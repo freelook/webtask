@@ -14,14 +14,10 @@ module.exports = function(context, cb) {
       token: context.secrets.token,
       rss: context.storage.goldbox
     }
-  })
-  .pipe(es.wait((err, data)=>{
+  }, (err, res, body) => {
     if(err) {
       return cb(err);
     }
-    return cb(null, data);
-  }))
-  .on('error', function(err) {
-      cb(err);
+    return cb(null, body);
   });
 };
