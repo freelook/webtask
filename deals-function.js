@@ -8,7 +8,6 @@ module.exports = function(context, cb) {
   if(context.secrets.token !== context.query.token) {
     return cb('No token.');
   }
-  
  return request.get({
     url: context.secrets.rssFunction,
     qs: {
@@ -25,5 +24,4 @@ module.exports = function(context, cb) {
   .on('error', function(err) {
       cb(err);
   });
-  
 };
