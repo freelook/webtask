@@ -17,7 +17,7 @@ module.exports = function(context, cb) {
             if(err) {
               return cb(err);
             }
-            return cb(null, {rss: arr});
+            return cb(null, {rss: arr.slice(0, 100)});
         }))
         .on('error', function(err) {
             cb(err);
