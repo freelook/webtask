@@ -7,7 +7,7 @@ const es = require('event-stream');
 */
 module.exports = function(context, cb) {
   if(context.secrets.token !== context.query.token) {
-    return cb("No token.");
+    return cb('No token.');
   }
   if(context.query.rss) {
     const rss = context.query.rss;
@@ -23,5 +23,5 @@ module.exports = function(context, cb) {
             cb(err);
         });
   } 
-  return cb("No rss param provided.");
+  return cb('No rss param provided.');
 };
