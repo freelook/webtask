@@ -10,7 +10,18 @@ module.exports = function(context, cb) {
     return cb("No token.");
   }
   if(context.query.rss) {
-    return cb(null, { rss: context.query.rss });
+    const rss = context.query.rss;
+    return request(rss)
+        .pipe(new feedparser())
+        .pipe(es.wait(function (err, body) {
+            if(err) {
+              return cd(err);
+            }
+            return cd(null, body);
+        }))
+        .on('error', function(err) {
+            cd(err);
+        });
   } 
   return cb("No rss param provided.");
 };
