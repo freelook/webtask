@@ -9,20 +9,25 @@ module.exports = function(context, cb) {
   if(context.secrets.token !== context.query.token) {
     return cb('No token.');
   }
- return as.waterfall([
+  if(!context.query.endpoint) {
+    return cb('No endpoint param provided.');
+  }
+  return as.waterfall([
    (next) => context.storage.get(next),
    (storage, next) => {
      request.get({
         url: context.secrets.rssFunction,
         qs: {
           token: context.secrets.token,
-          rss: storage.goldbox
+          rss: storage[context.query.endpoint]
         }
       }, (err, res, body) => {
         if(err) {
           return next(err);
         }
-        return next(null, JSON.parse(body));
+        const deals = JSON.parse(body);
+        
+        return next(null, deals);
       });
      }
    ], cb);
