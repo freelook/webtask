@@ -6,11 +6,11 @@ const app = express();
 app.use(bodyParser.json());
 
 app.get('/push', function (req, res) {
-  res.sendStatus(200, 'push');
+  res.status(200).send('push');
 });
 
 app.get('/pop', function (req, res) {
-  res.sendStatus(200, 'pop');
+  res.status(200).send('pop');
 });
 
 module.exports = wt.fromExpress(app);
