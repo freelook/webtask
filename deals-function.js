@@ -16,7 +16,7 @@ module.exports = function(context, cb) {
         url: context.secrets.rssFunction,
         qs: {
           token: context.secrets.token,
-          rss: context.storage.goldbox
+          rss: storage.goldbox
         }
       }, (err, res, body) => {
         if(err) {
