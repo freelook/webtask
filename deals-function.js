@@ -22,7 +22,7 @@ module.exports = function(context, cb) {
         if(err) {
           return next(err);
         }
-        return next(null, body);
+        return next(null, JSON.parse(body));
       });
      }
    ], cb);
