@@ -1,6 +1,13 @@
+const request = require('request');
+const feedparser = require('feedparser');
+const es = require('event-stream');
+
 /**
 * @param context {WebtaskContext}
 */
 module.exports = function(context, cb) {
-  cb(null, { hello: context.query.name || 'Anonymous' });
+  if(context.query.rss) {
+    return cb(null, { hello: context.query.rss });
+  } 
+  return cb(true);
 };
