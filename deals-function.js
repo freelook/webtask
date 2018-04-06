@@ -1,6 +1,5 @@
 const request = require('request');
 const es = require('event-stream');
-const RSS_FUNCTION = '';
 
 /**
 * @param context {WebtaskContext}
@@ -10,7 +9,21 @@ module.exports = function(context, cb) {
     return cb('No token.');
   }
   
-  request();
+ return request.get({
+    url: context.secrets.rssFunction,
+    qs: {
+      token: context.secrets.token,
+      rss: context.storage.goldbox
+    }
+  })
+  .pipe(es.wait((err, data)=>{
+    if(err) {
+      return cb(err);
+    }
+    return cb(null, {rss: data});
+  }))
+  .on('error', function(err) {
+      cb(err);
+  });
   
-  return cb(null, { hello: context.query.name || 'Anonymous' });
 };
