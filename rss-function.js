@@ -13,12 +13,11 @@ module.exports = function(context, cb) {
     const rss = context.query.rss;
     return request(rss)
         .pipe(new feedparser())
-        .pipe(es.wait(function (err, body) {
-          console.log(body);
+        .pipe(es.writeArray(function (err, arr) {
             if(err) {
               return cb(err);
             }
-            return cb(null, body);
+            return cb(null, {rss: arr});
         }))
         .on('error', function(err) {
             cb(err);
