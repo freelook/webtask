@@ -15,12 +15,12 @@ module.exports = function(context, cb) {
         .pipe(new feedparser())
         .pipe(es.wait(function (err, body) {
             if(err) {
-              return cd(err);
+              return cb(err);
             }
-            return cd(null, body);
+            return cb(null, body);
         }))
         .on('error', function(err) {
-            cd(err);
+            cb(err);
         });
   } 
   return cb("No rss param provided.");
