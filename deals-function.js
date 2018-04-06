@@ -19,7 +19,7 @@ module.exports = function(context, cb) {
     if(err) {
       return cb(err);
     }
-    return cb(null, {rss: data});
+    return cb(null, data);
   }))
   .on('error', function(err) {
       cb(err);
