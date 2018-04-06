@@ -14,6 +14,7 @@ module.exports = function(context, cb) {
     return request(rss)
         .pipe(new feedparser())
         .pipe(es.wait(function (err, body) {
+          console.log(body);
             if(err) {
               return cb(err);
             }
