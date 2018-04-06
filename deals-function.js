@@ -1,3 +1,6 @@
+const request = require('request');
+const es = require('event-stream');
+
 /**
 * @param context {WebtaskContext}
 */
