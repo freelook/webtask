@@ -1,6 +1,12 @@
-/**
-* @param context {WebtaskContext}
-*/
-module.exports = function(context, cb) {
-  cb(null, { hello: context.query.name || 'Anonymous' });
-};
+let express = require('express');
+let webtask = require('webtask-tools');
+let bodyParser = require('body-parser');
+let app = express();
+
+app.use(bodyParser.json());
+
+app.get('/', function (req, res) {
+  res.sendStatus(200);
+});
+
+module.exports = webtask.fromExpress(app);
