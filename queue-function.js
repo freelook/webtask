@@ -8,17 +8,21 @@ const app = express();
 
 app.use((req, res, next) => {
   if(req.webtaskContext.secrets.token !== req.query.token) {
-     res.status(400).send('No token.');
-     return next('No token.');
+     const errMsg = 'No token.';
+     res.status(400).send(errMsg);
+     return next(errMsg);
+  }
+  if(!req.params.qq) {
+     const errMsg = 'No queue name provided.';
+     res.status(400).send(errMsg);
+     return next(errMsg);
   }
   return next();
 });
 app.use(bodyParser.json());
 app.use((req, res, next) => {
   mongodb.MongoClient.connect(req.webtaskContext.secrets.mongo, function(err, db) {
-    if(req.params.qq) {
     req.queue = mongoDbQueue(db, req.params.qq);
-    }
     next(err);
   });
 });
