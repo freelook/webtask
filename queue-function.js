@@ -14,7 +14,7 @@ router.use((req, res, next) => {
      res.status(400).send(errMsgToken);
      return next(errMsgToken);
   }
-  if(!req.params.qq) {
+  if(!req.query.qq) {
      const errMsgQQ = 'No queue name provided.';
      res.status(400).send(errMsgQQ);
      return next(errMsgQQ);
@@ -46,6 +46,6 @@ router.get('/get', function (req, res) {
   });
 });
 
-app.use('/:qq', router);
+app.use('/', router);
 
 module.exports = wt.fromExpress(app);
