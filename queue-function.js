@@ -12,6 +12,7 @@ app.use((req, res, next) => {
      res.status(400).send(errMsgToken);
      return next(errMsgToken);
   }
+  console.log(req.params);
   if(!req.params.qq) {
      const errMsgQQ = 'No queue name provided.';
      res.status(400).send(errMsgQQ);
