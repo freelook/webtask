@@ -5,14 +5,15 @@ const mongodb = require('mongodb');
 const mongoDbQueue = require('mongodb-queue');
 const as = require('async');
 const app = express();
+const router = express.Router();
 
-app.use((req, res, next) => {
+app.use(bodyParser.json());
+router.use((req, res, next) => {
   if(req.webtaskContext.secrets.token !== req.query.token) {
      const errMsgToken = 'No token.';
      res.status(400).send(errMsgToken);
      return next(errMsgToken);
   }
-  console.log(req.params);
   if(!req.params.qq) {
      const errMsgQQ = 'No queue name provided.';
      res.status(400).send(errMsgQQ);
@@ -20,15 +21,14 @@ app.use((req, res, next) => {
   }
   return next();
 });
-app.use(bodyParser.json());
-app.use((req, res, next) => {
+router.use((req, res, next) => {
   mongodb.MongoClient.connect(req.webtaskContext.secrets.mongo, function(err, db) {
     req.queue = mongoDbQueue(db, req.params.qq);
     next(err);
   });
 });
 
-app.get('/:qq/add/:msg', function (req, res) {
+router.get('/:qq/add/:msg', function (req, res) {
   as.waterfall([
     (next) => {
       req.queue.add(req.params.msg, next);
@@ -38,12 +38,14 @@ app.get('/:qq/add/:msg', function (req, res) {
   });
 });
 
-app.get('/:qq/get', function (req, res) {
+router.get('/:qq/get', function (req, res) {
   as.waterfall([
     
     ], ()=> {
       res.status(200).send('get');
   });
 });
+
+app.use('/', router);
 
 module.exports = wt.fromExpress(app);
