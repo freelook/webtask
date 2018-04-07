@@ -8,12 +8,12 @@ const app = express();
 
 app.use((req, res, next) => {
   if(req.webtaskContext.secrets.token !== req.query.token) {
-     const errMsg = 'No token.';
+     let errMsg = 'No token.';
      res.status(400).send(errMsg);
      return next(errMsg);
   }
   if(!req.params.qq) {
-     const errMsg = 'No queue name provided.';
+     let errMsg = 'No queue name provided.';
      res.status(400).send(errMsg);
      return next(errMsg);
   }
