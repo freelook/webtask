@@ -6,14 +6,14 @@ const mongoDbQueue = require('mongodb-queue');
 const as = require('async');
 const app = express();
 
-app.use(bodyParser.json());
 app.use((req, res, next) => {
   if(req.webtaskContext.secrets.token !== req.query.token) {
-    next(true);
-    return res.status(400).send('No token.');
+     res.status(400).send('No token.');
+     return next('No token.');
   }
   return next();
 });
+app.use(bodyParser.json());
 app.use((req, res, next) => {
   mongodb.MongoClient.connect(req.webtaskContext.secrets.mongo, function(err, db) {
     req.queue = mongoDbQueue(db, req.params.qq);
