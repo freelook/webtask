@@ -9,6 +9,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use((req, res, next) => {
   if(req.webtaskContext.secrets.token !== req.query.token) {
+    next(true);
     return res.status(400).send('No token.');
   }
   return next();
