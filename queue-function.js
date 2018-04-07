@@ -23,7 +23,7 @@ router.use((req, res, next) => {
 });
 router.use((req, res, next) => {
   mongodb.MongoClient.connect(req.webtaskContext.secrets.mongo, function(err, db) {
-    req.queue = mongoDbQueue(db, req.params.qq);
+    req.queue = mongoDbQueue(db, req.query.qq);
     next(err);
   });
 });
