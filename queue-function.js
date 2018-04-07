@@ -3,16 +3,39 @@ const wt = require('webtask-tools');
 const bodyParser = require('body-parser');
 const mongodb = require('mongodb');
 const mongoDbQueue = require('mongodb-queue');
+const as = require('async');
 const app = express();
 
 app.use(bodyParser.json());
-
-app.get('/push', function (req, res) {
-  res.status(200).send('push');
+app.use((req, res, next) => {
+  if(req.webtaskContext.secrets.token !== req.query.token) {
+    return res.status(400).send('No token.');
+  }
+  return next();
+});
+app.use((req, res, next) => {
+  mongodb.MongoClient.connect(req.webtaskContext.secrets.mongo, function(err, db) {
+    req.queue = mongoDbQueue(db, req.params.qq);
+    next(err);
+  });
 });
 
-app.get('/pop', function (req, res) {
-  res.status(200).send('pop');
+app.get('/:qq/add/:msg', function (req, res) {
+  as.waterfall([
+    (next) => {
+      req.queue.add(req.params.msg, next);
+    }
+  ], ()=> {
+      res.status(200).send('add');
+  });
+});
+
+app.get('/:qq/get', function (req, res) {
+  as.waterfall([
+    
+    ], ()=> {
+      res.status(200).send('get');
+  });
 });
 
 module.exports = wt.fromExpress(app);
