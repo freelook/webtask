@@ -28,7 +28,7 @@ router.use((req, res, next) => {
   });
 });
 
-router.get('/:qq/add/:msg', function (req, res) {
+router.get('/add/:msg', function (req, res) {
   as.waterfall([
     (next) => {
       req.queue.add(req.params.msg, next);
@@ -38,7 +38,7 @@ router.get('/:qq/add/:msg', function (req, res) {
   });
 });
 
-router.get('/:qq/get', function (req, res) {
+router.get('/get', function (req, res) {
   as.waterfall([
     
     ], ()=> {
@@ -46,6 +46,6 @@ router.get('/:qq/get', function (req, res) {
   });
 });
 
-app.use('/', router);
+app.use('/:qq', router);
 
 module.exports = wt.fromExpress(app);
