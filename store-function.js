@@ -20,22 +20,6 @@ const validateMiddleware = (req, res, next) => {
   }
   return next();
 };
-const validateIdRouteMiddleware = (req, res, next) => {
-  if(!req.params.id) {
-     const errMsgId = 'No id param provided.';
-     res.status(400).send(errMsgId);
-     return next(errMsgId);
-  }
-  return next();
-};
-const validateBodyRouteMiddleware = (req, res, next) => {
-  if(!req.body) {
-     const errMsgBody = 'No body provided.';
-     res.status(400).send(errMsgBody);
-     return next(errMsgBody);
-  }
-  return next();
-};
 const mongoDbMiddleware = (req, res, next) => {
   mongoose.connect(req.webtaskContext.secrets.mongo, (err) => {
     req.Store = mongoose.model('Store', StoreSchema);
@@ -50,13 +34,13 @@ const responseHandler = (err, res, data) => {
 };
 
 router
-.get('/:id', validateIdRouteMiddleware, function (req, res) {
+.get('/:id', function (req, res) {
   as.waterfall([
     (next) => req.Store.findById(req.params.id, next)
   ],
   (err, data) => responseHandler(err, res, data));
 })
-.post('/:id?', validateBodyRouteMiddleware, function (req, res) {
+.post('/:id?', function (req, res) {
   as.waterfall([
     (next) => {
       console.log(req.body);
