@@ -1,10 +1,10 @@
 const express = require('express');
 const wt = require('webtask-tools');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
 const as = require('async');
 const app = express();
 const router = express.Router();
+const mongoose = require('mongoose');
 const StoreSchema = mongoose.Schema({
   updated: { 
     type: Date,
@@ -15,7 +15,7 @@ const StoreSchema = mongoose.Schema({
 const validateMiddleware = (req, res, next) => {
   if(req.webtaskContext.secrets.token !== req.query.token) {
      const errMsgToken = 'No token.';
-     responseHandler(errMsgToken, res);
+     res.status(400).send(errMsgToken);
      return next(errMsgToken);
   }
   return next();
@@ -23,7 +23,7 @@ const validateMiddleware = (req, res, next) => {
 const validateIdRouteMiddleware = (req, res, next) => {
   if(!req.params.id) {
      const errMsgId = 'No id param provided.';
-     responseHandler(errMsgId, res);
+     res.status(400).send(errMsgId);
      return next(errMsgId);
   }
   return next();
@@ -31,7 +31,7 @@ const validateIdRouteMiddleware = (req, res, next) => {
 const validateBodyRouteMiddleware = (req, res, next) => {
   if(!req.body) {
      const errMsgBody = 'No body provided.';
-     responseHandler(errMsgBody, res);
+     res.status(400).send(errMsgBody);
      return next(errMsgBody);
   }
   return next();
