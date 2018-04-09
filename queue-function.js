@@ -12,7 +12,7 @@ const validateMiddleware = (req, res, next) => {
      res.status(400).send(errMsgToken);
      return next(errMsgToken);
   }
-  if(!req.query.qq) {
+  if(!req.params.qq) {
      const errMsgQQ = 'No queue name provided.';
      res.status(400).send(errMsgQQ);
      return next(errMsgQQ);
@@ -21,12 +21,10 @@ const validateMiddleware = (req, res, next) => {
 };
 const mongoDbQueueMiddleware = (req, res, next) => {
   mongodb.MongoClient.connect(req.webtaskContext.secrets.mongo, function(err, db) {
-    req.queue = mongoDbQueue(db, req.query.qq);
+    req.queue = mongoDbQueue(db, req.params.qq);
     next(err);
   });
 };
-
-app.use(bodyParser.json());
 
 router.get('/add/:msg', function (req, res) {
   as.waterfall([
@@ -48,6 +46,7 @@ router.get('/get', function (req, res) {
   });
 });
 
-app.use('/', validateMiddleware, mongoDbQueueMiddleware, router);
+app.use(bodyParser.json());
+app.use('/:qq', validateMiddleware, mongoDbQueueMiddleware, router);
 
 module.exports = wt.fromExpress(app);
