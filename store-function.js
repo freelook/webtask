@@ -52,7 +52,10 @@ router
 })
 .patch('/:id', function (req, res) {
   as.waterfall([
-    (next) => req.Store.findOneAndUpdate(mongoose.Types.ObjectId(req.params.id), {payload:req.body}, next)
+    (next) => req.Store.findOneAndUpdate(mongoose.Types.ObjectId(req.params.id), {
+      updated: Date.now,
+      payload:req.body
+    }, next)
   ],
   (err, data)=> responseHandler(err, res, data));
 });
