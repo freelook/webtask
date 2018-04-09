@@ -35,7 +35,6 @@ router.get('/add/:msg', function (req, res) {
       res.status(200).json({id:id});
   });
 });
-
 router.get('/get', function (req, res) {
   as.waterfall([
     (next) => {
@@ -43,6 +42,15 @@ router.get('/get', function (req, res) {
     }
     ], (err, msg)=> {
       res.status(200).json(msg);
+  });
+});
+router.get('/ack/:ack', function (req, res) {
+  as.waterfall([
+    (next) => {
+      req.queue.ack(req.params.ack, next);
+    }
+  ], (err, id)=> {
+      res.status(200).json({id:id});
   });
 });
 
