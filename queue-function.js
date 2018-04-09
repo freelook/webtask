@@ -25,36 +25,35 @@ const mongoDbQueueMiddleware = (req, res, next) => {
     next(err);
   });
 };
+const responseHandler = (err, res, data) => {
+  if(!!err) {
+    return res.status(400).json(err);
+  }
+  return res.status(200).json(data);
+};
 
-router.get('/add/:msg', function (req, res) {
+router
+.get('/add/:msg', function (req, res) {
   as.waterfall([
-    (next) => {
-      req.queue.add(req.params.msg, next);
-    }
-  ], (err, id)=> {
-      res.status(200).json({id:id});
-  });
-});
-router.get('/get', function (req, res) {
+    (next) => req.queue.add(req.params.msg, next)
+  ],
+  (err, id) => responseHandler(err, res, {id:id}));
+})
+.get('/get', function (req, res) {
   as.waterfall([
-    (next) => {
-      req.queue.get(next);
-    }
-    ], (err, msg)=> {
-      res.status(200).json(msg);
-  });
-});
-router.get('/ack/:ack', function (req, res) {
+    (next) => req.queue.get(next)
+  ],
+  (err, msg)=> responseHandler(err, res, msg));
+})
+.get('/ack/:ack', function (req, res) {
   as.waterfall([
-    (next) => {
-      req.queue.ack(req.params.ack, next);
-    }
-  ], (err, id)=> {
-      res.status(200).json({id:id, err:err});
-  });
+    (next) => req.queue.ack(req.params.ack, next)
+  ],
+  (err, id)=> responseHandler(err, res, {id:id, err:err}));
 });
 
-app.use(bodyParser.json());
-app.use('/:qq', validateMiddleware, mongoDbQueueMiddleware, router);
+app
+.use(bodyParser.json())
+.use('/:qq', validateMiddleware, mongoDbQueueMiddleware, router);
 
 module.exports = wt.fromExpress(app);
