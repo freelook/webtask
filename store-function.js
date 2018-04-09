@@ -34,7 +34,7 @@ const responseHandler = (err, res, data) => {
 };
 
 router
-.get('/:id', function (req, res) {
+.get(':id', function (req, res) {
   as.waterfall([
     (next) => req.Store.findById(req.params.id, next)
   ],
