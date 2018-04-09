@@ -43,7 +43,8 @@ router
 .post('/:id?', function (req, res) {
   as.waterfall([
     (next) => {
-      var item = new req.Store(req.body);
+      console.log(req.body);
+      var item = new req.Store({payload:req.body});
       item.save(next);
     }
   ],
