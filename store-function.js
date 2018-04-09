@@ -13,13 +13,13 @@ const validateMiddleware = (req, res, next) => {
   }
   return next();
 };
-const StoreSchema = {
+const StoreSchema = mongoose.Schema({
   updated: { 
     type: Date,
     default: Date.now
   }, 
-  payload: Schema.Types.Mixed
-};
+  payload: mongoose.Schema.Types.Mixed
+});
 const mongoDbMiddleware = (req, res, next) => {
   mongoose.connect(req.webtaskContext.secrets.mongo, (err) => {
     req.Store = mongoose.model('Store', StoreSchema);
