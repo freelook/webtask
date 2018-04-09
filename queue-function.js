@@ -50,7 +50,7 @@ router.get('/ack/:ack', function (req, res) {
       req.queue.ack(req.params.ack, next);
     }
   ], (err, id)=> {
-      res.status(200).json({id:id});
+      res.status(200).json({id:id, err:err});
   });
 });
 
