@@ -6,9 +6,7 @@ const mongoDbQueue = require('mongodb-queue');
 const as = require('async');
 const app = express();
 const router = express.Router();
-
-app.use(bodyParser.json());
-router.use((req, res, next) => {
+const validateMiddleware = (req, res, next) => {
   if(req.webtaskContext.secrets.token !== req.query.token) {
      const errMsgToken = 'No token.';
      res.status(400).send(errMsgToken);
@@ -20,13 +18,15 @@ router.use((req, res, next) => {
      return next(errMsgQQ);
   }
   return next();
-});
-router.use((req, res, next) => {
+};
+const mongoDbQueueMiddleware = (req, res, next) => {
   mongodb.MongoClient.connect(req.webtaskContext.secrets.mongo, function(err, db) {
     req.queue = mongoDbQueue(db, req.query.qq);
     next(err);
   });
-});
+};
+
+app.use(bodyParser.json());
 
 router.get('/add/:msg', function (req, res) {
   as.waterfall([
@@ -48,6 +48,6 @@ router.get('/get', function (req, res) {
   });
 });
 
-app.use('/', router);
+app.use('/', validateMiddleware, mongoDbQueueMiddleware, router);
 
 module.exports = wt.fromExpress(app);
