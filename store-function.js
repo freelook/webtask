@@ -36,13 +36,16 @@ const responseHandler = (err, res, data) => {
 router
 .get('/:id', function (req, res) {
   as.waterfall([
-
+    (next) => req.Store.findById(req.params.id, next)
   ],
   (err, data) => responseHandler(err, res, data));
 })
 .post('/:id?', function (req, res) {
   as.waterfall([
-
+    (next) => {
+      var item = new req.Store(req.body);
+      item.save(next);
+    }
   ],
   (err, data)=> responseHandler(err, res, data));
 })
