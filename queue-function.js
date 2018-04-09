@@ -49,7 +49,7 @@ router
   as.waterfall([
     (next) => req.queue.ack(req.params.ack, next)
   ],
-  (err, id)=> responseHandler(err, res, {id:id, err:err}));
+  (err, id)=> responseHandler(err, res, {id:id}));
 });
 
 app
