@@ -33,16 +33,18 @@ router.get('/add/:msg', function (req, res) {
     (next) => {
       req.queue.add(req.params.msg, next);
     }
-  ], ()=> {
-      res.status(200).send('add');
+  ], (err, id)=> {
+      res.status(200).json({id:id});
   });
 });
 
 router.get('/get', function (req, res) {
   as.waterfall([
-    
-    ], ()=> {
-      res.status(200).send('get');
+    (next) => {
+      req.queue.get(next);
+    }
+    ], (err, msg)=> {
+      res.status(200).json(msg);
   });
 });
 
