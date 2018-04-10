@@ -20,8 +20,8 @@ module.exports = function(context, cb) {
         if(err) {
           return next(err);
         }
-        const data = JSON.parse(body);
-        return next(null, data);
+        //const data = JSON.parse(body);
+        return next(null, body);
       });
      }
    ], cb);
