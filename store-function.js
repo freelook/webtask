@@ -42,20 +42,26 @@ router
 })
 .post('/:id?', function (req, res) {
   as.waterfall([
-    (next) => {
-      console.log(req.body);
-      var item = new req.Store({payload:req.body});
-      item.save(next);
-    }
+    (next) => req.Store.create({payload:req.body})
   ],
   (err, data)=> responseHandler(err, res, data));
 })
 .patch('/:id', function (req, res) {
   as.waterfall([
-    (next) => req.Store.findOneAndUpdate(mongoose.Types.ObjectId(req.params.id), {
-      updated: Date.now(),
-      payload:req.body
-    }, next)
+    (next) => req.Store.findById(req.params.id, next),
+    (item, next) => {
+      _.merge(item, {
+        updated: Date.now(),
+        payload: req.body
+      });
+      item.save(next);
+    }
+  ],
+  (err, data)=> responseHandler(err, res, data));
+})
+.delete('/:id', function (req, res) {
+  as.waterfall([
+    (next) => req.Store.findOneAndRemove(req.params.id, next)
   ],
   (err, data)=> responseHandler(err, res, data));
 });
