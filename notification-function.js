@@ -4,7 +4,7 @@ const as = require('async');
 /**
 * @param context {WebtaskContext}
 */
-module.exports = function(context, cb) {
+module.exports = function(context, req, res) {
   if(context.secrets.token !== context.query.token) {
     return cb('No token.');
   }
@@ -19,10 +19,10 @@ module.exports = function(context, cb) {
         }
       }, (err, res, body) => {
         if(!!err) {
-          return next(err);
+          return res.status(400).json(err);
         }
-        return next(null, body);
+        return res.status(200).json(body);
       });
      }
-   ], cb);
+   ]);
 };
