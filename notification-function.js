@@ -6,8 +6,7 @@ const loader = (params, next) => {
     url: params.url,
     qs: params.qs
   }, (err, res, body) => {
-    console.log(res.status);
-    if(!!err || res.status !== "200" || !body) {
+    if(!!err || res.statusCode !== 200 || !body) {
       return next(err || body || 'No body.');
     }
     const msg = JSON.parse(body);
