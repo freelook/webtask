@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const express = require('express');
 const wt = require('webtask-tools');
 const bodyParser = require('body-parser');
