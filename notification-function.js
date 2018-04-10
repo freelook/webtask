@@ -21,7 +21,7 @@ module.exports = function(context, cb) {
           return next(err);
         }
         const data = JSON.parse(body);
-        return next(null, body);
+        return next(null, data);
       });
      }
    ], cb);
