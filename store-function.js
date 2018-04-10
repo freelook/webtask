@@ -46,7 +46,7 @@ router
   ],
   (err, data) => responseHandler(err, res, data));
 })
-.post('/:id?', function (req, res) {
+.post('/', function (req, res) {
   as.waterfall([
     (next) => req.Store.create({payload:req.body})
   ],
