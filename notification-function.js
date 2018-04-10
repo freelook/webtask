@@ -6,6 +6,7 @@ const loader = (params, next) => {
     url: params.url,
     qs: params.qs
   }, (err, res, body) => {
+    console.log(res.status, res);
     if(!!err || res.status !== "200" || !body) {
       return next(err || body || 'No body.');
     }
