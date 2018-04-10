@@ -28,6 +28,6 @@ module.exports = function(context, cb) {
       qs: {
         token: context.secrets.token
       }
-    })
+    }, next)
    ], cb);
 };
