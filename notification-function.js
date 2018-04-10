@@ -20,7 +20,7 @@ module.exports = function(context, cb) {
         if(!!err) {
           return next(err);
         }
-        const data = JSON.parse(body);
+        const data = !!body ? JSON.parse(body) : null;
         return next(null, data);
       });
      }
