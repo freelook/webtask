@@ -11,6 +11,7 @@ module.exports = function(context, cb) {
   return as.waterfall([
    (next) => context.storage.get(next),
    (storage, next) => {
+     console.log(next);
      request.get({
         url: context.secrets.queueFunction,
         qs: {
