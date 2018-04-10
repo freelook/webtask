@@ -34,15 +34,15 @@ const responseHandler = (err, res, data) => {
 };
 
 router
-.get('/query', function(req, res) {
-  as.waterfall([
-    (next) => req.Store.find({payload:req.query}, next)
-  ],
-  (err, data) => responseHandler(err, res, data));
-})
 .get('/:id', function (req, res) {
   as.waterfall([
     (next) => req.Store.findById(req.params.id, next)
+  ],
+  (err, data) => responseHandler(err, res, data));
+})
+.post('/find', function(req, res) {
+  as.waterfall([
+    (next) => req.Store.find({payload:req.body}, next)
   ],
   (err, data) => responseHandler(err, res, data));
 })
