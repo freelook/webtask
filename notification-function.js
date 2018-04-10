@@ -17,7 +17,7 @@ module.exports = function(context, cb) {
           token: context.secrets.token
         }
       }, (err, res, body) => {
-        if(err) {
+        if(!!err) {
           return next(err);
         }
         //const data = JSON.parse(body);
