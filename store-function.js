@@ -42,7 +42,7 @@ router
 })
 .post('/find', function(req, res) {
   as.waterfall([
-    (next) => req.Store.find({payload:req.body}, next)
+    (next) => req.Store.find(req.body, next)
   ],
   (err, data) => responseHandler(err, res, data));
 })
