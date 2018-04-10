@@ -24,10 +24,16 @@ module.exports = function(context, cb) {
   return as.waterfall([
    (next) => context.storage.get(next),
    (storage, next) => loader({
-      url: context.secrets.queueFunction,
-      qs: {
-        token: context.secrets.token
-      }
+      url: `${context.secrets.queueFunction}/get`,
+      qs: {token: context.secrets.token}
+    }, next),
+    (msg, next) => {
+      //todo: publish
+      next(null, msg);
+    },
+    (msg, next) => loader({
+      url: `${context.secrets.queueFunction}/ack/${msg.ack}`,
+      qs: {token: context.secrets.token}
     }, next)
    ], cb);
 };
