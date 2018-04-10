@@ -1,6 +1,19 @@
 const request = require('request');
 const as = require('async');
 
+const loader = (params, next) => {
+  request.get({
+    url: params.url,
+    qs: params.qs
+  }, (err, res, body) => {
+    if(!!err || res.status !== 200 || !body) {
+      return next(err || body || 'No body.');
+    }
+    const msg = JSON.parse(body);
+    return next(null, msg);
+  });
+};
+
 /**
 * @param context {WebtaskContext}
 */
@@ -10,19 +23,11 @@ module.exports = function(context, cb) {
   }
   return as.waterfall([
    (next) => context.storage.get(next),
-   (storage, next) => {
-     request.get({
-        url: context.secrets.queueFunction,
-        qs: {
-          token: context.secrets.token
-        }
-      }, (err, res, body) => {
-        if(!!err) {
-          return next(err);
-        }
-        const data = !!body ? JSON.parse(body) : null;
-        return next(null, data);
-      });
-     }
+   (storage, next) => loader({
+      url: context.secrets.queueFunction,
+      qs: {
+        token: context.secrets.token
+      }
+    })
    ], cb);
 };
