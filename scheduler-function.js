@@ -15,16 +15,16 @@ const loader = (params, next) => {
   });
 };
 
-const mmHandler = (storage, next) => {
-  storage.mm += 1;
+const mmHandler = (context) => (storage, next) => {
+  storage.count.mm += 1;
   as.map(
     storage.tasks.mm,
-    (task, next) => loader({url: task}, next), 
+    (task, next) => loader({url: context.secrets[task]}, next), 
     (err, result) => next(null, storage)
   );
 };
 
-const hhHandler = (storage, next) => {
+const hhHandler = (context) => (storage, next) => {
   if(storage.mm >= 60) {
     storage.mm = 0;
     storage.hh += 1;
@@ -32,7 +32,7 @@ const hhHandler = (storage, next) => {
   next(null, storage);
 };
 
-const ddHandler = (storage, next) => {
+const ddHandler = (context) => (storage, next) => {
   if(storage.hh >= 24) {
     storage.hh = 0;
   }
@@ -48,9 +48,9 @@ module.exports = function(context, cb) {
   }
   return as.waterfall([
    (next) => context.storage.get(next),
-   (storage, next) => mmHandler(storage, next),
-   (storage, next) => hhHandler(storage, next),
-   (storage, next) => ddHandler(storage, next),
+   (storage, next) => mmHandler(context)(storage, next),
+   (storage, next) => hhHandler(context)(storage, next),
+   (storage, next) => ddHandler(context)(storage, next),
    (storage, next) => context.storage.set(storage, next)
   ], cb);
 };
