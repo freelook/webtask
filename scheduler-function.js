@@ -17,7 +17,11 @@ const loader = (params, next) => {
 
 const mmHandler = (storage, next) => {
   storage.mm += 1;
-  next(null, storage);
+  as.map(
+    storage.tasks.mm,
+    (task) => loader({url: task}), 
+    (err, result) => next(null, storage)
+  );
 };
 
 const hhHandler = (storage, next) => {
