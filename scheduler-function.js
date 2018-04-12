@@ -25,12 +25,16 @@ module.exports = function(context, cb) {
   return as.waterfall([
    (next) => context.storage.get(next),
    (storage, next) => {
-    console.log(storage.count);
-    storage.count += 1;
+    storage.mm += 1;
     //todo: 1 minute handler
-    if(storage.count >= 60) {
-      storage.count = 0;
+    if(storage.mm >= 60) {
+      storage.mm = 0;
+      storage.hh += 1;
       //todo: 1 hour handler
+      if(storage.mm >= 24) {
+        storage.hh = 0;
+        //todo: 1 day handler
+      }
     }
     context.storage.set(storage, next);
    }
