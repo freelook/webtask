@@ -17,7 +17,7 @@ const loader = (params, next) => {
 
 const mmHandler = (context) => (storage, next) => {
   storage.count.mm += 1;
-  as.map(
+  return as.map(
     storage.tasks.mm,
     (task, next) => loader({url: context.secrets[task]}, next), 
     (err, result) => next(null, storage)
@@ -28,15 +28,25 @@ const hhHandler = (context) => (storage, next) => {
   if(storage.count.mm >= 60) {
     storage.count.mm = 0;
     storage.count.hh += 1;
+    return as.map(
+      storage.tasks.hh,
+      (task, next) => loader({url: context.secrets[task]}, next), 
+      (err, result) => next(null, storage)
+    );
   }
-  next(null, storage);
+  return next(null, storage);
 };
 
 const ddHandler = (context) => (storage, next) => {
   if(storage.count.hh >= 24) {
     storage.count.hh = 0;
+    return as.map(
+      storage.tasks.dd,
+      (task, next) => loader({url: context.secrets[task]}, next), 
+      (err, result) => next(null, storage)
+    );
   }
-  next(null, storage);
+  return next(null, storage);
 };
 
 /**
