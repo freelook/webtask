@@ -25,16 +25,16 @@ const mmHandler = (context) => (storage, next) => {
 };
 
 const hhHandler = (context) => (storage, next) => {
-  if(storage.mm >= 60) {
-    storage.mm = 0;
-    storage.hh += 1;
+  if(storage.count.mm >= 60) {
+    storage.count.mm = 0;
+    storage.count.hh += 1;
   }
   next(null, storage);
 };
 
 const ddHandler = (context) => (storage, next) => {
-  if(storage.hh >= 24) {
-    storage.hh = 0;
+  if(storage.count.hh >= 24) {
+    storage.count.hh = 0;
   }
   next(null, storage);
 };
