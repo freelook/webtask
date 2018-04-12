@@ -15,6 +15,26 @@ const loader = (params, next) => {
   });
 };
 
+const mmHandler = (storage, next) => {
+  storage.mm += 1;
+  next(null, storage);
+};
+
+const hhHandler = (storage, next) => {
+  if(storage.mm >= 60) {
+    storage.mm = 0;
+    storage.hh += 1;
+  }
+  next(null, storage);
+};
+
+const ddHandler = (storage, next) => {
+  if(storage.hh >= 24) {
+    storage.hh = 0;
+  }
+  next(null, storage);
+};
+
 /**
 * @param context {WebtaskContext}
 */
@@ -24,19 +44,9 @@ module.exports = function(context, cb) {
   }
   return as.waterfall([
    (next) => context.storage.get(next),
-   (storage, next) => {
-    storage.mm += 1;
-    //todo: 1 minute handler
-    if(storage.mm >= 60) {
-      storage.mm = 0;
-      storage.hh += 1;
-      //todo: 1 hour handler
-      if(storage.mm >= 24) {
-        storage.hh = 0;
-        //todo: 1 day handler
-      }
-    }
-    context.storage.set(storage, next);
-   }
-   ], cb);
+   (storage, next) => mmHandler(storage, next),
+   (storage, next) => hhHandler(storage, next),
+   (storage, next) => ddHandler(storage, next),
+   (storage, next) => context.storage.set(storage, next)
+  ], cb);
 };
