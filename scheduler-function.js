@@ -19,7 +19,7 @@ const mmHandler = (storage, next) => {
   storage.mm += 1;
   as.map(
     storage.tasks.mm,
-    (task) => loader({url: task}), 
+    (task, next) => loader({url: task}, next), 
     (err, result) => next(null, storage)
   );
 };
