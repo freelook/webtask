@@ -16,9 +16,9 @@ const poster = (params, next) => {
 };
 
 const publisher = (context) => (params, next) => as.map(
-  params.tasks,
-  (task, next) => poster({
-    url: context.secrets[task],
+  params.sources,
+  (source, next) => poster({
+    url: context.secrets[source],
     body: params.body
   }, next), 
   next
