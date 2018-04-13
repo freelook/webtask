@@ -19,7 +19,7 @@ const publisher = (context) => (params, next) => as.map(
   params.sources,
   (source, next) => poster({
     url: context.secrets[source],
-    body: params.body
+    body: context.body
   }, next), 
   next
 );
@@ -33,8 +33,8 @@ module.exports = function(context, cb) {
   }
   return as.waterfall([
    (next) => context.storage.get(next),
-   (storage, next) => {
-     next();
-   },
+   (storage, next) => publisher(context)({
+     sources: storage.sources
+   }, next),
   ], cb);
 };
