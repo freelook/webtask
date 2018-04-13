@@ -1,10 +1,11 @@
 const request = require('request');
 const as = require('async');
 
-const loader = (params, next) => {
-  request.get({
+const poster = (params, next) => {
+  request.post({
     url: params.url,
-    qs: params.qs
+    qs: params.qs,
+    body: params.body
   }, (err, res, body) => {
     if(!!err || res.statusCode !== 200 || !body) {
       return next(err || body || 'No body.');
@@ -13,6 +14,15 @@ const loader = (params, next) => {
     return next(null, msg);
   });
 };
+
+const publisher = (context) => (params, next) => as.map(
+  params.tasks,
+  (task, next) => poster({
+    url: context.secrets[task],
+    body: params.body
+  }, next), 
+  next
+);
 
 /**
 * @param context {WebtaskContext}
