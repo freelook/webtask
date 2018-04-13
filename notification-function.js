@@ -35,5 +35,5 @@ module.exports = function(context, cb) {
       url: `${context.secrets.queueFunction}/ack/${msg.ack}`,
       qs: {token: context.secrets.token}
     }, next)
-   ], cb);
+  ], cb);
 };
