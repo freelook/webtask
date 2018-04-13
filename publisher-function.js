@@ -5,7 +5,7 @@ const poster = (params, next) => {
   request.post({
     url: params.url,
     qs: params.qs,
-    body: params.body
+    json: params.body
   }, (err, res, body) => {
     if(!!err || res.statusCode !== 200 || !body) {
       return next(err || body || 'No body.');
