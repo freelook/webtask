@@ -34,10 +34,10 @@ router
       fb.api('me/feed', 'post', { message: body }, function (result) {
       if(!result || result.error) {
         console.log(!result ? 'error occurred' : result.error);
-        return next(err || result.error);
+        return next(result.error || result || 'Error');
       }
       console.log('Post Id: ' + result.id);
-      next(null, result)
+      next(null, result);
     });
     }
   ],
