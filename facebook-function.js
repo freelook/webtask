@@ -46,6 +46,6 @@ router
 
 app
 .use(bodyParser.json())
-.use('/', router);
+.use('/', validateMiddleware, fbMiddleware, router);
 
 module.exports = wt.fromExpress(app);
