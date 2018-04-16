@@ -2,6 +2,7 @@ const express = require('express');
 const wt = require('webtask-tools');
 const bodyParser = require('body-parser');
 const as = require('async');
+const fb = require('fb');
 const app = express();
 const router = express.Router();
 const validateMiddleware = (req, res, next) => {
@@ -29,6 +30,6 @@ router
 
 app
 .use(bodyParser.json())
-.use('/', validateMiddleware, mongoDbQueueMiddleware, router);
+.use('/', router);
 
 module.exports = wt.fromExpress(app);
