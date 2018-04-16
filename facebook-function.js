@@ -13,6 +13,10 @@ const validateMiddleware = (req, res, next) => {
   }
   return next();
 };
+const fbMiddleware = (req, res, next) => {
+  fb.setAccessToken(req.webtaskContext.secrets.access_token);
+  return next();
+};
 const responseHandler = (res) => (err, data) => {
   if(!!err) {
     return res.status(400).json(err);
