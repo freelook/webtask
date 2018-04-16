@@ -2,7 +2,7 @@ const express = require('express');
 const wt = require('webtask-tools');
 const bodyParser = require('body-parser');
 const as = require('async');
-const fb = require('fb');
+const fb = require('fb').default;
 const app = express();
 const router = express.Router();
 const validateMiddleware = (req, res, next) => {
@@ -14,7 +14,9 @@ const validateMiddleware = (req, res, next) => {
   return next();
 };
 const fbMiddleware = (req, res, next) => {
-  fb.setAccessToken(req.webtaskContext.secrets.access_token);
+  var secrets = req.webtaskContext.secrets;
+  fb.options({version: secrets.version});
+  fb.setAccessToken(secrets.access_token);
   return next();
 };
 const responseHandler = (res) => (err, data) => {
@@ -25,9 +27,19 @@ const responseHandler = (res) => (err, data) => {
 };
 
 router
-.post('/msg', function (req, res) {
+.get('/msg', function (req, res) {
   as.waterfall([
-    (next) => next()
+    (next) => {
+      var body = 'Hi!';
+      fb.api('me/feed', 'post', { message: body }, function (result) {
+      if(!result || result.error) {
+        console.log(!result ? 'error occurred' : result.error);
+        return next(err || result.error);
+      }
+      console.log('Post Id: ' + result.id);
+      next(null, result)
+    });
+    }
   ],
   (err, result) => responseHandler(res)(err, result));
 });
