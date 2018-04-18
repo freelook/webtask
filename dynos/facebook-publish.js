@@ -24,7 +24,10 @@ module.exports = function(context, req, res) {
   var instance, page, status, content, error;
 
   phantom
-    .create()
+    .create([
+        '--ignore-ssl-errors=yes',
+        '--load-images=no'
+    ])
     .then((_instance) => {
       instance = _instance;
       return instance.createPage();
@@ -74,16 +77,18 @@ module.exports = function(context, req, res) {
     })
     .then((_content) => {
       content = _content;
+      console.log(`Success: ${!!_content}`);
       res.writeHead(200, { 'Content-Type': 'text/html '});
       res.end(content);
-      page.close();
-      instance.exit();
+      page && page.close();
+      instance && instance.exit();
     })
     .catch((_error) => {
       error = _error;
       console.log(`Error: ${error}`);
       res.writeHead(400, { 'Content-Type': 'text/html '});
       res.end(error);
+      page && page.close();
       instance && instance.exit();
     });
     
