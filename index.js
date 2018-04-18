@@ -32,7 +32,6 @@ router
     .get('/', function(req, res) {
         req.dyno({
             secrets: process.env
-
         }, req, res);
     });
 
