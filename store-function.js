@@ -7,10 +7,8 @@ const app = express();
 const router = express.Router();
 const mongoose = require('mongoose');
 const StoreSchema = mongoose.Schema({
-  updated: { 
-    type: Date,
-    default: Date.now
-  }, 
+  updated: {type: Date, default: Date.now},
+  state: {type: String, default: 'new'},
   payload: mongoose.Schema.Types.Mixed
 });
 const validateMiddleware = (req, res, next) => {
@@ -19,10 +17,22 @@ const validateMiddleware = (req, res, next) => {
      res.status(400).send(errMsgToken);
      return next(errMsgToken);
   }
+  if(!req.params.db) {
+     const errMsgDB = 'No DB provided.';
+     res.status(400).send(errMsgDB);
+     return next(errMsgDB);
+  }
+  const db = req.webtaskContext.secrets[req.params.db];
+  if(!db) {
+     const errMsgDBEmpty = 'DB not exist.';
+     res.status(400).send(errMsgDBEmpty);
+     return next(errMsgDBEmpty);
+  }
+  reg.mongo = db;
   return next();
 };
 const mongoDbMiddleware = (req, res, next) => {
-  mongoose.connect(req.webtaskContext.secrets.mongo, (err) => {
+  return mongoose.connect(req.mongo, (err) => {
     req.Store = mongoose.model('Store', StoreSchema);
     next(err);
   });
@@ -75,6 +85,6 @@ router
 
 app
 .use(bodyParser.json())
-.use('/', validateMiddleware, mongoDbMiddleware, router);
+.use('/:db', validateMiddleware, mongoDbMiddleware, router);
 
 module.exports = wt.fromExpress(app);
