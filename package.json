@@ -1,0 +1,31 @@
+{
+  "name": "webtask",
+  "version": "1.0.0",
+  "description": "Cloud webtasks",
+  "main": "index.js",
+  "engines": {
+    "node": "8.11.1"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "npm test"
+  },
+  "dependencies": {
+    "express": "4.16.3",
+    "body-parser": "1.18.2",
+    "phantom": "2.1.21"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/freelook/webtask.git"
+  },
+  "keywords": [
+    "webtask"
+  ],
+  "author": "Dmytro Kostrub",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/freelook/webtask/issues"
+  },
+  "homepage": "https://github.com/freelook/webtask#readme"
+}
