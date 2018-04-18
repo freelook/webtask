@@ -28,7 +28,7 @@ const validateMiddleware = (req, res, next) => {
      res.status(400).send(errMsgDBEmpty);
      return next(errMsgDBEmpty);
   }
-  reg.mongo = db;
+  req.mongo = db;
   return next();
 };
 const mongoDbMiddleware = (req, res, next) => {
