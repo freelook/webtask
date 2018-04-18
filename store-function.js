@@ -28,11 +28,11 @@ const validateMiddleware = (req, res, next) => {
      res.status(400).send(errMsgDBEmpty);
      return next(errMsgDBEmpty);
   }
-  req.mongo = db;
+  req.db = db;
   return next();
 };
 const mongoDbMiddleware = (req, res, next) => {
-  return mongoose.connect(req.mongo, (err) => {
+  return mongoose.connect(req.db, (err) => {
     req.Store = mongoose.model('Store', StoreSchema);
     next(err);
   });
