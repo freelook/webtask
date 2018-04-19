@@ -31,7 +31,10 @@ module.exports = function(context, cb) {
     }, next),
     (msg, next) => {
       if(msg && msg.payload) {
-        return loader
+        return loader({
+          method: 'post',
+          url: context.secrets.storeFunction,
+        }, () => next(null, msg));
       }
       return next(null, msg);
     },
