@@ -19,6 +19,7 @@ const loader = (params, next) => {
 const notifier = (context) => (params, next) => as.map(
   params.topics,
   (source, next) => loader({
+    method: 'post',
     url: context.secrets[source],
     json: context.body
   }, next), 
