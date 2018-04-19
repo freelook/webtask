@@ -33,10 +33,10 @@ const StoreSchema = mongoose.Schema({
 }, {minimize: false});
 StoreSchema.post('save', function(item, next) {
   console.log('1', item.state);
-  if(item.state) {
+  if(!!item.state) {
     if(this.isNew || this.isModified('state')) {
       console.log('2');
-      streamer(req.webtaskContext)(item, ()=>{});
+      //streamer(req.webtaskContext)(item, ()=>{});
     }
   }
   next();
