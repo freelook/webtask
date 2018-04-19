@@ -32,7 +32,7 @@ module.exports = function(context, cb) {
     (msg, next) => {
       if(msg && msg.payload) {
         return loader({
-          method: 'post',
+          method: 'patch',
           url: `${context.secrets.storeFunction}/${msg.payload}`,
           qs: {token: context.secrets.token},
           json: {
