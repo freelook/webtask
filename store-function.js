@@ -9,7 +9,7 @@ const mongoose = require('mongoose');
 const StoreSchema = mongoose.Schema({
   updated: {type: Date, default: Date.now},
   state: {type: String, default: 'new'},
-  payload: mongoose.Schema.Types.Mixed
+  payload: {type: mongoose.Schema.Types.Mixed, default: {}}
 });
 const validateMiddleware = (req, res, next) => {
   if(req.webtaskContext.secrets.token !== req.query.token) {
