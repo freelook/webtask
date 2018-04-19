@@ -10,7 +10,7 @@ const StoreSchema = mongoose.Schema({
   updated: {type: Date, default: Date.now},
   state: {type: String, default: 'new'},
   payload: {type: mongoose.Schema.Types.Mixed, default: {}}
-});
+}, {minimize: false});
 StoreSchema.pre('save', function(next) {
     if(this.isNew) {
       console.log('new');
