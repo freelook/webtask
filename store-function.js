@@ -7,7 +7,6 @@ const app = express();
 const router = express.Router();
 const mongoose = require('mongoose');
 const StoreSchema = mongoose.Schema({
-  _id: mongoose.Schema.ObjectId,
   updated: {type: Date, default: Date.now},
   state: {type: String, default: 'new'},
   payload: mongoose.Schema.Types.Mixed
