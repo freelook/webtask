@@ -11,6 +11,15 @@ const StoreSchema = mongoose.Schema({
   state: {type: String, default: 'new'},
   payload: {type: mongoose.Schema.Types.Mixed, default: {}}
 });
+StoreSchema.pre('save', function(next) {
+    if(this.isNew) {
+      console.log('new');
+    }
+    if(this.isModified('state')) {
+      console.log('state');
+    }
+    next();
+});
 const validateMiddleware = (req, res, next) => {
   if(req.webtaskContext.secrets.token !== req.query.token) {
      const errMsgToken = 'No token.';
