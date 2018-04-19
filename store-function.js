@@ -37,6 +37,7 @@ StoreSchema.pre('save', function(next) {
     }
     if(this.isModified('state')) {
       console.log('state');
+      console.log(this.state);
     }
     next();
 });
