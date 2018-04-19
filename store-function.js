@@ -31,6 +31,17 @@ const StoreSchema = mongoose.Schema({
   state: {type: String, default: 'new'},
   payload: {type: mongoose.Schema.Types.Mixed, default: {}}
 }, {minimize: false});
+StoreSchema.pre('save', function(_next) {
+  console.log('1', item.state);
+  // var item = this;
+  // if(item.state) {
+  //   if(item.isNew || item.isModified('state')) {
+  //     console.log('2');
+  //     streamer(req.webtaskContext)(item, ()=>{});
+  //   }
+  // }
+  _next();
+});
 const validateMiddleware = (req, res, next) => {
   if(req.webtaskContext.secrets.token !== req.query.token) {
      const errMsgToken = 'No token.';
@@ -52,11 +63,6 @@ const validateMiddleware = (req, res, next) => {
   return next();
 };
 const mongoDbMiddleware = (req, res, next) => {
-  StoreSchema.pre('save', function(_next) {
-    console.log('1', item.state);
-
-    _next();
-  });
   return mongoose.connect(req.db, (err) => {
     req.Store = mongoose.model('Store', StoreSchema);
     next(err);
