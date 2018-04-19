@@ -1,3 +1,4 @@
+var webtaskContext;
 const _ = require('lodash');
 const express = require('express');
 const wt = require('webtask-tools');
@@ -22,7 +23,7 @@ const loader = (params, next) => {
 };
 const streamer = (context) => (item, next) => loader({
     method: 'post',
-    url:context.secrets.notificationFunction,
+    url: context.secrets.notificationFunction,
     qs: {token: context.secrets.token, topic: item.state},
     json: item
 });
@@ -37,7 +38,9 @@ StoreSchema.pre('save', function (next) {
 });
 StoreSchema.post('save', function(item, next) {
   if(!!this.isStreamRequired) {
-    //streamer(req.webtaskContext)(item, ()=>{});
+    if(!!webtaskContext) {
+      streamer(webtaskContext)(item, ()=>{});
+    }
   }
   next();
 });
@@ -58,6 +61,7 @@ const validateMiddleware = (req, res, next) => {
      res.status(400).send(errMsgDBEmpty);
      return next(errMsgDBEmpty);
   }
+  webtaskContext = req.webtaskContext;
   req.db = db;
   return next();
 };
