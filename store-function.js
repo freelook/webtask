@@ -69,7 +69,6 @@ router
       if(!!item) {
         _.merge(item, {
           updated: Date.now(),
-          state: 'new',
           payload: req.body
         });
         return item.save(next);
