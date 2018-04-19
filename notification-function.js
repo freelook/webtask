@@ -2,7 +2,8 @@ const request = require('request');
 const as = require('async');
 
 const loader = (params, next) => {
-  request.get({
+  request({
+    method: (params.method || 'get').toUpperCase(),
     url: params.url,
     qs: params.qs
   }, (err, res, body) => {
@@ -28,8 +29,10 @@ module.exports = function(context, cb) {
       qs: {token: context.secrets.token}
     }, next),
     (msg, next) => {
-      //todo: publish
-      next(null, msg);
+      if(msg && msg.payload) {
+        return loader
+      }
+      return next(null, msg);
     },
     (msg, next) => loader({
       url: `${context.secrets.queueFunction}/ack/${msg.ack}`,
