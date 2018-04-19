@@ -19,7 +19,7 @@ const loader = (params, next) => {
       return next(err || body || 'No body.');
     }
     //const msg = JSON.parse(body);
-    return next(null, msg);
+    return next(null, body);
   });
 };
 const streamer = (item, next) => loader({
