@@ -65,7 +65,7 @@ router
 .patch('/:id', function (req, res) {
   as.waterfall([
     (next) => req.Store.findById(req.params.id, next),
-    (item, next) => { 
+    (item, next) => {
       if(!!item) {
         item = _.merge(item, {
           updated: Date.now(),
