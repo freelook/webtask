@@ -39,9 +39,7 @@ StoreSchema.pre('save', function (next) {
 });
 StoreSchema.post('save', function(item, next) {
   if(!!this.isStreamRequired) {
-    if(!!webtaskContext) {
-      //streamer(webtaskContext)(item, ()=>{});
-    }
+    streamer(item, ()=>{});
   }
   next();
 });
