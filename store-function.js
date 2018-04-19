@@ -67,10 +67,11 @@ router
     (next) => req.Store.findById(req.params.id, next),
     (item, next) => {
       if(!!item) {
-        _.merge(item, {
-          updated: Date.now(),
-          payload: req.body
-        });
+        item.payload = req.body;
+        // _.merge(item, {
+        //   updated: Date.now(),
+        //   payload: req.body
+        // });
         return item.save(next);
       }
       return next();
