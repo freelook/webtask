@@ -26,7 +26,6 @@ module.exports = function(context, cb) {
   if(!_.get(context, 'body._id')) {
     return cb('No _id provided.');
   }
-  console.log('qq', context.body);
   return as.waterfall([
    (next) => loader({
       url: `${context.secrets.queueFunction}/add/${context.body._id}`,
