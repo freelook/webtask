@@ -37,7 +37,6 @@ module.exports = function(context, cb) {
   if(!context.query.topic) {
     return cb('No topic provided.');
   }
-  console.log('stream', context.body);
   return as.waterfall([
    (next) => context.storage.get(next),
    (storage, next) => notifier(context)({
