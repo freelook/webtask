@@ -1,6 +1,6 @@
 const request = require('request');
 const as = require('async');
-const _ = require('lodash'); 
+const _ = require('lodash');
 
 const loader = (params, next) => {
   request({
