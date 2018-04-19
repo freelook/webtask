@@ -69,7 +69,7 @@ router
     (item, next) => {
       if(!!item) {
         item.updated = Date.now();
-        item.payload = _.clone(_.merge(item.payload, req.body));
+        Object.assign(item.payload, req.body);
         return item.save(next);
       }
       return next();
