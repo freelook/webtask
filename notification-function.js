@@ -16,6 +16,15 @@ const loader = (params, next) => {
   });
 };
 
+const notifier = (context) => (params, next) => as.map(
+  params.sources,
+  (source, next) => loader({
+    url: context.secrets[source],
+    json: context.body
+  }, next), 
+  next
+);
+
 /**
 * @param context {WebtaskContext}
 */
