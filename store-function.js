@@ -77,6 +77,25 @@ router
   ],
   (err, data)=> responseHandler(err, res, data));
 })
+.put('/:id', function (req, res) {
+  as.waterfall([
+    (next) => req.Store.findById(req.params.id, next),
+    (item, next) => {
+      if(!!item) {
+        item.updated = Date.now();
+        if(req.body.state) {
+          item.state = req.body.state;
+        }
+        if(req.body.payload) {
+         item.payload = req.body.payload;
+        }
+        return item.save(next);
+      }
+      return next();
+    }
+  ],
+  (err, data)=> responseHandler(err, res, data));
+})
 .delete('/:id', function (req, res) {
   as.waterfall([
     (next) => req.Store.findOneAndRemove(req.params.id, next)
