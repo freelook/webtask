@@ -23,6 +23,9 @@ module.exports = function(context, cb) {
   if(context.secrets.token !== context.query.token) {
     return cb('No token.');
   }
+  if(!context.query.topic) {
+    return cb('No topic provided.');
+  }
   return as.waterfall([
    (next) => context.storage.get(next),
    (storage, next) => loader({
