@@ -33,7 +33,11 @@ module.exports = function(context, cb) {
       if(msg && msg.payload) {
         return loader({
           method: 'post',
-          url: context.secrets.storeFunction,
+          url: `${context.secrets.storeFunction}/${msg.payload}`,
+          qs: {token: context.secrets.token},
+          json: {
+            state: 'scheduled'
+          }
         }, () => next(null, msg));
       }
       return next(null, msg);
