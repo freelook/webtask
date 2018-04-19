@@ -1,5 +1,6 @@
 var webtaskContext;
 const _ = require('lodash');
+const request = require('request');
 const express = require('express');
 const wt = require('webtask-tools');
 const bodyParser = require('body-parser');
