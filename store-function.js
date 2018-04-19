@@ -32,14 +32,13 @@ const StoreSchema = mongoose.Schema({
   payload: {type: mongoose.Schema.Types.Mixed, default: {}}
 }, {minimize: false});
 StoreSchema.pre('save', function(next) {
-    if(this.isNew) {
-      console.log('new');
+  var item = this;
+  if(item.state) {
+    if(item.isNew || item.isModified('state')) {
+      streamer(item, ()=>{});
     }
-    if(this.isModified('state')) {
-      console.log('state');
-      console.log(this.state);
-    }
-    next();
+  }
+  next();
 });
 const validateMiddleware = (req, res, next) => {
   if(req.webtaskContext.secrets.token !== req.query.token) {
