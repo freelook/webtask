@@ -2,6 +2,7 @@ const request = require('request');
 const as = require('async');
 
 const loader = (params, next) => {
+  console.log('load', params);
   request({
     method: (params.method || 'get').toUpperCase(),
     url: params.url,
