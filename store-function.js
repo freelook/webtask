@@ -25,7 +25,7 @@ const streamer = (next) => loader({
     url: context.secrets[source],
     qs: {token: context.secrets.token},
     json: context.body
-}); 
+});
 const StoreSchema = mongoose.Schema({
   updated: {type: Date, default: Date.now},
   state: {type: String, default: 'new'},
