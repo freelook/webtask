@@ -20,26 +20,17 @@ const loader = (params, next) => {
     return next(null, msg);
   });
 };
-const streamer = (context, next) => loader({
+const streamer = (context) => (item, next) => loader({
     method: 'post',
     url: context.secrets.notificationFunction,
     qs: {token: context.secrets.token},
-    json: context.body
+    json: item
 });
 const StoreSchema = mongoose.Schema({
   updated: {type: Date, default: Date.now},
   state: {type: String, default: 'new'},
   payload: {type: mongoose.Schema.Types.Mixed, default: {}}
 }, {minimize: false});
-StoreSchema.pre('save', function(next) {
-  var item = this;
-  if(item.state) {
-    if(item.isNew || item.isModified('state')) {
-      streamer(item, ()=>{});
-    }
-  }
-  next();
-});
 const validateMiddleware = (req, res, next) => {
   if(req.webtaskContext.secrets.token !== req.query.token) {
      const errMsgToken = 'No token.';
@@ -61,6 +52,15 @@ const validateMiddleware = (req, res, next) => {
   return next();
 };
 const mongoDbMiddleware = (req, res, next) => {
+  StoreSchema.pre('save', function(next) {
+    var item = this;
+    if(item.state) {
+      if(item.isNew || item.isModified('state')) {
+        streamer(req.webtaskContext)(item, ()=>{});
+      }
+    }
+    next();
+  });
   return mongoose.connect(req.db, (err) => {
     req.Store = mongoose.model('Store', StoreSchema);
     next(err);
