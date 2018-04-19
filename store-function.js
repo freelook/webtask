@@ -83,10 +83,10 @@ router
     (item, next) => {
       if(!!item) {
         item.updated = Date.now();
-        if(req.body.state) {
+        if(!!req.body.state) {
           item.state = req.body.state;
         }
-        if(req.body.payload) {
+        if(!!req.body.payload) {
          item.payload = req.body.payload;
         }
         return item.save(next);
