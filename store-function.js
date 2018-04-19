@@ -38,7 +38,7 @@ StoreSchema.pre('save', function (next) {
 StoreSchema.post('save', function(item, next) {
   console.log('1', item.state);
   if(!!this.isStreamRequired) {
-    console.log('2');
+    console.log(item);
     //streamer(req.webtaskContext)(item, ()=>{});
   }
   next();
