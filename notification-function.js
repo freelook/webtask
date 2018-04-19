@@ -17,7 +17,7 @@ const loader = (params, next) => {
 };
 
 const notifier = (context) => (params, next) => as.map(
-  params.topics,
+  params.sources,
   (source, next) => loader({
     method: 'post',
     url: context.secrets[source],
@@ -39,7 +39,7 @@ module.exports = function(context, cb) {
   return as.waterfall([
    (next) => context.storage.get(next),
    (storage, next) => notifier(context)({
-     topics: storage[context.query.topic] || []
+     sources: storage[context.query.topic] || []
    }, next)
   ], cb);
 };
