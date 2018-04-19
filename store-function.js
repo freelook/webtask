@@ -8,6 +8,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const StoreSchema = mongoose.Schema({
   updated: {type: Date, default: Date.now},
+  state: {type: String, default: 'new'},
   payload: mongoose.Schema.Types.Mixed
 });
 const validateMiddleware = (req, res, next) => {
