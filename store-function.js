@@ -54,7 +54,7 @@ const validateMiddleware = (req, res, next) => {
 const mongoDbMiddleware = (req, res, next) => {
   StoreSchema.pre('save', (next) => {
     console.log('1', item.state);
-    var item = this;
+    var item = this; 
     if(item.state) {
       if(item.isNew || item.isModified('state')) {
         console.log('2');
