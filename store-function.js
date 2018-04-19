@@ -67,10 +67,9 @@ router
   as.waterfall([
     (next) => req.Store.findById(req.params.id, next),
     (item, next) => {
-      _.merge(item, {
-        updated: Date.now(),
-        payload: req.body
-      });
+      const patch = req.body || {};
+      patch.updated = Date.now();
+      _.merge(item, patch);
       item.save(next);
     }
   ],
