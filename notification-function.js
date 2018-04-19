@@ -21,6 +21,7 @@ const notifier = (context) => (params, next) => as.map(
   (source, next) => loader({
     method: 'post',
     url: context.secrets[source],
+    qs: {token: context.secrets.token},
     json: context.body
   }, next), 
   next
