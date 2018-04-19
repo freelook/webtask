@@ -20,9 +20,9 @@ const loader = (params, next) => {
     return next(null, msg);
   });
 };
-const streamer = (next) => loader({
+const streamer = (context, next) => loader({
     method: 'post',
-    url: context.secrets[source],
+    url: context.secrets.notificationFunction,
     qs: {token: context.secrets.token},
     json: context.body
 });
