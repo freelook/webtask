@@ -6,6 +6,26 @@ const as = require('async');
 const app = express();
 const router = express.Router();
 const mongoose = require('mongoose');
+const loader = (params, next) => {
+  request({
+    method: (params.method || 'get').toUpperCase(),
+    url: params.url,
+    qs: params.qs,
+    json: params.json
+  }, (err, res, body) => {
+    if(!!err || res.statusCode !== 200 || !body) {
+      return next(err || body || 'No body.');
+    }
+    const msg = JSON.parse(body);
+    return next(null, msg);
+  });
+};
+const streamer = (next) => loader({
+    method: 'post',
+    url: context.secrets[source],
+    qs: {token: context.secrets.token},
+    json: context.body
+}); 
 const StoreSchema = mongoose.Schema({
   updated: {type: Date, default: Date.now},
   state: {type: String, default: 'new'},
