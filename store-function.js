@@ -22,8 +22,8 @@ const loader = (params, next) => {
 };
 const streamer = (context) => (item, next) => loader({
     method: 'post',
-    url: context.secrets.notificationFunction,
-    qs: {token: context.secrets.token},
+    url:context.secrets.notificationFunction,
+    qs: {token: context.secrets.token, topic: item.state},
     json: item
 });
 const StoreSchema = mongoose.Schema({
