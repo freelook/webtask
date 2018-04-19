@@ -67,10 +67,13 @@ router
   as.waterfall([
     (next) => req.Store.findById(req.params.id, next),
     (item, next) => {
-      const patch = req.body || {};
-      patch.updated = Date.now();
-      _.merge(item, patch);
-      item.save(next);
+      if(!!item) {
+        const patch = req.body || {};
+        patch.updated = Date.now();
+        _.merge(item, patch);
+        return item.save(next);
+      }
+      return next();
     }
   ],
   (err, data)=> responseHandler(err, res, data));
