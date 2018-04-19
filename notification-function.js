@@ -17,7 +17,7 @@ const loader = (params, next) => {
 };
 
 const notifier = (context) => (params, next) => as.map(
-  params.sources,
+  params.topics,
   (source, next) => loader({
     url: context.secrets[source],
     json: context.body
@@ -37,26 +37,8 @@ module.exports = function(context, cb) {
   }
   return as.waterfall([
    (next) => context.storage.get(next),
-   (storage, next) => loader({
-      url: `${context.secrets.queueFunction}/get`,
-      qs: {token: context.secrets.token}
-    }, next),
-    (msg, next) => {
-      if(msg && msg.payload) {
-        return loader({
-          method: 'patch',
-          url: `${context.secrets.storeFunction}/${msg.payload}`,
-          qs: {token: context.secrets.token},
-          json: {
-            state: 'scheduled'
-          }
-        }, () => next(null, msg));
-      }
-      return next(null, msg);
-    },
-    (msg, next) => loader({
-      url: `${context.secrets.queueFunction}/ack/${msg.ack}`,
-      qs: {token: context.secrets.token}
-    }, next)
+   (storage, next) => notifier(context)({
+     topics: storage[context.query.topic] || []
+   }, next)
   ], cb);
 };
