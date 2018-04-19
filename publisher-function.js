@@ -5,7 +5,7 @@ const poster = (params, next) => {
   request.post({
     url: params.url,
     qs: params.qs,
-    json: params.body
+    json: params.json
   }, (err, res, body) => {
     if(!!err || res.statusCode !== 200 || !body) {
       return next(err || body || 'No body.');
@@ -19,7 +19,7 @@ const publisher = (context) => (params, next) => as.map(
   params.sources,
   (source, next) => poster({
     url: context.secrets[source],
-    body: context.body
+    json: context.body
   }, next), 
   next
 );
