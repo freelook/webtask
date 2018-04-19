@@ -71,6 +71,7 @@ router
         const patch = req.body || {};
         patch.updated = Date.now();
         _.merge(item, patch);
+        console.log(item);
         return item.save(next);
       }
       return next();
