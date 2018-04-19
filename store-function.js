@@ -22,10 +22,10 @@ const loader = (params, next) => {
     return next(null, msg);
   });
 };
-const streamer = (context) => (item, next) => loader({
+const streamer = (item, next) => loader({
     method: 'post',
-    url: context.secrets.notificationFunction,
-    qs: {token: context.secrets.token, topic: item.state},
+    url: webtaskContext.secrets.notificationFunction,
+    qs: {token: webtaskContext.secrets.token, topic: item.state},
     json: item
 });
 const StoreSchema = mongoose.Schema({
