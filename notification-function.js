@@ -12,8 +12,8 @@ const loader = (params, next) => {
     if(!!err || res.statusCode !== 200 || !body) {
       return next(err || body || 'No body.');
     }
-    const msg = JSON.parse(body);
-    return next(null, msg);
+    //const msg = JSON.parse(body);
+    return next(null, body);
   });
 };
 
@@ -38,7 +38,6 @@ module.exports = function(context, cb) {
   if(!context.query.topic) {
     return cb('No topic provided.');
   }
-  console.log('body', context.body); return cb(null, 'test');
   return as.waterfall([
    (next) => context.storage.get(next),
    (storage, next) => notifier(context)({
