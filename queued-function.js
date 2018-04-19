@@ -1,5 +1,6 @@
 const request = require('request');
 const as = require('async');
+const _ = require('lodash'); 
 
 const loader = (params, next) => {
   request({
@@ -23,27 +24,26 @@ module.exports = function(context, cb) {
   if(context.secrets.token !== context.query.token) {
     return cb('No token.');
   }
+  if(!_.get(context, 'body._id')) {
+    return cb('No _id provided.');
+  }
   return as.waterfall([
    (next) => loader({
-      url: `${context.secrets.queueFunction}/add/`,
+      url: `${context.secrets.queueFunction}/add/${context.body._id}`,
       qs: {token: context.secrets.token}
     }, next),
     (msg, next) => {
       if(msg && msg.payload) {
         return loader({
           method: 'patch',
-          url: `${context.secrets.storeFunction}/${msg.payload}`,
+          url: `${context.secrets.storeFunction}/${context.body._id}`,
           qs: {token: context.secrets.token},
           json: {
-            state: 'scheduled'
+            state: 'queued'
           }
         }, () => next(null, msg));
       }
       return next(null, msg);
-    },
-    (msg, next) => loader({
-      url: `${context.secrets.queueFunction}/ack/${msg.ack}`,
-      qs: {token: context.secrets.token}
-    }, next)
+    }
   ], cb);
 };
