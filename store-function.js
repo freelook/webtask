@@ -54,13 +54,7 @@ const validateMiddleware = (req, res, next) => {
 const mongoDbMiddleware = (req, res, next) => {
   StoreSchema.pre('save', function(_next) {
     console.log('1', item.state);
-    var item = this;
-    if(item.state) {
-      if(item.isNew || item.isModified('state')) {
-        console.log('2');
-        streamer(req.webtaskContext)(item, ()=>{});
-      }
-    }
+
     _next();
   });
   return mongoose.connect(req.db, (err) => {
