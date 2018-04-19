@@ -24,8 +24,7 @@ module.exports = function(context, cb) {
     return cb('No token.');
   }
   return as.waterfall([
-   (next) => context.storage.get(next),
-   (storage, next) => loader({
+   (next) => loader({
       url: `${context.secrets.queueFunction}/get`,
       qs: {token: context.secrets.token}
     }, next),
