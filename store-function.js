@@ -31,13 +31,15 @@ const StoreSchema = mongoose.Schema({
   state: {type: String, default: 'new'},
   payload: {type: mongoose.Schema.Types.Mixed, default: {}}
 }, {minimize: false});
+StoreSchema.pre('save', function (next) {
+  this.isStreamRequired = !!this.state && (this.isNew || this.isModified('state'));
+  next();
+});
 StoreSchema.post('save', function(item, next) {
-  console.log('1', item.state);
-  if(!!item.state) {
-    if(this.isNew || this.isModified('state')) {
-      console.log('2');
-      //streamer(req.webtaskContext)(item, ()=>{});
-    }
+  console.log('1', item.state); 
+  if(!!this.isStreamRequired) {
+    console.log('2');
+    //streamer(req.webtaskContext)(item, ()=>{});
   }
   next();
 });
