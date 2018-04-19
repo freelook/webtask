@@ -65,13 +65,12 @@ router
 .patch('/:id', function (req, res) {
   as.waterfall([
     (next) => req.Store.findById(req.params.id, next),
-    (item, next) => {
+    (item, next) => { 
       if(!!item) {
-        item.payload = req.body;
-        // _.merge(item, {
-        //   updated: Date.now(),
-        //   payload: req.body
-        // });
+        item = _.merge(item, {
+          updated: Date.now(),
+          payload: req.body
+        });
         return item.save(next);
       }
       return next();
