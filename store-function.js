@@ -1,4 +1,4 @@
-var webtaskContext, db;
+var webtaskContext, dbConnection;
 const _ = require('lodash');
 const request = require('request');
 const express = require('express');
@@ -64,8 +64,8 @@ const validateMiddleware = (req, res, next) => {
   return next();
 };
 const mongoDbMiddleware = (req, res, next) => {
-  if(!db) {
-    db = mongoose.connect(req.db);
+  if(!dbConnection) {
+    dbConnection = mongoose.connect(req.db);
   }
   req.Store = mongoose.model('Store', StoreSchema);
   next();
