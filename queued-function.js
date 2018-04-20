@@ -12,6 +12,8 @@ const loader = (params, next) => {
     if(!!err || res.statusCode !== 200 || !body) {
       return next(err || body || 'No body.');
     }
+    var msg = body;
+    try {msg = typeof body === 'string' ? JSON.parse(body) : body;} catch(e) {}
     return next(null, body);
   });
 };
@@ -31,13 +33,13 @@ module.exports = function(context, cb) {
       url: `${context.secrets.queueFunction}/add/${context.body._id}`,
       qs: {token: context.secrets.token}
     }, next),
-    (msg, next) => {console.log('t', typeof msg),loader({
+    (msg, next) => loader({
       method: 'put',
       url: `${context.secrets.storeFunction}/${context.body._id}`,
       qs: {token: context.secrets.token},
       json: {
         state: 'queued'
       }
-    }, () => next(null, msg))}
+    }, () => next(null, msg))
   ], cb);
 };
