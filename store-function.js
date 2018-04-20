@@ -64,7 +64,7 @@ const validateMiddleware = (req, res, next) => {
   return next();
 };
 const mongoDbMiddleware = (req, res, next) => {
-  return mongoose.createConnection(req.db, (err) => {
+  return mongoose.connect(req.db, (err) => {
     req.Store = mongoose.model('Store', StoreSchema);
     next(err);
   });
