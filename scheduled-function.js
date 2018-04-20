@@ -28,7 +28,6 @@ module.exports = function(context, cb) {
       qs: {token: context.secrets.token}
     }, next),
     (msg, next) => {
-      console.log('t', typeof msg);
       if(msg && msg.payload) {      
         console.log('scheduled', msg.payload);
         return loader({
