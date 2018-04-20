@@ -22,7 +22,7 @@ const validateMiddleware = (req, res, next) => {
 const mongoDbQueueMiddleware = (req, res, next) => {
   mongodb.MongoClient.connect(req.webtaskContext.secrets.mongo, function(err, db) {
     req.queue = mongoDbQueue(db, req.params.qq, {
-      visibility: 0,
+      visibility: 1,
       delay: 0,
       maxRetries: 5,
       deadQueue: mongoDbQueue(db, `${req.params.qq}-dead`)
