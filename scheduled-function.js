@@ -30,6 +30,9 @@ module.exports = function(context, cb) {
       qs: {token: context.secrets.token}
     }, next),
     (msg, next) => {
+      
+    },
+    (msg, next) => {
       if(msg && msg.payload) {      
         return loader({
           method: 'put',
