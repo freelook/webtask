@@ -31,7 +31,6 @@ module.exports = function(context, cb) {
     }, next),
     (msg, next) => {
       if(msg && msg.payload) {      
-        console.log('scheduled', msg.payload);
         return loader({
           method: 'put',
           url: `${context.secrets.storeFunction}/${msg.payload}`,
