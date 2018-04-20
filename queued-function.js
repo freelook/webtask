@@ -31,13 +31,13 @@ module.exports = function(context, cb) {
       url: `${context.secrets.queueFunction}/add/${context.body._id}`,
       qs: {token: context.secrets.token}
     }, next),
-    (msg, next) => console.log('t', typeof msg),loader({
+    (msg, next) => {console.log('t', typeof msg),loader({
       method: 'put',
       url: `${context.secrets.storeFunction}/${context.body._id}`,
       qs: {token: context.secrets.token},
       json: {
         state: 'queued'
       }
-    }, () => next(null, msg))
+    }, () => next(null, msg))}
   ], cb);
 };
