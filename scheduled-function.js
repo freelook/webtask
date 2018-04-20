@@ -35,7 +35,7 @@ module.exports = function(context, cb) {
    (storage, next) => loader({
       url: `${context.secrets.queueFunction}/get`,
       qs: {token: context.secrets.token}
-    }, (err, msg) => ({storage:storage, msg:msg})),
+    }, (err, msg) => next(null, {storage:storage, msg:msg})),
     (params, next) => {
       var last = _.get(params.storage, 'last');
       var current = _.get(params.msg, 'payload');
