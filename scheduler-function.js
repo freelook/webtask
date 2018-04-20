@@ -14,7 +14,10 @@ const loader = (params, next) => request.get({
 
 const worker = (context) => (params, next) => as.map(
   params.tasks,
-  (task, next) => loader({url: context.secrets[task]}, next), 
+  (task, next) => loader({
+    url: context.secrets[task], 
+    qs: {token: context.secrets.token}
+  }, next), 
   next
 );
 
@@ -44,8 +47,8 @@ const ddHandler = (context) => (storage, next) => {
 * @param context {WebtaskContext}
 */
 module.exports = function(context, cb) {
-  if(context.secrets.token !== _.get(context, 'body.container')) {
-    return cb('No token.');
+  if(context.secrets.container !== _.get(context, 'body.container')) {
+    return cb('No container token.');
   }
   return as.waterfall([
    (next) => context.storage.get(next),
