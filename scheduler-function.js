@@ -45,6 +45,7 @@ const ddHandler = (context) => (storage, next) => {
 */
 module.exports = function(context, cb) {
   console.log(_.get(context, 'body.container'));
+  console.log(context.secrets.token);
   if(context.secrets.token !== _.get(context, 'body.container')) {
     return cb('No token.');
   }
