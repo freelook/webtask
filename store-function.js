@@ -1,4 +1,4 @@
-var webtaskContext;
+var webtaskContext, dbConnection;
 const _ = require('lodash');
 const request = require('request');
 const express = require('express');
@@ -8,7 +8,6 @@ const as = require('async');
 const app = express();
 const router = express.Router();
 const mongoose = require('mongoose');
-const dbConnection = mongoose.connect(req.db);
 const loader = (params, next) => {
   request({
     method: (params.method || 'get').toUpperCase(),
@@ -65,6 +64,7 @@ const validateMiddleware = (req, res, next) => {
   return next();
 };
 const mongoDbMiddleware = (req, res, next) => {
+  dbConnection = mongoose.connect(req.db);
   req.Store = mongoose.model('Store', StoreSchema);
   next();
 };
