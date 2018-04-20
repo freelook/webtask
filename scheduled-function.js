@@ -1,5 +1,6 @@
 const request = require('request');
 const as = require('async');
+const _ = require('lodash');
 
 const loader = (params, next) => {
   request({
@@ -25,29 +26,41 @@ module.exports = function(context, cb) {
     return cb('No token.');
   }
   return as.waterfall([
-   (next) => loader({
+   (next) => context.storage.get(next),
+   (storage, next) => loader({
       url: `${context.secrets.queueFunction}/get`,
       qs: {token: context.secrets.token}
-    }, next),
-    (msg, next) => {
-      
-    },
-    (msg, next) => {
-      if(msg && msg.payload) {      
-        return loader({
-          method: 'put',
-          url: `${context.secrets.storeFunction}/${msg.payload}`,
-          qs: {token: context.secrets.token},
-          json: {
-            state: 'scheduled'
-          }
-        }, () => next(null, msg));
+    }, (err, msg) => ({storage:storage, msg:msg})),
+    (params, next) => {
+      var last = _.get(params.storage, 'data.last');
+      var current = _.get(params.msg, 'payload');
+      if(!current) {
+        return next('No item payload provided.', params);
       }
-      return next(null, msg);
+      if(last && current && last === current) {
+        return next('Item still in progress.', params);
+      }
+      return next(null, param);
     },
-    (msg, next) => loader({
-      url: `${context.secrets.queueFunction}/ack/${msg.ack}`,
+    (param, next) => loader({
+        method: 'put',
+        url: `${context.secrets.storeFunction}/${param.msg.payload}`,
+        qs: {token: context.secrets.token},
+        json: {
+          state: 'scheduled'
+        }
+    }, () => next(null, param)),
+    (param, next) => loader({
+      url: `${context.secrets.queueFunction}/ack/${param.msg.ack}`,
       qs: {token: context.secrets.token}
-    }, next)
-  ], cb);
+    }, () => next(null, param))
+  ], (err, result) => {
+    if(!!err && +_.get(params, 'msg.tries', 0) > 10 ) {
+      loader({
+        url: `${context.secrets.queueFunction}/ack/${param.msg.ack}`,
+        qs: {token: context.secrets.token}
+      }, () => next(null, param));
+    }
+    return cb(null);
+  });
 };
