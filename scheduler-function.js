@@ -9,8 +9,7 @@ const loader = (params, next) => request.get({
     if(!!err || res.statusCode !== 200 || !body) {
       return next(err || body || 'No body.');
     }
-    const msg = JSON.parse(body);
-    return next(null, msg);
+    return next(null, body);
 });
 
 const worker = (context) => (params, next) => as.map(
