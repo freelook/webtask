@@ -1,49 +1,58 @@
 const request = require('request');
 const as = require('async');
+const _ = require('lodash');
 
-const loader = (params, next) => {
-  request({
-    method: (params.method || 'get').toUpperCase(),
+const loader = (params, next) => request.get({
     url: params.url,
-    qs: params.qs,
-    json: params.json
+    qs: params.qs
   }, (err, res, body) => {
     if(!!err || res.statusCode !== 200 || !body) {
       return next(err || body || 'No body.');
     }
     const msg = JSON.parse(body);
     return next(null, msg);
-  });
+});
+
+const worker = (context) => (params, next) => as.map(
+  params.tasks,
+  (task, next) => loader({url: context.secrets[task]}, next), 
+  next
+);
+
+const mmHandler = (context) => (storage, next) => {
+  storage.count.mm += 1;
+  return worker(context)({tasks: storage.tasks.mm}, (err, result) => next(null, storage));
+};
+
+const hhHandler = (context) => (storage, next) => {
+  if(storage.count.mm >= 60) {
+    storage.count.mm = 0;
+    storage.count.hh += 1;
+    return worker(context)({tasks: storage.tasks.hh}, (err, result) => next(null, storage));
+  }
+  return next(null, storage);
+};
+
+const ddHandler = (context) => (storage, next) => {
+  if(storage.count.hh >= 24) {
+    storage.count.hh = 0;
+    return worker(context)({tasks: storage.tasks.dd}, (err, result) => next(null, storage));
+  }
+  return next(null, storage);
 };
 
 /**
 * @param context {WebtaskContext}
 */
 module.exports = function(context, cb) {
-  if(context.secrets.token !== context.query.token) {
+  if(context.secrets.token !== _.get(context, 'body.container')) {
     return cb('No token.');
   }
   return as.waterfall([
-   (next) => loader({
-      url: `${context.secrets.queueFunction}/get`,
-      qs: {token: context.secrets.token}
-    }, next),
-    (msg, next) => {
-      if(msg && msg.payload) {
-        return loader({
-          method: 'put',
-          url: `${context.secrets.storeFunction}/${msg.payload}`,
-          qs: {token: context.secrets.token},
-          json: {
-            state: 'scheduled'
-          }
-        }, () => next(null, msg));
-      }
-      return next(null, msg);
-    },
-    (msg, next) => loader({
-      url: `${context.secrets.queueFunction}/ack/${msg.ack}`,
-      qs: {token: context.secrets.token}
-    }, next)
+   (next) => context.storage.get(next),
+   (storage, next) => mmHandler(context)(storage, next),
+   (storage, next) => hhHandler(context)(storage, next),
+   (storage, next) => ddHandler(context)(storage, next),
+   (storage, next) => context.storage.set(storage, next)
   ], cb);
 };
