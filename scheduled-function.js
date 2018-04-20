@@ -18,6 +18,11 @@ const loader = (params, next) => {
   });
 };
 
+const ack = (context) => (params, next) => loader({
+    url: `${context.secrets.queueFunction}/ack/${params.msg.ack}`,
+    qs: {token: context.secrets.token}
+}, next);
+
 /**
 * @param context {WebtaskContext}
 */
@@ -32,7 +37,7 @@ module.exports = function(context, cb) {
       qs: {token: context.secrets.token}
     }, (err, msg) => ({storage:storage, msg:msg})),
     (params, next) => {
-      var last = _.get(params.storage, 'data.last');
+      var last = _.get(params.storage, 'last');
       var current = _.get(params.msg, 'payload');
       if(!current) {
         return next('No item payload provided.', params);
@@ -40,27 +45,19 @@ module.exports = function(context, cb) {
       if(last && current && last === current) {
         return next('Item still in progress.', params);
       }
-      return next(null, param);
+      params.storage.last = current;
+      return next(null, params);
     },
-    (param, next) => loader({
+    (params, next) => context.storage.set(params.storage, () => next(null, params)),
+    (params, next) => loader({
         method: 'put',
-        url: `${context.secrets.storeFunction}/${param.msg.payload}`,
+        url: `${context.secrets.storeFunction}/${params.msg.payload}`,
         qs: {token: context.secrets.token},
         json: {
           state: 'scheduled'
         }
-    }, () => next(null, param)),
-    (param, next) => loader({
-      url: `${context.secrets.queueFunction}/ack/${param.msg.ack}`,
-      qs: {token: context.secrets.token}
-    }, () => next(null, param))
-  ], (err, result) => {
-    if(!!err && +_.get(params, 'msg.tries', 0) > 10 ) {
-      loader({
-        url: `${context.secrets.queueFunction}/ack/${param.msg.ack}`,
-        qs: {token: context.secrets.token}
-      }, () => next(null, param));
-    }
-    return cb(null);
+    }, () => next(null, params))
+  ], (err, params) => {
+    return cb(null, {err: err, params: params});
   });
 };
