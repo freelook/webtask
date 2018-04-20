@@ -1,6 +1,6 @@
 const request = require('request');
 const as = require('async');
-const _ = require('lodash');
+const _ = require('lodash'); 
 
 const loader = (params, next) => {
   request({
@@ -31,18 +31,13 @@ module.exports = function(context, cb) {
       url: `${context.secrets.queueFunction}/add/${context.body._id}`,
       qs: {token: context.secrets.token}
     }, next),
-    (msg, next) => {
-      if(msg && msg.payload) {
-        return loader({
-          method: 'put',
-          url: `${context.secrets.storeFunction}/${context.body._id}`,
-          qs: {token: context.secrets.token},
-          json: {
-            state: 'queued'
-          }
-        }, () => next(null, msg));
+    (msg, next) => loader({
+      method: 'put',
+      url: `${context.secrets.storeFunction}/${context.body._id}`,
+      qs: {token: context.secrets.token},
+      json: {
+        state: 'queued'
       }
-      return next(null, msg);
-    }
+    }, () => next(null, msg))
   ], cb);
 };
