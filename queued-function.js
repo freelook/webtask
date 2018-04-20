@@ -14,7 +14,7 @@ const loader = (params, next) => {
     }
     var msg = body;
     try {msg = typeof body === 'string' ? JSON.parse(body) : body;} catch(e) {}
-    return next(null, body);
+    return next(null, msg);
   });
 };
 
