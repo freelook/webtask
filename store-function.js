@@ -65,7 +65,7 @@ const validateMiddleware = (req, res, next) => {
 };
 const mongoDbMiddleware = (req, res, next) => {
   dbConnection = mongoose.connect(req.db);
-  req.Store = mongoose.model('Store', StoreSchema);
+  req.Store = dbConnection.model('Store', StoreSchema);
   next();
 };
 const responseHandler = (err, res, data) => {
