@@ -29,7 +29,7 @@ module.exports = function(context, cb) {
       qs: {token: context.secrets.token}
     }, next),
     (msg, next) => {
-      if(msg && msg.payload) { 
+      if(msg && msg.payload) {
         return loader({
           method: 'put',
           url: `${context.secrets.storeFunction}/${msg.payload}`,
