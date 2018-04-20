@@ -31,7 +31,7 @@ module.exports = function(context, cb) {
       url: `${context.secrets.queueFunction}/add/${context.body._id}`,
       qs: {token: context.secrets.token}
     }, next),
-    (msg, next) => loader({
+    (msg, next) => console.log('t', typeof msg),loader({
       method: 'put',
       url: `${context.secrets.storeFunction}/${context.body._id}`,
       qs: {token: context.secrets.token},
