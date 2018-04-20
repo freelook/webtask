@@ -11,7 +11,9 @@ const loader = (params, next) => {
     if(!!err || res.statusCode !== 200 || !body) {
       return next(err || body || 'No body.');
     }
-    return next(null, body);
+    var msg = body;
+    try {msg = typeof body === 'string' ? JSON.parse(body) : body;} catch(e) {}
+    return next(null, msg);
   });
 };
 
