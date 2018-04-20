@@ -44,6 +44,7 @@ const ddHandler = (context) => (storage, next) => {
 * @param context {WebtaskContext}
 */
 module.exports = function(context, cb) {
+  console.log(_.get(context, 'body.container'));
   if(context.secrets.token !== _.get(context, 'body.container')) {
     return cb('No token.');
   }
