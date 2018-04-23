@@ -87,21 +87,7 @@ router
       })
       .then((info) => jsonMapper(asin)(info, next))
       .catch((err) => next(err));
-    },
-    (info, next) => loader({
-      method: 'patch',
-      url: `${req.webtaskContext.secrets.storeFunction}/${req.body._id}`,
-      qs: {token: req.webtaskContext.secrets.token},
-      json: info
-    }, () => next(null, info)),
-    (info, next) => loader({
-      method: 'put',
-      url: `${req.webtaskContext.secrets.storeFunction}/${req.body._id}`,
-      qs: {token: req.webtaskContext.secrets.token},
-      json: {
-        state: 'informed'
-      }
-    }, () => next(null, info))
+    }
   ],
   (err, info) => responseHandler(err, res, info));
 });
