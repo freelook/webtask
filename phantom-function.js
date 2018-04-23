@@ -2,7 +2,7 @@ const phantom = require('phantom');
 
 const waitFor = (page, selector) => {
   var count = 0;
-  return new Promise(function evaluateFunc(resolve) { 
+  return new Promise(function evaluateFunc(resolve) {
     page.evaluate(function(selector){
       return document.querySelector(selector);
     }, selector).then((result) => {
