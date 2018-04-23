@@ -21,7 +21,7 @@ const loader = (params, next) => {
 /**
 * @param context {WebtaskContext}
 */
-module.exports = function(context, cb) { 
+module.exports = function(context, cb) {
   if(context.secrets.token !== context.query.token) {
     return cb('No token.');
   }
