@@ -23,11 +23,11 @@ const waitFor = (page, selector) => {
 * @param context {WebtaskContext}
 */
 module.exports = function(context, req, res) {
-  return res.end(req.url);
   var url = req.url.split('/phantom-function/')[1] || context.query.url;
   if(!url) {
     return res.end('No url provided.');
   }
+  return res.end(url);
   var instance, page, status, content, error;
 
   phantom
