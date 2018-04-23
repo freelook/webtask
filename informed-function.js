@@ -21,7 +21,7 @@ const loader = (params, next) => {
 /**
 * @param context {WebtaskContext}
 */
-module.exports = function(context, cb) {
+module.exports = function(context, cb) { 
   if(context.secrets.token !== context.query.token) {
     return cb('No token.');
   }
@@ -38,13 +38,13 @@ module.exports = function(context, cb) {
     }, next),
     (info, next) => loader({
       method: 'patch',
-      url: `${context.secrets.storeFunction}/${req.body._id}`,
+      url: `${context.secrets.storeFunction}/${context.body._id}`,
       qs: {token: context.secrets.token},
       json: info
     }, () => next(null, info)),
     (info, next) => loader({
       method: 'put',
-      url: `${context.secrets.storeFunction}/${req.body._id}`,
+      url: `${context.secrets.storeFunction}/${context.body._id}`,
       qs: {token: context.secrets.token},
       json: {
         state: 'informed'
