@@ -28,11 +28,6 @@ const validateMiddleware = (req, res, next) => {
      res.status(400).send(errMsgToken);
      return next(errMsgToken);
   }
-  if(!_.get(req, 'body._id')) {
-    const errMsgId = 'No _id provided.';
-    res.status(400).send(errMsgId);
-    return next(errMsgId);
-  }
   if(!_.get(req, 'params.market')) {
      const errMsgMarket = 'No market name provided.';
      res.status(400).send(errMsgQQ);
@@ -79,10 +74,10 @@ const jsonMapper = (asin) => (info , next) => {
 };
 
 router
-.get('/lookup/:asin?', function (req, res) {
+.get('/lookup/:asin', function (req, res) {
   as.waterfall([
     (next) => {
-      var asin = _.get(req, 'body.payload.asin') || _.get(req, 'params.asin');
+      var asin = _.get(req, 'params.asin');
       if(!asin) {
         return next('No asin provided.');
       }
