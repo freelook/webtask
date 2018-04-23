@@ -27,7 +27,6 @@ module.exports = function(context, req, res) {
   if(!url) {
     return res.end('No url provided.');
   }
-  return res.end(url);
   var instance, page, status, content, error;
 
   phantom
