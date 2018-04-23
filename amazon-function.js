@@ -93,7 +93,7 @@ router
       .then((info) => jsonMapper(asin)(info, next))
       .catch((err) => next(err));
     },
-    (info, next) => loader({ 
+    (info, next) => loader({
       method: 'patch',
       url: `${req.webtaskContext.secrets.storeFunction}/${req.body._id}`,
       qs: {token: req.webtaskContext.secrets.token},
