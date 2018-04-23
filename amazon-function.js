@@ -28,7 +28,7 @@ const validateMiddleware = (req, res, next) => {
      res.status(400).send(errMsgToken);
      return next(errMsgToken);
   }
-  if(false && !_.get(req, 'body._id')) {
+  if(!_.get(req, 'body._id')) {
     const errMsgId = 'No _id provided.';
     res.status(400).send(errMsgId);
     return next(errMsgId);
@@ -62,13 +62,19 @@ const jsonMapper = (asin) => (info , next) => {
   }
   var title = _.get(item, 'ItemAttributes.Title');
   var content = _.get(item, 'EditorialReviews.EditorialReview.Content') || 
-                _.get(item, 'ItemAttributes.Feature');
-  if(!title || !content) {
+                _.chain(item).get('ItemAttributes.Feature', '').concat([]).join('; ').value();
+  var image = _.get(item, 'LargeImage.URL') ||
+              _.get(item, 'MediumImage.URL');
+  var price = _.get(item, 'ItemAttributes.ListPrice.FormattedPrice') ||
+              _.get(item, 'OfferSummary.LowestNewPrice.FormattedPrice');
+  if(!title || !content || !image || !price) {
     return next('No content.');
   }
   return next(null, { info: {
-      title: title,
-      content: content
+    title: title,
+    content: content,
+    image: image,
+    price: price
   }});
 };
 
@@ -84,26 +90,23 @@ router
         'ItemId': req.params.asin,
         'ResponseGroup': 'Large'
       })
-      .then((info) => {
-        console.log(info);
-        jsonMapper(asin)(info, next);
-      })
+      .then((info) => jsonMapper(asin)(info, next))
       .catch((err) => next(err));
     },
-    (info, next) => loader({
+    (info, next) => loader({ 
       method: 'patch',
-      url: `${context.secrets.storeFunction}/${context.body._id}`,
-      qs: {token: context.secrets.token},
+      url: `${req.webtaskContext.secrets.storeFunction}/${req.body._id}`,
+      qs: {token: req.webtaskContext.secrets.token},
       json: info
+    }, () => next(null, info)),
+    (info, next) => loader({
+      method: 'put',
+      url: `${req.webtaskContext.secrets.storeFunction}/${req.body._id}`,
+      qs: {token: req.webtaskContext.secrets.token},
+      json: {
+        state: 'informed'
+      }
     }, () => next(null, info))
-    // (info, next) => loader({
-    //   method: 'put',
-    //   url: `${context.secrets.storeFunction}/${context.body._id}`,
-    //   qs: {token: context.secrets.token},
-    //   json: {
-    //     state: 'informed'
-    //   }
-    // }, () => next(null, info))
   ],
   (err, info) => responseHandler(err, res, info));
 });
