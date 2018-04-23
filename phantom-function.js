@@ -41,7 +41,6 @@ module.exports = function(context, req, res) {
     })
     .then((_status) => {
       status = _status;
-      console.log(`Status: ${status}`);
       return page.property('content');
     })
     .then((_content) => {
@@ -53,7 +52,6 @@ module.exports = function(context, req, res) {
     })
     .catch((_error) => {
       error = _error;
-      console.log(`Error: ${error}`);
       res.writeHead(400, { 'Content-Type': 'text/html '});
       res.end(error);
       instance && instance.exit();
