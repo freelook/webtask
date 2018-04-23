@@ -2,7 +2,7 @@ const phantom = require('phantom');
 
 const waitFor = (page, selector) => {
   var count = 0;
-  return new Promise(function evaluateFunc(resolve) {
+  return new Promise(function evaluateFunc(resolve) { 
     page.evaluate(function(selector){
       return document.querySelector(selector);
     }, selector).then((result) => {
@@ -23,7 +23,10 @@ const waitFor = (page, selector) => {
 * @param context {WebtaskContext}
 */
 module.exports = function(context, req, res) {
-
+  var url = req.url.split('/phantom-function/')[1] || context.query.url;
+  if(!url) {
+    return res.end('No url provided.');
+  }
   var instance, page, status, content, error;
 
   phantom
@@ -34,32 +37,12 @@ module.exports = function(context, req, res) {
     })
     .then((_page) => {
       page = _page;
-      return page.open('https://m.facebook.com/amzn.deals.us/');
+      return page.open(url);
     })
     .then((_status) => {
       status = _status;
       console.log(`Status: ${status}`);
-    })
-    .then(() => {
-      return page.evaluate(function(){
-        return document.querySelector('a[href*="login.php"]').click();
-      });
-    })
-    .then(() => waitFor(page, 'input[name="email1"]'))
-    .then((isElementExist) => {
-      console.log('Login', isElementExist);
-      return page.evaluate(function(email, password){
-        document.querySelector('input[name="email"]').value = email;
-        document.querySelector('input[name="pass"]').value = password;
-        return document.querySelector('button[name="login"]').click();
-      }, context.secrets.email, context.secrets.password);
-    })
-    .then(() => waitFor(page, 'a[aria-label="Publish"]'))
-    .then((isElementExist) => {
-      console.log('Publish', isElementExist);
-      return page.evaluate(function(email, password){
-        return document.documentElement.outerHTML;
-      });
+      return page.property('content');
     })
     .then((_content) => {
       content = _content;
