@@ -92,14 +92,16 @@ router
   (err, info) => responseHandler(err, res, info));
 })
 .get('/minify', function (req, res) {
-  if(!req.params.url) {
-    return next('No url provided.');
-  }
   as.waterfall([
-   (next) => loader({
+   (next) => {
+    if(!req.params.url) {
+      return next('No url provided.');
+    }
+    return loader({
       url: context.secrets.minifyFunction,
       qs: {longUrl: encodeURIComponent(decodeURIComponent(req.params.url))}
-   }, next)
+    }, next);
+   }
   ],
   (err, info) => responseHandler(err, res, info));
 });
