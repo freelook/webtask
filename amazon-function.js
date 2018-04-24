@@ -99,7 +99,7 @@ router
     }
     return loader({
       url: req.webtaskContext.secrets.minifyFunction,
-      qs: {longUrl: encodeURIComponent(decodeURIComponent(req.query.url))}
+      qs: {longUrl: req.query.url}
     }, next);
    }
   ],
