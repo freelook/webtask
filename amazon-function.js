@@ -98,7 +98,7 @@ router
       return next('No url provided.');
     }
     return loader({
-      url: context.secrets.minifyFunction,
+      url: req.webtaskContext.secrets.minifyFunction,
       qs: {longUrl: encodeURIComponent(decodeURIComponent(req.query.url))}
     }, next);
    }
