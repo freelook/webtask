@@ -94,12 +94,12 @@ router
 .get('/minify', function (req, res) {
   as.waterfall([
    (next) => {
-    if(!req.params.url) {
+    if(!req.query.url) {
       return next('No url provided.');
     }
     return loader({
       url: context.secrets.minifyFunction,
-      qs: {longUrl: encodeURIComponent(decodeURIComponent(req.params.url))}
+      qs: {longUrl: encodeURIComponent(decodeURIComponent(req.query.url))}
     }, next);
    }
   ],
