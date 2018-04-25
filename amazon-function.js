@@ -7,21 +7,7 @@ const _ = require('lodash');
 const operationHelper = require('apac').OperationHelper;
 const app = express();
 const router = express.Router();
-const loader = (params, next) => {
-  request({
-    method: (params.method || 'get').toUpperCase(),
-    url: params.url,
-    qs: params.qs,
-    json: params.json
-  }, (err, res, body) => {
-    if(!!err || res.statusCode !== 200 || !body) {
-      return next(err || body || 'No body.');
-    }
-    var msg = body;
-    try {msg = typeof body === 'string' ? JSON.parse(body) : body;} catch(e) {}
-    return next(null, msg);
-  });
-};
+const loader = require('fli-webtask').lib.loader;
 const validateMiddleware = (req, res, next) => {
   if(req.webtaskContext.secrets.token !== req.query.token) {
      const errMsgToken = 'No token.';
