@@ -1,6 +1,6 @@
 {
-  "name": "webtask",
-  "version": "1.0.0",
+  "name": "fli-webtask",
+  "version": "1.0.1",
   "description": "Cloud webtasks",
   "main": "index.js",
   "engines": {
@@ -10,7 +10,9 @@
     "heroku": "node heroku.js"
   },
   "dependencies": {
+    "async": "2.6.0",
     "body-parser": "1.18.2",
+    "event-stream": "3.3.4",
     "express": "4.16.3",
     "phantom": "4.0.12",
     "request": "2.85.0"
