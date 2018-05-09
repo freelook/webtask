@@ -1,6 +1,8 @@
-const request = require('request');
-const es = require('event-stream');
-const as = require('async');
+
+const fli = require('fli-webtask');
+const request = fli.request;
+const es = fli.es;
+const as = fli.as;
 
 /**
 * @param context {WebtaskContext}
