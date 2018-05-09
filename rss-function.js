@@ -1,5 +1,5 @@
 const request = require('request');
-const feedparser = require('feedparser');
+const feedparser = require('feedparser'); 
 const es = require('event-stream');
 
 /**
