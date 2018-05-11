@@ -1,6 +1,6 @@
 const fli = require('fli-webtask');
-const request = fli.request;
-const as = fli.as;
+const request = fli.npm.request;
+const as = fli.npm.async;
 const loader = fli.lib.loader;
 
 const publisher = (context) => (params, next) => as.map(
