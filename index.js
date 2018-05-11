@@ -1,6 +1,9 @@
+var dependencies = require('package.json').dependencies;
+
 module.exports = {
   lib: require('./lib'),
-  as: require('async'),
-  es: require('event-stream'),
-  request: require('request')
+  npm: Object.keys(dependencies).reduce(function(npm, d){
+    npm[d] = require(d);
+    return npm;
+  }, {})
 };
