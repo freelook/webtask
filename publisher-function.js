@@ -1,11 +1,11 @@
 const fli = require('fli-webtask');
 const request = fli.request;
 const as = fli.as;
-const poster = fli.lib.loader;
+const loader = fli.lib.loader;
 
 const publisher = (context) => (params, next) => as.map(
   params.sources,
-  (source, next) => poster({
+  (source, next) => loader({
     url: context.secrets[source],
     json: context.body
   }, next), 
