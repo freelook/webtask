@@ -1,19 +1,7 @@
-const request = require('request');
-const as = require('async');
-
-const poster = (params, next) => {
-  request.post({
-    url: params.url,
-    qs: params.qs,
-    json: params.json
-  }, (err, res, body) => {
-    if(!!err || res.statusCode !== 200 || !body) {
-      return next(err || body || 'No body.');
-    }
-    const msg = JSON.parse(body);
-    return next(null, msg);
-  });
-};
+const fli = require('fli-webtask');
+const request = fli.request;
+const as = fli.as;
+const poster = fli.lib.loader; 
 
 const publisher = (context) => (params, next) => as.map(
   params.sources,
