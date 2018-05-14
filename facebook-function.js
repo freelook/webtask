@@ -48,7 +48,7 @@ router
 });
 
 app
-.use(bodyParser.json())
+//.use(bodyParser.json())
 .use('/', validateMiddleware, router);
 
 module.exports = wt.fromExpress(app);
