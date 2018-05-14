@@ -1,22 +1,8 @@
-const request = require('request');
-const as = require('async');
-const _ = require('lodash');
-
-const loader = (params, next) => {
-  request({
-    method: (params.method || 'get').toUpperCase(),
-    url: params.url,
-    qs: params.qs,
-    json: params.json
-  }, (err, res, body) => {
-    if(!!err || res.statusCode !== 200 || !body) {
-      return next(err || body || 'No body.');
-    }
-    var msg = body;
-    try {msg = typeof body === 'string' ? JSON.parse(body) : body;} catch(e) {}
-    return next(null, msg);
-  });
-};
+const fli = require('fli-webtask');
+const request = fli.npm.request;
+const as = fli.npm.async;
+const _ = fli.npm.lodash;
+const loader = fli.lib.loader;
 
 /**
 * @param context {WebtaskContext}
