@@ -1,8 +1,11 @@
-const express = require('express');
+const fli = require('fli-webtask');
 const wt = require('webtask-tools');
-const bodyParser = require('body-parser');
-const as = require('async');
-const fb = require('fb').default;
+const express = fli.npm.express;
+const bodyParser = fli.npm.body-parser;
+const request = fli.npm.request;
+const as = fli.npm.async;
+const _ = fli.npm.lodash;
+const loader = fli.lib.loader;
 const app = express();
 const router = express.Router();
 const validateMiddleware = (req, res, next) => {
@@ -11,15 +14,14 @@ const validateMiddleware = (req, res, next) => {
      res.status(400).send(errMsgToken);
      return next(errMsgToken);
   }
+  if(!_.get(req, 'body._id')) {
+     const errMsgId = 'No _id provided.';
+     res.status(400).send(errMsgId);
+     return next(errMsgId);
+  }
   return next();
 };
-const fbMiddleware = (req, res, next) => {
-  var secrets = req.webtaskContext.secrets;
-  fb.options({version: secrets.version});
-  fb.setAccessToken(secrets.access_token);
-  return next();
-};
-const responseHandler = (res) => (err, data) => {
+const responseHandler = (err, res, data) => {
   if(!!err) {
     return res.status(400).json(err);
   }
@@ -27,25 +29,26 @@ const responseHandler = (res) => (err, data) => {
 };
 
 router
-.get('/msg', function (req, res) {
+.get('/publish', function (req, res) {
   as.waterfall([
-    (next) => {
-      var body = 'Hi!';
-      fb.api('me/feed', 'post', { message: body }, function (result) {
-      if(!result || result.error) {
-        console.log(!result ? 'error occurred' : result.error);
-        return next(result.error || result || 'Error');
-      }
-      console.log('Post Id: ' + result.id);
-      next(null, result);
-    });
-    }
+   (next) => loader({
+    method: 'post',
+    url: context.secrets.facebookPublishDyno,
+    qs: {token: context.secrets.token}, 
+    body: req.body
+  }, next),
+   (response, next) => loader({
+    method: 'patch',
+    url: `${context.secrets.storeFunction}/${context.body._id}`,
+    qs: {token: context.secrets.token},
+    json: response
+  }, () => next(null, response))
   ],
-  (err, result) => responseHandler(res)(err, result));
-});
+  (err, info) => responseHandler(err, res, info));
+}); 
 
 app
 .use(bodyParser.json())
-.use('/', validateMiddleware, fbMiddleware, router);
+.use('/', validateMiddleware, router);
 
 module.exports = wt.fromExpress(app);
