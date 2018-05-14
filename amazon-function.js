@@ -51,12 +51,12 @@ const jsonMapper = (asin) => (info , next) => {
   if(!title || !content || !image || !price) {
     return next('No content.');
   }
-  return next(null, { info: {
+  return next(null, {
     title: title,
     content: content,
     image: image,
     price: price
-  }});
+  });
 };
 
 router
