@@ -45,7 +45,7 @@ router
   }, () => next(null, response))
   ],
   (err, info) => responseHandler(err, res, info));
-}); 
+});
 
 app
 .use(bodyParser.json())
