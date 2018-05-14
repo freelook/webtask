@@ -35,7 +35,9 @@ router
     method: 'post',
     url: context.secrets.facebookPublishDyno,
     qs: {token: context.secrets.token}, 
-    body: req.body
+    body: {
+      text: req.body.text
+    }
   }, next),
    (response, next) => loader({
     method: 'patch',
