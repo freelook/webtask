@@ -1,6 +1,6 @@
 {
   "name": "fli-webtask",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Cloud webtasks",
   "main": "index.js",
   "engines": {

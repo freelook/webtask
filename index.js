@@ -1,4 +1,4 @@
-var dependencies = require('package.json').dependencies;
+var dependencies = require('./package.json').dependencies;
 
 module.exports = {
   lib: require('./lib'),
