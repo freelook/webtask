@@ -29,7 +29,7 @@ const responseHandler = (err, res, data) => {
 };
 
 router
-.get('/publish', function (req, res) {
+.all('/publish', function (req, res) {
   as.waterfall([
    (next) => loader({
     method: 'post',
