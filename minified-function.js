@@ -2,7 +2,7 @@ const fli = require('fli-webtask');
 const request = fli.npm.request;
 const as = fli.npm.async;
 const _ = fli.npm.lodash;
-const loader = fli.lib.loader;
+const loader = fli.lib.loader; 
 
 /**
 * @param context {WebtaskContext}
