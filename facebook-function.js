@@ -19,6 +19,11 @@ const validateMiddleware = (req, res, next) => {
      res.status(400).send(errMsgId);
      return next(errMsgId);
   }
+  if(!_.get(req, 'body.shortUrl')) {
+     const errMsgShortUrl = 'No shortUrl provided.';
+     res.status(400).send(errMsgShortUrl);
+     return next(errMsgShortUrl);
+  }
   return next();
 };
 const responseHandler = (err, res, data) => {
@@ -36,7 +41,7 @@ router
     url: context.secrets.facebookPublishDyno,
     qs: {token: context.secrets.token}, 
     body: {
-      text: req.body.text
+      text: req.body.shortUrl
     }
   }, next),
    (response, next) => loader({
