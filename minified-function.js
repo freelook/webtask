@@ -36,7 +36,7 @@ module.exports = function(context, cb) {
       url: `${context.secrets.storeFunction}/${context.body._id}`,
       qs: {token: context.secrets.token},
       json: {
-        state: 'informed'
+        state: 'minified'
       }
     }, () => next(null, info))
   ], cb);
