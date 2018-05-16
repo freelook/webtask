@@ -16,8 +16,8 @@ const validateMiddleware = (req, res, next) => {
   }
   if(!_.get(req, 'params.market')) {
      const errMsgMarket = 'No market name provided.';
-     res.status(400).send(errMsgQQ);
-     return next(errMsgQQ);
+     res.status(400).send(errMsgMarket);
+     return next(errMsgMarket);
   }
   return next();
 };
