@@ -29,7 +29,7 @@ const validateMiddleware = (req, res, next) => {
 };
 
 router
-    .get('/', function(req, res) {
+    .all('/', function(req, res) {
         req.dyno({
             secrets: process.env
         }, req, res);

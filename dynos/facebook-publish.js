@@ -1,11 +1,25 @@
 const phantom = require('phantom');
 
-const waitFor = (page, selector) => {
+const waitFor = (page, element) => {
   var count = 0;
+  var evaluator;
+  var selector = element.selector;
+  var xpath = element.xpath;
+  if(!!xpath) {
+    evaluator = function() {
+      return page.evaluate(function(xpath){
+        return document.evaluate(xpath, document, null, 9, null).singleNodeValue;
+      }, xpath);
+    };
+  } else {
+    evaluator = function() {
+      return page.evaluate(function(selector){
+        return document.querySelector(selector);
+      }, selector);
+    };
+  }
   return new Promise(function evaluateFunc(resolve) {
-    page.evaluate(function(selector){
-      return document.querySelector(selector);
-    }, selector).then((result) => {
+    evaluator().then((result) => {
       if(!!result) {
         return resolve(true);
       }
@@ -19,9 +33,27 @@ const waitFor = (page, selector) => {
   });
 };
 
+const phantomClose = (page, instance) => {
+  if(!!page) {
+    return page.close().then(function(){
+      instance && instance.exit();
+    });
+  } 
+  return instance && instance.exit();
+};
+
+const responseEnd = (res, code, content) => {
+  res.writeHead(code, { 'Content-Type': 'text/html '});
+  res.end(content);
+};
+
 module.exports = function(context, req, res) {
 
   var instance, page, status, content, error;
+  var fbText = req.body.text || req.query.text;
+  if (!fbText) {
+    return responseEnd(res, 400, 'No text provided.');
+  }
 
   phantom
     .create([
@@ -42,34 +74,34 @@ module.exports = function(context, req, res) {
     })
     .then(() => {
       return page.evaluate(function(){
-        return document.querySelector('a[href*="login.php"]').click();
+        return document.evaluate('//*[text()="Log In"]', document, null, 9, null).singleNodeValue.click();
       });
     })
-    .then(() => waitFor(page, 'input[name="email"]'))
+    .then(() => waitFor(page, {selector: 'input[name="email"]'}))
     .then((isElementExist) => {
       console.log('Login', isElementExist);
       return isElementExist && page.evaluate(function(email, password){
         document.querySelector('input[name="email"]').value = email;
         document.querySelector('input[name="pass"]').value = password;
-        return document.querySelector('button[name="login"]').click();
+        return document.querySelector('*[name="login"]').click();
       }, context.secrets.fb_email, context.secrets.fb_pass);
     })
-    .then(() => waitFor(page, 'a[aria-label="Publish"]'))
+    .then(() => waitFor(page, {xpath: '//*[text()="Publish"]'}))
     .then((isElementExist) => {
       console.log('Publish', isElementExist);
       return isElementExist && page.evaluate(function(){
-        return document.querySelector('a[aria-label="Publish"]').click();
+        return document.evaluate('//*[text()="Publish"]', document, null, 9, null).singleNodeValue.click();
       });
     })
-    .then(() => waitFor(page, 'textarea[name="status"]'))
+    .then(() => waitFor(page, {selector: 'textarea'}))
     .then((isElementExist) => {
       console.log('Textarea', isElementExist);
-      return isElementExist && page.evaluate(function(){
-        document.querySelector('textarea[name="status"]').value = 'test: ' + Date.now();
-        return document.querySelector('button[value="Post"]').click();
-      });
+      return isElementExist && page.evaluate(function(fbText){
+        document.querySelector('textarea').value = fbText;
+        return document.querySelector('*[value="Post"]').click();
+      }, fbText);
     })
-    .then(() => waitFor(page, 'a[aria-label="Publish"]'))
+    .then(() => waitFor(page, {selector: 'a[aria-label="Publish"]'}))
     .then(() => {
       return page.evaluate(function(){
         return document.documentElement.outerHTML;
@@ -78,18 +110,14 @@ module.exports = function(context, req, res) {
     .then((_content) => {
       content = _content;
       console.log(`Success: ${!!_content}`);
-      res.writeHead(200, { 'Content-Type': 'text/html '});
-      res.end(content);
-      page && page.close();
-      instance && instance.exit();
+      responseEnd(res, 200, content);
+      phantomClose(page, instance);
     })
     .catch((_error) => {
       error = _error;
       console.log(`Error: ${error}`);
-      res.writeHead(400, { 'Content-Type': 'text/html '});
-      res.end(error);
-      page && page.close();
-      instance && instance.exit();
+      responseEnd(res, 400, error);
+      phantomClose(page, instance);
     });
     
 };
