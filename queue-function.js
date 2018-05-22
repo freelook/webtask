@@ -55,7 +55,7 @@ router
     (next) => req.queue.get(next),
     (item, next) => {
       console.log(item);
-      !!item ? req.queue.ack(item.ack, next) : next('Queue is empty.');
+      !!item ? req.queue.ack(item.ack, next) : item('Queue is empty.');
     },
     (id, next) => req.queue.clean((err) => next(err, {id:id}))
   ],
