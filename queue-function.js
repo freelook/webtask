@@ -50,9 +50,10 @@ router
   ],
   (err, msg)=> responseHandler(err, res, msg));
 })
-.get('/ack/:ack', function (req, res) {
+.get('/ack', function (req, res) {
   as.waterfall([
-    (next) => req.queue.ack(req.params.ack, next),
+    (next) => req.queue.get(next),
+    (item, next) => req.queue.ack(item.ack, next),
     (id, next) => req.queue.clean((err) => next(err, {id:id}))
   ],
   (err, data)=> responseHandler(err, res, data));
