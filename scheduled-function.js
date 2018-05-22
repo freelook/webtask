@@ -3,11 +3,6 @@ const as = require('async');
 const _ = require('lodash');
 const loader = require('fli-webtask').lib.loader;
 
-const ack = (context) => (params, next) => loader({
-    url: `${context.secrets.queueFunction}/ack/${params.msg.ack}`,
-    qs: {token: context.secrets.token}
-}, next);
-
 /**
 * @param context {WebtaskContext}
 */
