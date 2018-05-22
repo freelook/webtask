@@ -1,7 +1,7 @@
-const request = require('request');
-const as = require('async');
-const _ = require('lodash');
-const loader = require('fli-webtask').lib.loader;
+const fli = require('fli-webtask');
+const as = fli.npm.async;
+const _ = fli.npm.lodash;
+const loader = fli.lib.loader;
 
 /**
 * @param context {WebtaskContext}
