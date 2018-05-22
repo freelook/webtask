@@ -53,7 +53,7 @@ router
 .get('/ack', function (req, res) {
   as.waterfall([
     (next) => req.queue.get(next),
-    (item, next) => !!item ? req.queue.ack(item.ack, next) : item(),
+    (item, next) => !!item ? req.queue.ack(item.ack, next) : item('Queue is empty.'),
     (id, next) => req.queue.clean((err) => next(err, {id:id}))
   ],
   (err, data)=> responseHandler(err, res, data));
