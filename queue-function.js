@@ -1,9 +1,11 @@
+const fli = require('fli-webtask');
 const express = require('express');
 const wt = require('webtask-tools');
 const bodyParser = require('body-parser');
 const mongodb = require('mongodb');
 const mongoDbQueue = require('mongodb-queue');
-const as = require('async');
+const as = fli.npm.async;
+const _ = fli.npm.lodash;
 const app = express();
 const router = express.Router();
 const validateMiddleware = (req, res, next) => {
