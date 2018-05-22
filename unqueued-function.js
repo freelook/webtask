@@ -6,7 +6,7 @@ const loader = require('fli-webtask').lib.loader;
 /**
 * @param context {WebtaskContext}
 */
-module.exports = function(context, cb) { 
+module.exports = function(context, cb) {
   if(context.secrets.token !== context.query.token) {
     return cb('No token.');
   }
