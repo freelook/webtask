@@ -23,6 +23,9 @@ module.exports = function(context, cb) {
         rss: storage[context.query.endpoint]
       }
    }, next),
-   (data, next) => as.mapSeries(_.get(data, 'rss', []), (deal, next) => next(), next)
+   (data, next) => as.mapSeries(_.get(data, 'rss', []),
+    (deal, next) => next(null, {
+     url: _.get(deal, 'link', '').replace(context.secrets.rssTag, context.secrets.fliTag)
+    }), next)
   ], cb);
 };
