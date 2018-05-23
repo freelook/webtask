@@ -1,6 +1,6 @@
 
 const fli = require('fli-webtask');
-const request = fli.request;
+const loader = fli.lib.loader;
 const es = fli.es;
 const as = fli.as;
 
@@ -16,21 +16,13 @@ module.exports = function(context, cb) {
   }
   return as.waterfall([
    (next) => context.storage.get(next),
-   (storage, next) => {
-     request.get({
-        url: context.secrets.rssFunction,
-        qs: {
-          token: context.secrets.token,
-          rss: storage[context.query.endpoint]
-        }
-      }, (err, res, body) => {
-        if(err) {
-          return next(err);
-        }
-        const deals = JSON.parse(body);
-        
-        return next(null, deals);
-      });
-     }
+   (storage, next) => loader({
+      url: context.secrets.rssFunction,
+      qs: {
+        token: context.secrets.token,
+        rss: storage[context.query.endpoint]
+      }
+  }, next),
+  (deals, next) => next(null, deals)
    ], cb);
 };
