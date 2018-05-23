@@ -1,8 +1,8 @@
 
 const fli = require('fli-webtask');
 const loader = fli.lib.loader;
-const es = fli.es;
-const as = fli.as;
+const _ = fli.npm.lodash;
+const as = fli.npm.async;
 
 /**
 * @param context {WebtaskContext}
@@ -23,6 +23,6 @@ module.exports = function(context, cb) {
         rss: storage[context.query.endpoint]
       }
   }, next),
-  (deals, next) => next(null, deals)
+  (data, next) => as.mapSeries(_.get(data, 'rss', []), (deal, next) => {}, next)
    ], cb);
 };
