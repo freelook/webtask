@@ -25,6 +25,7 @@ module.exports = function(context, cb) {
    }, next),
    (data, next) => as.mapSeries(_.get(data, 'rss', []),
     (deal, next) => next(null, {
+     title: _.get(deal, 'title', ''),
      url: _.get(deal, 'link', '').replace(context.secrets.rssTag, context.secrets.fliTag)
     }), next)
   ], cb);
