@@ -26,6 +26,7 @@ module.exports = function(context, cb) {
    (data, next) => as.mapSeries(_.get(data, 'rss', []),
     (deal, next) => next(null, {
      promoText: _.get(deal, 'title', ''),
+     asin: (_.get(deal, 'link', '').match(/.+\/dp\/([\w]+)\/.+/) || [])[1] || '',
      url: _.get(deal, 'link', '').replace(context.secrets.rssTag, context.secrets.fliTag)
     }), next)
   ], cb);
