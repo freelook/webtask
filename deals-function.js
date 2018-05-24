@@ -24,11 +24,15 @@ module.exports = function(context, cb) {
       }
    }, next),
    (data, next) => as.mapSeries(_.get(data, 'rss', []),
-    (deal, next) => next(null, {
-     promoText: _.get(deal, 'title', ''),
-     asin: (_.get(deal, 'link', '').match(/.+\/dp\/([\w]+)\/.+/) || [])[1] || '',
-     node: (_.get(deal, 'link', '').match(/.+node=([\w]+)&.+/) || [])[1] || '',
-     url: _.get(deal, 'link', '').replace(context.secrets.rssTag, context.secrets.fliTag)
-    }), next)
+    (deal, next) => {
+      const link = _.get(deal, 'link', '');
+      next(null, {
+       promoText: _.get(deal, 'title', ''),
+       asin: (link.match(/.+\/dp\/([\w]+)\/.+/) || [])[1] || '',
+       node: (link.match(/.+node=([\w]+)&.+/) || [])[1] || '',
+       url: link.replace(context.secrets.rssTag, context.secrets.fliTag)
+      });
+    }, 
+   next)
   ], cb);
 };
