@@ -27,6 +27,7 @@ module.exports = function(context, cb) {
     (deal, next) => next(null, {
      promoText: _.get(deal, 'title', ''),
      asin: (_.get(deal, 'link', '').match(/.+\/dp\/([\w]+)\/.+/) || [])[1] || '',
+     node: (_.get(deal, 'link', '').match(/.+node=([\w]+)&.+/) || [])[1] || '',
      url: _.get(deal, 'link', '').replace(context.secrets.rssTag, context.secrets.fliTag)
     }), next)
   ], cb);
