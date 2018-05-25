@@ -35,7 +35,7 @@ const responseHandler = (err, res, data) => {
 
 router
 .all('/publish', function (req, res) {
-  if(!!req.body.payload.facebookPublished) {
+  if(!!_.get(req, 'body.payload.facebookPublished')) {
     return responseHandler('Already published', res);
   }
   return as.waterfall([
