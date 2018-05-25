@@ -11,17 +11,17 @@ const router = express.Router();
 const validateMiddleware = (req, res, next) => {
   if(req.webtaskContext.secrets.token !== req.query.token) {
      const errMsgToken = 'No token.';
-     res.status(400).send(errMsgToken);
+     responseHandler(errMsgToken, res);
      return next(errMsgToken);
   }
   if(!_.get(req, 'body._id')) {
      const errMsgId = 'No _id provided.';
-     res.status(400).send(errMsgId);
+     responseHandler(errMsgId, res);
      return next(errMsgId);
   }
   if(!_.get(req, 'body.payload.shortUrl')) {
      const errMsgShortUrl = 'No shortUrl provided.';
-     res.status(400).send(errMsgShortUrl);
+     responseHandler(errMsgShortUrl, res);
      return next(errMsgShortUrl);
   }
   return next();
@@ -35,7 +35,10 @@ const responseHandler = (err, res, data) => {
 
 router
 .all('/publish', function (req, res) {
-  as.waterfall([
+  if(!!req.body.payload.facebookPublished) {
+    return responseHandler('Already published', res);
+  }
+  return as.waterfall([
    (next) => loader({
     method: 'post',
     url: context.secrets.facebookPublishDyno,
@@ -48,7 +51,7 @@ router
     method: 'patch',
     url: `${context.secrets.storeFunction}/${context.body._id}`,
     qs: {token: context.secrets.token},
-    json: response
+    json: {facebookPublished: !!response}
   }, () => next(null, response))
   ],
   (err, info) => responseHandler(err, res, info));
