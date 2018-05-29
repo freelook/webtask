@@ -27,7 +27,7 @@ module.exports = function(context, cb) {
     (deal, next) => {
       const link = _.get(deal, 'link', '');
       const description = _.get(deal, 'description', '');
-      next(null, {
+      var item = {
        promoText: _.get(deal, 'title', ''),
        promoImg: ((description.match(/.+img src="(.+?)".+/) || [])[1] || '')
                  .replace('._SL160_.', '._SL1000_.'),
@@ -37,7 +37,15 @@ module.exports = function(context, cb) {
        asin: (link.match(/.+\/dp\/([\w]+)\/.+/) || [])[1] || '',
        node: (link.match(/.+node=([\w]+)&.+/) || [])[1] || '',
        url: link.replace(context.secrets.rssTag, context.secrets.fliTag)
-      });
+      };
+      loader({
+        method: 'post',
+        url: context.secrets.storeFunction,
+        qs: {
+          token: context.secrets.token
+        },
+        json: item
+      }, () => next(null, item));
     }, 
    next)
   ], cb);
