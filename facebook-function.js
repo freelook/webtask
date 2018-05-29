@@ -44,7 +44,7 @@ router
     url: context.secrets.facebookPublishDyno,
     qs: {token: context.secrets.token}, 
     body: {
-      text: req.body.payload.shortUrl
+      text: `${req.body.promoText} ${req.body.payload.shortUrl}`
     }
   }, next),
    (response, next) => loader({
