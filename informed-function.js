@@ -8,10 +8,10 @@ const loader = fli.lib.loader;
 * @param context {WebtaskContext}
 */
 module.exports = function(context, cb) {
-  console.log(`- informed`);
   if(context.secrets.token !== context.query.token) {
     return cb('No token.');
   }
+  console.log(`- informed`);
   if(!_.get(context, 'body._id')) {
     return cb('No _id provided.');
   }
