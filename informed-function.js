@@ -20,7 +20,7 @@ module.exports = function(context, cb) {
   if(!_.chain(context).get('body.payload.info').isEmpty().value()) {
     return cb('Info already provided.');
   }
-  console.log(`Informed asin: ${body.payload.asin}`);
+  console.log(`--- informed asin: ${body.payload.asin}`);
   return as.waterfall([
     (next) => loader({
       url: `${context.secrets.amazonFunction}/${context.body.payload.asin}`,
