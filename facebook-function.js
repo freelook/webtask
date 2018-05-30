@@ -35,10 +35,7 @@ const responseHandler = (err, res, data) => {
 
 router
 .all('/publish', function (req, res) {
-  if(!!_.get(req, 'body.payload.facebookPublished')) {
-    return responseHandler('Already published to facebook', res);
-  }
-  return as.waterfall([
+  as.waterfall([
    (next) => loader({
     method: 'post',
     url: context.secrets.facebookPublishDyno,
