@@ -12,7 +12,10 @@ module.exports = function(context, cb) {
     return cb('No token.');
   }
   console.log(`- minified`);
-  if(!_.get(context, 'body._id')) {
+  if(!!_.get(context, 'body.payload.shortUrl')) {
+    return cb('shortUrl already provided.');
+  }
+  if(!_.get(context, 'body._id.$oid')) {
     return cb('No _id provided.');
   }
   if(!_.get(context, 'body.payload.url')) {
@@ -28,13 +31,13 @@ module.exports = function(context, cb) {
     }, next),
     (info, next) => loader({
       method: 'patch',
-      url: `${context.secrets.storeFunction}/${context.body._id}`,
+      url: `${context.secrets.storeFunction}/${context.body._id.$oid}`,
       qs: {token: context.secrets.token},
       json: {info: info}
     }, () => next(null, info)),
     (info, next) => loader({
       method: 'put',
-      url: `${context.secrets.storeFunction}/${context.body._id}`,
+      url: `${context.secrets.storeFunction}/${context.body._id.$oid}`,
       qs: {token: context.secrets.token},
       json: {
         state: 'minified'
