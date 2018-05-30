@@ -35,8 +35,11 @@ module.exports = function(context, cb) {
   if(context.secrets.token !== context.query.token) {
     return cb('No token.');
   }
-  if(!context.body) {
+  if(!_.get(context, 'body')) {
     return cb('No body provided.');
+  }
+  if(!_.get(context, 'body._id')) {
+    return cb('No _id provided.');
   }
   return as.waterfall([
    (next) => context.storage.get(next),
