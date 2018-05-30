@@ -35,6 +35,7 @@ const responseHandler = (err, res, data) => {
 
 router
 .all('/publish', function (req, res) {
+  console.log(`-- facebook published`);
   as.waterfall([
    (next) => loader({
     method: 'post',
