@@ -12,10 +12,10 @@ module.exports = function(context, cb) {
     return cb('No token.');
   }
   console.log(`- informed`);
-  console.log(context);
   if(!_.get(context, 'body._id')) {
     return cb('No _id provided.');
   }
+    console.log(context.body._id);
   if(!_.get(context, 'body.payload.asin')) {
     return cb('No asin provided.');
   }
