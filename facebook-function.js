@@ -39,8 +39,8 @@ router
   as.waterfall([
    (next) => loader({
     method: 'post',
-    url: context.secrets.facebookPublishDyno,
-    qs: {token: context.secrets.token}, 
+    url: req.webtaskContext.secrets.facebookPublishDyno,
+    qs: {token: req.webtaskContext.secrets.token}, 
     body: {
       text: `${req.body.payload.promoText} ${req.body.payload.shortUrl}`
     }
