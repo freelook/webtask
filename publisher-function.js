@@ -6,20 +6,25 @@ const loader = fli.lib.loader;
 
 const publisher = (context) => (params, next) => as.map(
   params.sources,
-  (source, next) => loader({
-    url: context.secrets[source],
-    json: context.body
-  }, (response) => loader({
-    method: 'patch',
-    url: `${context.secrets.storeFunction}/${context.body._id}`,
-    qs: {token: context.secrets.token},
-    json: _.once(() => {
-      var json = {};
-      json[`${source}Published`] = !!response;
-      return json;
-    })()
-  }, () => next(null, response))
-  ), 
+  (source, next) => {
+    if(!!_.get(context, `body.payload.${source}Published`)) {
+      return next(null, `${source} already published`);
+    }
+    return loader({
+      url: context.secrets[source],
+      json: context.body
+    }, (response) => loader({
+      method: 'patch',
+      url: `${context.secrets.storeFunction}/${context.body._id}`,
+      qs: {token: context.secrets.token},
+      json: _.once(() => {
+        var json = {};
+        json[`${source}Published`] = !!response;
+        return json;
+      })()
+    }, () => next(null, response))
+    );
+  },
   next
 );
 
