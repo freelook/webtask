@@ -12,6 +12,7 @@ const publisher = (context) => (params, next) => as.map(
     }
     console.log(`-- published ${source}`);
     return loader({
+      method: 'post',
       url: context.secrets[source],
       json: context.body
     }, () => loader({
