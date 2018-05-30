@@ -1,5 +1,6 @@
 const fli = require('fli-webtask');
 const request = fli.npm.request;
+const _ = fli.npm.lodash;
 const as = fli.npm.async;
 const loader = fli.lib.loader;
 
@@ -8,7 +9,17 @@ const publisher = (context) => (params, next) => as.map(
   (source, next) => loader({
     url: context.secrets[source],
     json: context.body
-  }, next), 
+  }, (response) => loader({
+    method: 'patch',
+    url: `${context.secrets.storeFunction}/${context.body._id}`,
+    qs: {token: context.secrets.token},
+    json: _.once(() => {
+      var json = {};
+      json[`${source}Published`] = !!response;
+      return json;
+    })()
+  }, () => next(null, response))
+  ), 
   next
 );
 
