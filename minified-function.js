@@ -33,7 +33,7 @@ module.exports = function(context, cb) {
       method: 'patch',
       url: `${context.secrets.storeFunction}/${context.body._id}`,
       qs: {token: context.secrets.token},
-      json: {info: info}
+      json: {shortUrl: _.get(info, 'shortUrl', '')}
     }, () => next(null, info)),
     (info, next) => loader({
       method: 'put',
