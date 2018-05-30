@@ -21,13 +21,13 @@ module.exports = function(context, cb) {
       qs: {token: context.secrets.token},
       json: context.body,
     }, () => next()),
-    (info, next) => loader({
+    (next) => loader({
       method: 'put',
       url: `${context.secrets.storeFunction}/${context.body._id}`,
       qs: {token: context.secrets.token},
       json: {
         state: 'published'
       }
-    }, () => next(null, info))
+    }, () => next())
   ], cb);
 };
