@@ -12,6 +12,7 @@ module.exports = function(context, cb) {
     return cb('No token.');
   }
   console.log(`- informed`);
+  console.log(context);
   if(!_.get(context, 'body._id')) {
     return cb('No _id provided.');
   }
