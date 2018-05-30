@@ -35,14 +35,14 @@ const responseHandler = (err, res, data) => {
 
 router
 .all('/publish', function (req, res) {
-  console.log(`-- facebook published: ${req.body.promoText} ${req.body.payload.shortUrl}`);
+  console.log(`-- facebook published: ${req.body.payload.promoText} ${req.body.payload.shortUrl}`);
   as.waterfall([
    (next) => loader({
     method: 'post',
     url: context.secrets.facebookPublishDyno,
     qs: {token: context.secrets.token}, 
     body: {
-      text: `${req.body.promoText} ${req.body.payload.shortUrl}`
+      text: `${req.body.payload.promoText} ${req.body.payload.shortUrl}`
     }
    }, next)
   ],
