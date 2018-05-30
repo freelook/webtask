@@ -14,13 +14,13 @@ const publisher = (context) => (params, next) => as.map(
     return loader({
       url: context.secrets[source],
       json: context.body
-    }, (response) => loader({
+    }, () => loader({
       method: 'patch',
       url: `${context.secrets.storeFunction}/${context.body._id}`,
       qs: {token: context.secrets.token},
       json: _.once(() => {
         var json = {};
-        json[`${source}Published`] = !!response;
+        json[`${source}Published`] = true;
         return json;
       })()
     }, () => next(null, response))
