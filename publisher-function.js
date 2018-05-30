@@ -24,7 +24,7 @@ const publisher = (context) => (params, next) => as.map(
         json[`${source}Published`] = true;
         return json;
       })()
-    }, () => next(null, response))
+    }, () => next())
     );
   },
   next
