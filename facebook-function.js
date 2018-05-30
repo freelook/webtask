@@ -46,13 +46,7 @@ router
     body: {
       text: `${req.body.promoText} ${req.body.payload.shortUrl}`
     }
-  }, next),
-   (response, next) => loader({
-    method: 'patch',
-    url: `${context.secrets.storeFunction}/${context.body._id}`,
-    qs: {token: context.secrets.token},
-    json: {facebookPublished: !!response}
-  }, () => next(null, response))
+   }, next)
   ],
   (err, info) => responseHandler(err, res, info));
 });
