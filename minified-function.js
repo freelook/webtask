@@ -26,7 +26,7 @@ module.exports = function(context, cb) {
       url: context.secrets.amazonFunction,
       qs: {
         token: context.secrets.token,
-        url: encodeURIComponent(context.body.payload.url)
+        url: context.body.payload.url
       }
     }, next),
     (info, next) => loader({
