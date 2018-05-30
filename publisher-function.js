@@ -10,6 +10,7 @@ const publisher = (context) => (params, next) => as.map(
     if(!!_.get(context, `body.payload.${source}Published`)) {
       return next(null, `${source} already published`);
     }
+    console.log('-- published');
     return loader({
       url: context.secrets[source],
       json: context.body
