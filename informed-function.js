@@ -12,7 +12,7 @@ module.exports = function(context, cb) {
     return cb('No token.');
   }
   console.log(`- informed`);
-  if(!_.get(context, 'body._id.$oid')) {
+  if(!_.get(context, 'body._id')) {
     return cb('No _id provided.');
   }
   if(!_.get(context, 'body.payload.asin')) {
@@ -29,13 +29,13 @@ module.exports = function(context, cb) {
     }, next),
     (info, next) => loader({
       method: 'patch',
-      url: `${context.secrets.storeFunction}/${context.body._id.$oid}`,
+      url: `${context.secrets.storeFunction}/${context.body._id}`,
       qs: {token: context.secrets.token},
       json: {info: info}
     }, () => next(null, info)),
     (info, next) => loader({
       method: 'put',
-      url: `${context.secrets.storeFunction}/${context.body._id.$oid}`,
+      url: `${context.secrets.storeFunction}/${context.body._id}`,
       qs: {token: context.secrets.token},
       json: {
         state: 'informed'
