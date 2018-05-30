@@ -41,7 +41,7 @@ router
     method: 'post',
     url: req.webtaskContext.secrets.facebookPublishDyno,
     qs: {token: req.webtaskContext.secrets.token}, 
-    body: {
+    json: {
       text: `${req.body.payload.promoText} ${req.body.payload.shortUrl}`
     }
    }, next)
