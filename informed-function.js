@@ -18,11 +18,10 @@ module.exports = function(context, cb) {
   if(!_.get(context, 'body.payload.asin')) {
     return cb('No asin provided.');
   }
-  console.log(context.body.payload.info);
   if(!_.chain(context).get('body.payload.info').isEmpty().value()) {
     return cb('Info already provided.');
   }
-  console.log(`-- asin: ${body.payload.asin}`);
+  console.log(`-- asin: ${context.body.payload.asin}`);
   return as.waterfall([
     (next) => loader({
       url: `${context.secrets.amazonFunction}/${context.body.payload.asin}`,
