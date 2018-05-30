@@ -14,6 +14,7 @@ const publisher = (context) => (params, next) => as.map(
     return loader({
       method: 'post',
       url: context.secrets[source],
+      qs: {token: context.secrets.token},
       json: context.body
     }, () => loader({
       method: 'patch',
