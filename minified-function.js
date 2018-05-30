@@ -11,6 +11,7 @@ module.exports = function(context, cb) {
   if(context.secrets.token !== context.query.token) {
     return cb('No token.');
   }
+  console.log(`- minified`);
   if(!_.get(context, 'body._id')) {
     return cb('No _id provided.');
   }
