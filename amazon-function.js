@@ -48,11 +48,11 @@ const jsonMapper = (asin) => (info , next) => {
               _.get(item, 'MediumImage.URL');
   var price = _.get(item, 'ItemAttributes.ListPrice.FormattedPrice') ||
               _.get(item, 'OfferSummary.LowestNewPrice.FormattedPrice');
-  var lables = [];
+  var labels = [];
   (function fetchNodeName(node) {
     var nodeName = _.get(node, 'Name');
     var nodeAncestor = _.get(node, 'Ancestors.BrowseNode');
-    nodeName && lables.push(nodeName);
+    nodeName && labels.push(nodeName);
     nodeAncestor && fetchNodeName(nodeAncestor);
   })(_.get(item, 'BrowseNodes.BrowseNode'));
   if(!title || !content || !image || !price) {
@@ -63,7 +63,7 @@ const jsonMapper = (asin) => (info , next) => {
     content: content,
     image: image,
     price: price,
-    lables: lables,
+    labels: labels,
     info: info
   });
 };
