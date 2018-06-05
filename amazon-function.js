@@ -55,7 +55,8 @@ const jsonMapper = (asin) => (info , next) => {
     title: title,
     content: content,
     image: image,
-    price: price
+    price: price,
+    info: info
   });
 };
 
