@@ -94,7 +94,7 @@ router
       }
       req.oph.execute('BrowseNodeLookup', {
         'BrowseNodeId': node,
-        'ResponseGroup': 'NewReleases'
+        'ResponseGroup': 'TopSellers'
       })
       .then((info) => {
         next(null, {
