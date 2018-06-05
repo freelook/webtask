@@ -53,7 +53,7 @@ const jsonMapper = (asin) => (info , next) => {
     var nodeName = _.get(node, 'Name');
     var nodeAncestor = _.get(node, 'Ancestors.BrowseNode');
     nodeName && labels.push(_.get(node, 'Name'));
-    nodeAncestor && fetchNodeName(nodeAncestor); 
+    nodeAncestor && fetchNodeName(nodeAncestor);
   })(_.get(item, 'BrowseNodes.BrowseNode'));
   if(!title || !content || !image || !price) {
     return next('No content.');
