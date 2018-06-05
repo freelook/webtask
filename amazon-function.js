@@ -93,7 +93,8 @@ router
         return next('No node provided.');
       }
       req.oph.execute('ItemSearch', {
-        'BrowseNode': node
+        'BrowseNode': node,
+        'ResponseGroup': 'Large'
       })
       .then((info) => {
         next(null, {
