@@ -76,10 +76,31 @@ router
         return next('No asin provided.');
       }
       req.oph.execute('ItemLookup', {
-        'ItemId': req.params.asin,
+        'ItemId': asin,
         'ResponseGroup': 'Large'
       })
       .then((info) => jsonMapper(asin)(info, next))
+      .catch((err) => next(err));
+    }
+  ],
+  (err, info) => responseHandler(err, res, info));
+})
+.get('/browsenodelookup/:node', function (req, res) {
+  as.waterfall([
+    (next) => {
+      var node = _.get(req, 'params.node');
+      if(!node) {
+        return next('No node provided.');
+      }
+      req.oph.execute('BrowseNodeLookup', {
+        'BrowseNodeId': node,
+        'ResponseGroup': 'BrowseNodeInfo'
+      })
+      .then((info) => {
+        next(null, {
+          info: info
+        });
+      })
       .catch((err) => next(err));
     }
   ],
