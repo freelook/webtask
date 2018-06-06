@@ -16,13 +16,13 @@ const publisher = (context) => (params, next) => as.map(
       url: context.secrets[source],
       qs: {token: context.secrets.token},
       json: context.body
-    }, () => loader({
+    }, (err) => loader({
       method: 'patch',
       url: `${context.secrets.storeFunction}/${context.body._id}`,
       qs: {token: context.secrets.token},
       json: _.once(() => {
         var json = {};
-        json[`${source}Published`] = true;
+        json[`${source}Published`] = !err;
         return json;
       })()
     }, () => next())
