@@ -18,7 +18,7 @@ module.exports = function(context, cb) {
    (next) => loader({
       url: `${context.secrets.queueFunction}/ack`,
       qs: {token: context.secrets.token}
-    }, next),
+    }, (err, msg) => next(null, err || msg)),
     (msg, next) => loader({
       method: 'put',
       url: `${context.secrets.storeFunction}/${context.body._id}`,
