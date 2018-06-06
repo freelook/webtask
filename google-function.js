@@ -78,8 +78,9 @@ const generateContent = (payload) => {
     <div class="fli-image" style="text-align:center;">
       <a href="${url}"><img src="${img}"/></a>
     </div>
-    <div class="fli-description"><i>${description}</i></div>
-    <div class="fli-content">${content || title}</div>
+    <div class="fli-description">${description}</div>
+    <div class="fli-content">${content}</div>
+    <div class="fli-title"><a href="${url}">${title}</a></div>
     <div class="fli-link" data-url="${url}"></div>
   </div>`;
 };
