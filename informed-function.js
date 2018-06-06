@@ -15,9 +15,6 @@ module.exports = function(context, cb) {
   if(!_.get(context, 'body._id')) {
     return cb('No _id provided.');
   }
-  if(!_.get(context, 'body.payload.asin')) {
-    return cb('No asin provided.');
-  }
   if(!_.chain(context).get('body.payload.info').isEmpty().value()) {
     return cb('Info already provided.');
   }
