@@ -24,7 +24,7 @@ const validateMiddleware = (req, res, next) => {
      responseHandler(errMsgUrl, res);
      return next(errMsgUrl);
   }
-  return next(); 
+  return next();
 };
 const responseHandler = (err, res, data) => {
   if(!!err) {
