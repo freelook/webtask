@@ -33,7 +33,7 @@ module.exports = function(context, cb) {
       (next) => loader({
         url: `${context.secrets.amazonFunction}/${context.body.payload.asin}`,
         qs: {token: context.secrets.token}
-      }, next),
+      }, (err, info) => next(null, err || info)),
       (info, next) => loader({
         method: 'patch',
         url: `${context.secrets.storeFunction}/${context.body._id}`,
