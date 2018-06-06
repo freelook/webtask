@@ -44,6 +44,6 @@ module.exports = function(context, cb) {
     ], cb);
   }
   return as.waterfall([
-    (next) => informed(context, () => next(null, info))
+    (next) => informed(context, () => next())
   ], cb);
 };
