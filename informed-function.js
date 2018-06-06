@@ -3,6 +3,14 @@ const request = fli.npm.request;
 const as = fli.npm.async;
 const _ = fli.npm.lodash;
 const loader = fli.lib.loader;
+const informed = (context, next) => loader({
+  method: 'put',
+  url: `${context.secrets.storeFunction}/${context.body._id}`,
+  qs: {token: context.secrets.token},
+  json: {
+    state: 'informed'
+  }
+}, next);
 
 /**
 * @param context {WebtaskContext}
@@ -18,25 +26,24 @@ module.exports = function(context, cb) {
   if(!_.chain(context).get('body.payload.info').isEmpty().value()) {
     return cb('Info already provided.');
   }
-  console.log(`-- asin: ${context.body.payload.asin}`);
+  var asin = context.body.payload.asin;
+  console.log(`-- asin: ${asin}`);
+  if(!!asin) {
+    return as.waterfall([
+      (next) => loader({
+        url: `${context.secrets.amazonFunction}/${context.body.payload.asin}`,
+        qs: {token: context.secrets.token}
+      }, next),
+      (info, next) => loader({
+        method: 'patch',
+        url: `${context.secrets.storeFunction}/${context.body._id}`,
+        qs: {token: context.secrets.token},
+        json: {info: info}
+      }, () => next(null, info)),
+      (info, next) => informed(context, () => next(null, info))
+    ], cb);
+  }
   return as.waterfall([
-    (next) => loader({
-      url: `${context.secrets.amazonFunction}/${context.body.payload.asin}`,
-      qs: {token: context.secrets.token}
-    }, next),
-    (info, next) => loader({
-      method: 'patch',
-      url: `${context.secrets.storeFunction}/${context.body._id}`,
-      qs: {token: context.secrets.token},
-      json: {info: info}
-    }, () => next(null, info)),
-    (info, next) => loader({
-      method: 'put',
-      url: `${context.secrets.storeFunction}/${context.body._id}`,
-      qs: {token: context.secrets.token},
-      json: {
-        state: 'informed'
-      }
-    }, () => next(null, info))
+    (next) => informed(context, () => next(null, info))
   ], cb);
 };
