@@ -75,12 +75,11 @@ const generateContent = (payload) => {
   const content = _.get(payload, 'info.content') || '';
   return `
   <div>
-    <div class="fli-title"><h2>${title}</h2></div>
     <div class="fli-image" style="text-align:center;">
       <a href="${url}"><img src="${img}"/></a>
     </div>
     <div class="fli-description"><i>${description}</i></div>
-    <div class="fli-content">${content}</div>
+    <div class="fli-content">${content || title}</div>
     <div class="fli-link" data-url="${url}"></div>
   </div>`;
 };
