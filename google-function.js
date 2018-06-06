@@ -80,8 +80,8 @@ const generateContent = (payload) => {
       <a href="${url}"><img src="${img}"/></a>
     </div>
     <div class="fli-description"><i>${description}</i></div>
-    <div class="fli-link"><a href="${url}">Go to deal</a></div>
     <div class="fli-content">${content}</div>
+    <div class="fli-link" data-url="${url}"></div>
   </div>`;
 };
 
