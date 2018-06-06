@@ -38,6 +38,7 @@ const responseHandler = (err, res, data) => {
 };
 const jsonMapper = (asin) => (info , next) => {
   var item = _.get(info, 'result.ItemLookupResponse.Items.Item');
+  return next(null, 'info');
   if(!item || item.ASIN !== asin) {
     return next('Incorrect info.');
   }
