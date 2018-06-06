@@ -19,12 +19,12 @@ const validateMiddleware = (req, res, next) => {
      responseHandler(errMsgId, res);
      return next(errMsgId);
   }
-  if(!_.get(req, 'body.payload.shortUrl')) {
-     const errMsgShortUrl = 'No shortUrl provided.';
-     responseHandler(errMsgShortUrl, res);
-     return next(errMsgShortUrl);
+  if(!(_.get(req, 'body.payload.shortUrl') || _.get(req, 'body.payload.url'))) {
+     const errMsgUrl = 'No url provided.';
+     responseHandler(errMsgUrl, res);
+     return next(errMsgUrl);
   }
-  return next();
+  return next(); 
 };
 const responseHandler = (err, res, data) => {
   if(!!err) {
@@ -35,14 +35,15 @@ const responseHandler = (err, res, data) => {
 
 router
 .all('/publish', function (req, res) {
-  console.log(`-- facebook published: ${req.body.payload.promoText} ${req.body.payload.shortUrl}`);
+  const url = _.get(req, 'body.payload.shortUrl') || _.get(req, 'body.payload.url');
+  console.log(`-- facebook published: ${req.body.payload.promoText} ${url}`);
   as.waterfall([
    (next) => loader({
     method: 'post',
     url: req.webtaskContext.secrets.facebookPublishDyno,
     qs: {token: req.webtaskContext.secrets.token}, 
     json: {
-      text: `${req.body.payload.promoText} ${req.body.payload.shortUrl}`
+      text: `${req.body.payload.promoText} ${url}`
     }
    }, next)
   ],
