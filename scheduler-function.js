@@ -1,23 +1,17 @@
-const request = require('request');
-const as = require('async');
-const _ = require('lodash');
-
-const loader = (params, next) => request.get({
-    url: params.url,
-    qs: params.qs
-  }, (err, res, body) => {
-    if(!!err || res.statusCode !== 200 || !body) {
-      return next(err || body || 'No body.');
-    }
-    return next(null, body);
-});
+const fli = require('fli-webtask');
+const as = fli.npm.async;
+const _ = fli.npm.lodash;
+const loader = fli.lib.loader;
 
 const worker = (context) => (params, next) => as.map(
   params.tasks,
-  (task, next) => loader({
+  (task, next) => {
+    loader({
     url: context.secrets[task], 
     qs: {token: context.secrets.token}
-  }, next), 
+  }, () => {});
+  next();
+  }, 
   next
 );
 
