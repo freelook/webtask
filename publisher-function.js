@@ -11,7 +11,7 @@ const publisher = (context) => (params, next) => as.map(
       return next(null, `${source} already published`);
     }
     console.log(`-- published ${source}`);
-    return loader({
+    loader({
       method: 'post',
       url: context.secrets[source],
       qs: {token: context.secrets.token},
@@ -25,8 +25,8 @@ const publisher = (context) => (params, next) => as.map(
         json[`${source}Published`] = true;
         return json;
       })()
-    }, () => next())
-    );
+    }, () => {}));
+    return next();
   },
   next
 );
