@@ -35,6 +35,7 @@ module.exports = function(context, cb) {
        promoExpired: (description.match(/.+Expires (.+?)<.+/) || [])[1] || '',
        promoDescription: description
         .replace(/<a(.+?)<\/a>/gim, "")
+        .replace("<tr><td></td><td>", "")
         .replace(context.secrets.rssTag, context.secrets.fliTag),
        asin: (link.match(/.+\/dp\/([\w]+)\/.+/) || [])[1] || '',
        node: (link.match(/.+node=([\w]+)&.+/) || [])[1] || '',
