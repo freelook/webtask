@@ -33,7 +33,9 @@ module.exports = function(context, cb) {
        promoListPrice: (description.match(/.+List Price: <strike>\$(.+?)<.+/) || [])[1] || '',
        promoDealPrice: (description.match(/.+Deal Price: \$(.+?)<.+/) || [])[1] || '',
        promoExpired: (description.match(/.+Expires (.+?)<.+/) || [])[1] || '',
-       promoDescription: description.replace(context.secrets.rssTag, context.secrets.fliTag),
+       promoDescription: description
+        .replace(/<a(.+?)<\/a>/gim, "")
+        .replace(context.secrets.rssTag, context.secrets.fliTag),
        asin: (link.match(/.+\/dp\/([\w]+)\/.+/) || [])[1] || '',
        node: (link.match(/.+node=([\w]+)&.+/) || [])[1] || '',
        url: link.replace(context.secrets.rssTag, context.secrets.fliTag)
