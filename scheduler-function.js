@@ -17,14 +17,15 @@ const worker = (context) => (params, next) => as.map(
 
 const mmHandler = (context) => (storage, next) => {
   storage.count.mm += 1;
-  return worker(context)({tasks: storage.tasks.mm}, (err, result) => next(null, storage));
+  worker(context)({tasks: storage.tasks.mm}, () => {});
+  return next(null, storage);
 };
 
 const hhHandler = (context) => (storage, next) => {
   if(storage.count.mm >= 60) {
     storage.count.mm = 0;
     storage.count.hh += 1;
-    return worker(context)({tasks: storage.tasks.hh}, (err, result) => next(null, storage));
+    worker(context)({tasks: storage.tasks.hh}, () => {});
   }
   return next(null, storage);
 };
@@ -32,7 +33,7 @@ const hhHandler = (context) => (storage, next) => {
 const ddHandler = (context) => (storage, next) => {
   if(storage.count.hh >= 24) {
     storage.count.hh = 0;
-    return worker(context)({tasks: storage.tasks.dd}, (err, result) => next(null, storage));
+    worker(context)({tasks: storage.tasks.dd}, () => {});
   }
   return next(null, storage);
 };
