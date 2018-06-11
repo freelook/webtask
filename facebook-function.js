@@ -6,6 +6,7 @@ const request = fli.npm.request;
 const as = fli.npm.async;
 const _ = fli.npm.lodash;
 const loader = fli.lib.loader;
+const responseHandler = fli.lib.responseHandler;
 const app = express();
 const router = express.Router();
 const validateMiddleware = (req, res, next) => {
@@ -25,12 +26,6 @@ const validateMiddleware = (req, res, next) => {
      return next(errMsgUrl);
   }
   return next();
-};
-const responseHandler = (err, res, data) => {
-  if(!!err) {
-    return res.status(400).json(err);
-  }
-  return res.status(200).json(data);
 };
 
 router
