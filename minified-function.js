@@ -3,6 +3,14 @@ const request = fli.npm.request;
 const as = fli.npm.async;
 const _ = fli.npm.lodash;
 const loader = fli.lib.loader;
+const minified = (context, next) => loader({
+  method: 'put',
+  url: `${context.secrets.storeFunction}/${context.body._id}`,
+  qs: {token: context.secrets.token},
+  json: {
+    state: 'minified'
+  }
+}, next);
 
 /**
 * @param context {WebtaskContext}
@@ -13,7 +21,7 @@ module.exports = function(context, cb) {
   }
   console.log(`- minified`);
   if(!!_.get(context, 'body.payload.shortUrl')) {
-    return cb('shortUrl already provided.');
+    return minified(context, () => cb('shortUrl already provided.'));
   }
   if(!_.get(context, 'body._id')) {
     return cb('No _id provided.');
@@ -35,13 +43,6 @@ module.exports = function(context, cb) {
       qs: {token: context.secrets.token},
       json: {shortUrl: _.get(info, 'shortUrl', '')}
     }, () => next(null, info)),
-    (info, next) => loader({
-      method: 'put',
-      url: `${context.secrets.storeFunction}/${context.body._id}`,
-      qs: {token: context.secrets.token},
-      json: {
-        state: 'minified'
-      }
-    }, () => next(null, info))
+    (info, next) => minified(context, () => next(null, info))
   ], cb);
 };
