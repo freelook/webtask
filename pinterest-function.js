@@ -31,7 +31,7 @@ const validateMiddleware = (req, res, next) => {
 const pinterestMiddleware = (req, res, next) => {
   req.pinterest = pinterest.init(req.webtaskContext.secrets.access_token);
   next();
-}; 
+};
 
 router
 .all('/publish', function (req, res) {
