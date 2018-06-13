@@ -42,7 +42,7 @@ router
 .all('/publish', function (req, res) {
   const url = _.get(req, 'body.payload.shortUrl') || _.get(req, 'body.payload.url');
   const imgUrl = _.get(req, 'body.payload.promoImg') || _.get(req, 'body.payload.info.image');
-  const promoText = _.get(req, 'body.payload.promoText');
+  const promoText = _.get(req, 'body.payload.promoText') || _.get(req, 'body.payload.info.title');
   console.log(`-- twitter published: ${promoText} ${url}`);
   as.waterfall([
    (next) => fli.npm.request({
