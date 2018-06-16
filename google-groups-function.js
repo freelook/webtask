@@ -62,7 +62,7 @@ router
       }, (err, info) => next(null, err || info))
   ],
   (err, response) => {
-    responseHandler(err, res, response); 
+    responseHandler(err, res, response);
   });
 });
 
