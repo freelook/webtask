@@ -43,7 +43,6 @@ const generateMail = (payload, to) => {
     <div class="fli-title"><a href="${url}">${title}</a></div>
     <div class="fli-link" data-url="${url}"></div>
   </div>`;
-  console.log(to, title, body);
   return {
     to: to,
     subject: title,
