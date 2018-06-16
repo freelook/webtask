@@ -104,7 +104,7 @@ router
     }
   ],
   (err, response) => {
-    responseHandler(err, res, _.get(response, 'data', 'no data'));
+    responseHandler(err, res, _.toString(response));
   });
 });
 
