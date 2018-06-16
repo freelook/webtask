@@ -17,16 +17,19 @@ const validateMiddleware = (req, res, next) => {
      responseHandler(errMsgToken, res);
      return next(errMsgToken);
   }
-  if(!_.get(req, 'body._id')) {
-     const errMsgId = 'No _id provided.';
-     responseHandler(errMsgId, res);
-     return next(errMsgId);
+  const to = _.get(req, 'query.to') || _.get(req, 'body.to');
+  const subject = _.get(req, 'query.subject') || _.get(req, 'body.subject');
+  const body = _.get(req, 'query.body') || _.get(req, 'body.body');
+  if(!(to && subject && body)) {
+     const errMsgMail = 'No mail params provided: to, email, body.';
+     responseHandler(errMsgMail, res);
+     return next(errMsgMail);
   }
-  if(!(_.get(req, 'body.payload.shortUrl') || _.get(req, 'body.payload.url'))) {
-     const errMsgUrl = 'No url provided.';
-     responseHandler(errMsgUrl, res);
-     return next(errMsgUrl);
-  }
+  req.mailParams = {
+    to: to,
+    subject: subject,
+    body: body
+  };
   return next();
 };
 const refreshToken = (context, cb) => {
@@ -72,8 +75,22 @@ const auth = (context, cb) => {
     return cb(null, authObj); 
   });
 };
-const generateContent = (payload) => {
-
+const generateMail = (m) => {
+  const messageParts = [
+    `To: <${m.to}>`,
+    'Content-Type: text/html; charset=utf-8',
+    'MIME-Version: 1.0',
+    `Subject: ${m.subject}`,
+    '',
+    `${m.body}`
+  ];
+  const message = messageParts.join('\n');    
+  const encodedMessage = Buffer.from(message)
+  .toString('base64')
+  .replace(/\+/g, '-')
+  .replace(/\//g, '_')
+  .replace(/=+$/, '');
+  return encodedMessage;
 };
 
 router
@@ -82,32 +99,16 @@ router
   as.waterfall([
     (next) => auth(req.webtaskContext, next),
     (authObj, next) => {
-      const messageParts = [
-        'From: <mr.freelook.info@gmail.com>',
-        'To: <freelook@mail.ua>',
-        'Content-Type: text/html; charset=utf-8',
-        'MIME-Version: 1.0',
-        `Subject: Hi`,
-        '',
-        'This is a message just to say hello.',
-        'So... <b>Hello!</b>  🤘❤️😎'
-      ];
-      const message = messageParts.join('\n');    
-      const encodedMessage = Buffer.from(message)
-      .toString('base64')
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=+$/, '');
       gmail.users.messages.send({
         auth: authObj,
         userId: 'me',
         clientId: req.webtaskContext.secrets.client_id,
         requestBody: {
-          raw: encodedMessage
+          raw: generateMail(req.mailParams)
         }
       })
       .then(data => next(null, data))
-      .catch(err => next(null, err));
+      .catch(err => next(null, err)); 
     }
   ],
   (err, response) => {
@@ -117,6 +118,6 @@ router
 
 app
 .use(bodyParser.json())
-.use('/', /*validateMiddleware,*/ router);
+.use('/', validateMiddleware, router);
 
 module.exports = wt.fromExpress(app);
