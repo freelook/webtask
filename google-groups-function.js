@@ -59,7 +59,7 @@ router
         method: 'post',
         url: req.webtaskContext.secrets.gmailFunction,
         qs: {token: req.webtaskContext.secrets.token},
-        json: generateMail(_.get(req, 'webtaskContext.body.payload'), req.webtaskContext.secrets.groupEmail)
+        json: generateMail(_.get(req, 'body.payload'), req.webtaskContext.secrets.groupEmail)
       }, (err, info) => next(null, err || info))
   ],
   (err, response) => {
