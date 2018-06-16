@@ -21,7 +21,7 @@ const validateMiddleware = (req, res, next) => {
   const subject = _.get(req, 'query.subject') || _.get(req, 'body.subject');
   const body = _.get(req, 'query.body') || _.get(req, 'body.body');
   if(!(to && subject && body)) {
-     const errMsgMail = 'No mail params provided: to, email, body.';
+     const errMsgMail = 'No mail params provided: to, subject, body.';
      responseHandler(errMsgMail, res);
      return next(errMsgMail);
   }
