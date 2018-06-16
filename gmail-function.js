@@ -26,6 +26,7 @@ const validateMiddleware = (req, res, next) => {
      return next(errMsgMail);
   }
   req.mailParams = {
+    from: req.webtaskContext.secrets.from,
     to: to,
     subject: subject,
     body: body
@@ -77,6 +78,7 @@ const auth = (context, cb) => {
 };
 const generateMail = (m) => {
   const messageParts = [
+    `From: <${m.from}>`,
     `To: <${m.to}>`,
     'Content-Type: text/html; charset=utf-8',
     'MIME-Version: 1.0',
