@@ -108,7 +108,7 @@ router
         }
       })
       .then(data => next(null, data))
-      .catch(err => next(null, err)); 
+      .catch(err => next(null, err));
     }
   ],
   (err, response) => {
