@@ -16,25 +16,12 @@ const worker = (context) => (params, next) => as.map(
 );
 
 const mmHandler = (context) => (storage, next) => {
-  storage.count.mm += 1;
   worker(context)({tasks: storage.tasks.mm}, () => {});
   return next(null, storage);
 };
 
-const hhHandler = (context) => (storage, next) => {
-  if(storage.count.mm >= 60) {
-    storage.count.mm = 0;
-    storage.count.hh += 1;
-    worker(context)({tasks: storage.tasks.hh}, () => {});
-  }
-  return next(null, storage);
-};
-
-const ddHandler = (context) => (storage, next) => {
-  if(storage.count.hh >= 24) {
-    storage.count.hh = 0;
-    worker(context)({tasks: storage.tasks.dd}, () => {});
-  }
+const cronHandler = (context) => (storage, next) => {
+  worker(context)({tasks: []]}, () => {});
   return next(null, storage);
 };
 
@@ -48,8 +35,7 @@ module.exports = function(context, cb) {
   return as.waterfall([
    (next) => context.storage.get(next),
    (storage, next) => mmHandler(context)(storage, next),
-   (storage, next) => hhHandler(context)(storage, next),
-   (storage, next) => ddHandler(context)(storage, next),
+   (storage, next) => cronHandler(context)(storage, next),
    (storage, next) => context.storage.set(storage, next)
   ], cb);
 };
