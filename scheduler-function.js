@@ -1,10 +1,9 @@
 const fli = require('fli-webtask');
 const m = require('moment');
-const mz = require('moment-timezone');
 const cron = require('cron-converter');
 const as = fli.npm.async;
 const _ = fli.npm.lodash;
-const loader = fli.lib.loader;
+const loader = fli.lib.loader; 
 
 const worker = (context) => (params, next) => as.map(
   params.tasks,
@@ -19,14 +18,14 @@ const worker = (context) => (params, next) => as.map(
 );
 
 const cronHandler = (context) => (storage, next) => {
-  const now = mz().tz(context.secrets.TIME_ZONE);
-  const today =  mz().tz(context.secrets.TIME_ZONE).startOf('day');
+  const now = m().add(2, 'h').startOf('m');
+  const tick = m(now).add(1, 'm');
   var tasks = [];
   _.keys(storage.tasks)
     .filter((key) => {
       var cronInstance = new cron();
       cronInstance.fromString(key);
-      return cronInstance.schedule(now).prev().isBetween(today, now);
+      return cronInstance.schedule(now).next().isBetween(now, tick, null, '[)');
     })
     .map((key) => {
       tasks.push.apply(tasks, storage.tasks[key]);
