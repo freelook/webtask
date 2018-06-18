@@ -7,6 +7,7 @@ const as = fli.npm.async;
 * @param context {WebtaskContext}
 */
 module.exports = function(context, cb) {
+  console.log('- deals');
   if(context.secrets.token !== context.query.token) {
     return cb('No token.');
   }
