@@ -15,13 +15,8 @@ const worker = (context) => (params, next) => as.map(
   next
 );
 
-const mmHandler = (context) => (storage, next) => {
-  worker(context)({tasks: storage.tasks.mm}, () => {});
-  return next(null, storage);
-};
-
 const cronHandler = (context) => (storage, next) => {
-  worker(context)({tasks: []]}, () => {});
+  worker(context)({tasks: []}, () => {});
   return next(null, storage);
 };
 
@@ -34,7 +29,6 @@ module.exports = function(context, cb) {
   }
   return as.waterfall([
    (next) => context.storage.get(next),
-   (storage, next) => mmHandler(context)(storage, next),
    (storage, next) => cronHandler(context)(storage, next),
    (storage, next) => context.storage.set(storage, next)
   ], cb);
