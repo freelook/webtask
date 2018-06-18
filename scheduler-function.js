@@ -32,7 +32,6 @@ module.exports = function(context, cb) {
   }
   return as.waterfall([
    (next) => context.storage.get(next),
-   (storage, next) => cronHandler(context)(storage, next),
-   (storage, next) => context.storage.set(storage, next)
+   (storage, next) => cronHandler(context)(storage, next)
   ], cb);
 };
