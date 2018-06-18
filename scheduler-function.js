@@ -38,6 +38,7 @@ const cronHandler = (context) => (storage, next) => {
 * @param context {WebtaskContext}
 */
 module.exports = function(context, cb) {
+  console.log(_.get(context, 'body.container'));
   if(context.secrets.container !== _.get(context, 'body.container')) {
     return cb('No container token.');
   }
