@@ -11,11 +11,14 @@ const app = express();
 const router = express.Router();
 const loader = fli.lib.loader;
 const responseHandler = fli.lib.responseHandler;
-const streamer = (webtaskContext) => (item, next) => loader({
+const streamer = (req) => (item, next) => loader({
     method: 'post',
-    url: webtaskContext.secrets.notificationFunction,
-    qs: {token: webtaskContext.secrets.token, topic: item.state},
-    json: item
+    url: req.webtaskContext.secrets.notificationFunction,
+    qs: {token: req.webtaskContext.secrets.token, topic: item.state},
+    json: (() => {
+      item.db = req.db;
+      return item;
+    })()
 }, next);
 const createDbConnection = (db) => {
   if(!dbConnection) {
@@ -23,7 +26,7 @@ const createDbConnection = (db) => {
   }
   return dbConnection;
 };
-const createStoreSchema = (webtaskContext) => {
+const createStoreSchema = (req) => {
   if(!StoreSchema) {
     StoreSchema = mongoose.Schema({
       updated: {type: Date, default: Date.now},
@@ -36,7 +39,7 @@ const createStoreSchema = (webtaskContext) => {
     });
     StoreSchema.post('save', function(item, next) {
       if(!!this.isStreamRequired) {
-        streamer(webtaskContext)(item, ()=>{});
+        streamer(req)(item, ()=>{});
       }
       next();
     });
@@ -64,7 +67,7 @@ const validateMiddleware = (req, res, next) => {
   return next();
 };
 const mongoDbMiddleware = (req, res, next) => {
-  req.Store = createDbConnection(req.db).model('Store', createStoreSchema(req.webtaskContext));
+  req.Store = createDbConnection(req.db).model('Store', createStoreSchema(req));
   next();
 };
 
