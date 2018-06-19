@@ -37,7 +37,6 @@ const mongoDbQueueMiddleware = (req, res, next) => {
 router
 .all('/add/:msg?', function (req, res) {
   var msg = _.get(req, 'body.msg') || _.get(req, 'params.msg');
-  console.log(req.body, msg);
   if(!msg) {
     return responseHandler('No msg provided.', res);
   }
