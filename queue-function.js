@@ -12,12 +12,12 @@ const router = express.Router();
 const validateMiddleware = (req, res, next) => {
   if(req.webtaskContext.secrets.token !== req.query.token) {
      const errMsgToken = 'No token.';
-     res.status(400).send(errMsgToken);
+     responseHandler(errMsgToken, res);
      return next(errMsgToken);
   }
   if(!req.params.qq) {
      const errMsgQQ = 'No queue name provided.';
-     res.status(400).send(errMsgQQ);
+     responseHandler(errMsgQQ, res);
      return next(errMsgQQ);
   }
   return next();
