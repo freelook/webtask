@@ -1,4 +1,4 @@
-var dbConnection;
+var dbConnection, StoreSchema;
 const fli = require('fli-webtask');
 const wt = require('webtask-tools');
 const bodyParser = require('body-parser');
@@ -18,7 +18,10 @@ const streamer = (webtaskContext) => (item, next) => loader({
     json: item
 }, next);
 const createStoreSchema = (webtaskContext) => { 
-  var StoreSchema = mongoose.Schema({
+  if(!!StoreSchema) {
+    return StoreSchema;
+  }
+  StoreSchema = mongoose.Schema({
     updated: {type: Date, default: Date.now},
     state: {type: String, default: 'new'},
     payload: {type: mongoose.Schema.Types.Mixed, default: {}}
