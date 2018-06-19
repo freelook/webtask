@@ -1,11 +1,12 @@
 const fli = require('fli-webtask');
-const express = require('express');
 const wt = require('webtask-tools');
 const bodyParser = require('body-parser');
 const mongodb = require('mongodb');
 const mongoDbQueue = require('mongodb-queue');
+const express = fli.npm.request;
 const as = fli.npm.async;
 const _ = fli.npm.lodash;
+const responseHandler = fli.lib.responseHandler;
 const app = express();
 const router = express.Router();
 const validateMiddleware = (req, res, next) => {
@@ -31,12 +32,6 @@ const mongoDbQueueMiddleware = (req, res, next) => {
     });
     next(err);
   });
-};
-const responseHandler = (err, res, data) => {
-  if(!!err) {
-    return res.status(400).json(err);
-  }
-  return res.status(200).json(data);
 };
 
 router
