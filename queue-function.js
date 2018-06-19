@@ -35,7 +35,7 @@ const mongoDbQueueMiddleware = (req, res, next) => {
 };
 
 router
-.get('/add/:msg?', function (req, res) {
+.all('/add/:msg?', function (req, res) {
   var msg = _.get(req, 'body.msg') || _.get(req, 'params.msg');
   console.log(req.body, msg);
   if(!msg) {
