@@ -38,7 +38,7 @@ router
 .get('/add/:msg?', function (req, res) {
   var msg = _.get(req, 'body.msg') || _.get(req, 'params.msg');
   if(!msg) {
-    return responseHandler('No msg provided.'. res);
+    return responseHandler('No msg provided.', res);
   }
   as.waterfall([
     (next) => req.queue.add(req.body.msg || req.params.msg, next)
