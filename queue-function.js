@@ -27,7 +27,7 @@ const mongoDbQueueMiddleware = (req, res, next) => {
     req.queue = mongoDbQueue(db, req.params.qq, {
       visibility: 1,
       delay: 0,
-      maxRetries: 5,
+      maxRetries: 3,
       deadQueue: mongoDbQueue(db, `${req.params.qq}-dead`)
     });
     next(err);
