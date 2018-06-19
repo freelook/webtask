@@ -17,25 +17,30 @@ const streamer = (webtaskContext) => (item, next) => loader({
     qs: {token: webtaskContext.secrets.token, topic: item.state},
     json: item
 }, next);
-const createStoreSchema = (webtaskContext) => { 
-  if(!!StoreSchema) {
-    return StoreSchema;
+const createDbConnection = (db) => {
+  if(!dbConnection) {
+    dbConnection = mongoose.createConnection(db);
   }
-  StoreSchema = mongoose.Schema({
-    updated: {type: Date, default: Date.now},
-    state: {type: String, default: 'new'},
-    payload: {type: mongoose.Schema.Types.Mixed, default: {}}
-  }, {minimize: false});
-  StoreSchema.pre('save', function (next) {
-    this.isStreamRequired = !!this.state && (this.isNew || this.isModified('state'));
-    next();
-  });
-  StoreSchema.post('save', function(item, next) {
-    if(!!this.isStreamRequired) {
-      streamer(webtaskContext)(item, ()=>{});
-    }
-    next();
-  });
+  return dbConnection;
+};
+const createStoreSchema = (webtaskContext) => {
+  if(!StoreSchema) {
+    StoreSchema = mongoose.Schema({
+      updated: {type: Date, default: Date.now},
+      state: {type: String, default: 'new'},
+      payload: {type: mongoose.Schema.Types.Mixed, default: {}}
+    }, {minimize: false});
+    StoreSchema.pre('save', function (next) {
+      this.isStreamRequired = !!this.state && (this.isNew || this.isModified('state'));
+      next();
+    });
+    StoreSchema.post('save', function(item, next) {
+      if(!!this.isStreamRequired) {
+        streamer(webtaskContext)(item, ()=>{});
+      }
+      next();
+    });
+  }
   return StoreSchema;
 };
 const validateMiddleware = (req, res, next) => {
@@ -59,10 +64,7 @@ const validateMiddleware = (req, res, next) => {
   return next();
 };
 const mongoDbMiddleware = (req, res, next) => {
-  if(!dbConnection) {
-    dbConnection = mongoose.createConnection(req.db);
-  }
-  req.Store = dbConnection.model('Store', createStoreSchema(req.webtaskContext));
+  req.Store = createDbConnection(req.db).model('Store', createStoreSchema(req.webtaskContext));
   next();
 };
 
