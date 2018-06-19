@@ -16,10 +16,10 @@ module.exports = function(context, cb) {
   return as.waterfall([
    (next) => loader({
       url: `${context.secrets.queueFunction}/add`,
-      json: {
+      json: { msg: {
         id: context.body._id,
         db: context.body.db
-      },
+      }},
       qs: {token: context.secrets.token}
     }, next),
     (msg, next) => loader({
