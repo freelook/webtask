@@ -15,6 +15,7 @@ module.exports = function(context, cb) {
   }
   return as.waterfall([
    (next) => loader({
+      method: 'post',
       url: `${context.secrets.queueFunction}/add`,
       json: { msg: {
         id: context.body._id,
