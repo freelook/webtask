@@ -22,7 +22,7 @@ module.exports = function(context, cb) {
       if(!current) {
         return next('No item payload provided.', params);
       }
-      if(last && current && last === current) {
+      if(last && current && _.isEqual(last, current)) {
         return next('Item still in progress.', params);
       }
       params.storage.last = current;
@@ -31,7 +31,7 @@ module.exports = function(context, cb) {
     (params, next) => context.storage.set(params.storage, () => next(null, params)),
     (params, next) => loader({
         method: 'put',
-        url: `${context.secrets.storeFunction}/${params.msg.payload}`,
+        url: `${context.secrets.storeFunction}/${params.msg.payload.id}`,
         qs: {token: context.secrets.token},
         json: {
           state: 'scheduled'
