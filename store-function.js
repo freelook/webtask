@@ -1,47 +1,40 @@
-var webtaskContext, dbConnection;
-const _ = require('lodash');
-const request = require('request');
-const express = require('express');
+var dbConnection;
+const fli = require('fli-webtask');
 const wt = require('webtask-tools');
 const bodyParser = require('body-parser');
-const as = require('async');
+const mongoose = require('mongoose');
+const _ = fli.npm.lodash;
+const request = fli.npm.request;
+const express = fli.npm.express;
+const as = fli.npm.async;
 const app = express();
 const router = express.Router();
-const mongoose = require('mongoose');
-const loader = (params, next) => {
-  request({
-    method: (params.method || 'get').toUpperCase(),
-    url: params.url,
-    qs: params.qs,
-    json: params.json
-  }, (err, res, body) => {
-    if(!!err || res.statusCode !== 200 || !body) {
-      return next(err || body || 'No body.');
-    }
-    return next(null, body);
-  });
-};
-const streamer = (item, next) => loader({
+const loader = fli.lib.loader;
+const responseHandler = fli.lib.responseHandler;
+const streamer = (webtaskContext) => (item, next) => loader({
     method: 'post',
     url: webtaskContext.secrets.notificationFunction,
     qs: {token: webtaskContext.secrets.token, topic: item.state},
     json: item
 }, next);
-const StoreSchema = mongoose.Schema({
-  updated: {type: Date, default: Date.now},
-  state: {type: String, default: 'new'},
-  payload: {type: mongoose.Schema.Types.Mixed, default: {}}
-}, {minimize: false});
-StoreSchema.pre('save', function (next) {
-  this.isStreamRequired = !!this.state && (this.isNew || this.isModified('state'));
-  next();
-});
-StoreSchema.post('save', function(item, next) {
-  if(!!this.isStreamRequired) {
-    streamer(item, ()=>{});
-  }
-  next();
-});
+const createStoreSchema = (webtaskContext) => { 
+  var StoreSchema = mongoose.Schema({
+    updated: {type: Date, default: Date.now},
+    state: {type: String, default: 'new'},
+    payload: {type: mongoose.Schema.Types.Mixed, default: {}}
+  }, {minimize: false});
+  StoreSchema.pre('save', function (next) {
+    this.isStreamRequired = !!this.state && (this.isNew || this.isModified('state'));
+    next();
+  });
+  StoreSchema.post('save', function(item, next) {
+    if(!!this.isStreamRequired) {
+      streamer(webtaskContext)(item, ()=>{});
+    }
+    next();
+  });
+  return StoreSchema;
+};
 const validateMiddleware = (req, res, next) => {
   if(req.webtaskContext.secrets.token !== req.query.token) {
      const errMsgToken = 'No token.';
@@ -59,7 +52,6 @@ const validateMiddleware = (req, res, next) => {
      res.status(400).send(errMsgDBEmpty);
      return next(errMsgDBEmpty);
   }
-  webtaskContext = req.webtaskContext;
   req.db = db;
   return next();
 };
@@ -67,14 +59,8 @@ const mongoDbMiddleware = (req, res, next) => {
   if(!dbConnection) {
     dbConnection = mongoose.createConnection(req.db);
   }
-  req.Store = dbConnection.model('Store', StoreSchema);
+  req.Store = dbConnection.model('Store', createStoreSchema(req.webtaskContext));
   next();
-};
-const responseHandler = (err, res, data) => {
-  if(!!err) {
-    return res.status(400).json(err);
-  }
-  return res.status(200).json(data);
 };
 
 router
