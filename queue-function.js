@@ -37,7 +37,10 @@ const mongoDbQueueMiddleware = (req, res, next) => {
 router
 .get('/add/:msg', function (req, res) {
   as.waterfall([
-    (next) => req.queue.add(req.params.msg, next)
+    (next) => req.queue.add({
+      db: req.params.db,
+      msg: req.params.msg
+    }, next)
   ],
   (err, id) => responseHandler(err, res, {id:id}));
 })
