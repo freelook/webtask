@@ -5,7 +5,7 @@ const _ = fli.npm.lodash;
 const loader = fli.lib.loader;
 const informed = (context, next) => loader({
   method: 'put',
-  url: `${context.secrets.storeFunction}/${context.body._id}`,
+  url: `${context.secrets.storeFunction}/${context.body.db}/${context.body._id}`,
   qs: {token: context.secrets.token},
   json: {
     state: 'informed'
@@ -36,7 +36,7 @@ module.exports = function(context, cb) {
       }, (err, info) => next(null, err || info)),
       (info, next) => loader({
         method: 'patch',
-        url: `${context.secrets.storeFunction}/${context.body._id}`,
+        url: `${context.secrets.storeFunction}/${context.body.db}/${context.body._id}`,
         qs: {token: context.secrets.token},
         json: {info: info}
       }, () => next(null, info)),
