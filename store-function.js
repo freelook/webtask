@@ -16,6 +16,7 @@ const streamer = (req) => (item, next) => loader({
     url: req.webtaskContext.secrets.notificationFunction,
     qs: {token: req.webtaskContext.secrets.token, topic: item.state},
     json: (() => {
+      console.log('1----', req.params.db);
       item.db = req.params.db;
       return item;
     })()
@@ -28,7 +29,6 @@ const createDbConnection = (db) => {
 };
 const createStoreSchema = (req) => {
   const db = req.params.db;
-  console.log('2----', req.params.db);
   if(!StoreSchema) {
     StoreSchema = mongoose.Schema({
       updated: {type: Date, default: Date.now},
@@ -41,7 +41,7 @@ const createStoreSchema = (req) => {
     });
     StoreSchema.post('save', function(item, next) {
       if(!!this.isStreamRequired) {
-        console.log('3----', req.params.db, db);
+        req.params.db = db;
         streamer(req)(item, ()=>{});
       }
       next();
@@ -70,7 +70,6 @@ const validateMiddleware = (req, res, next) => {
   return next();
 };
 const mongoDbMiddleware = (req, res, next) => {
-  console.log('1----', req.params.db);
   req.Store = createDbConnection(req.db).model('Store', createStoreSchema(req));
   next();
 };
