@@ -5,7 +5,7 @@ const _ = fli.npm.lodash;
 const loader = fli.lib.loader;
 const minified = (context, next) => loader({
   method: 'put',
-  url: `${context.secrets.storeFunction}/${context.body._id}`,
+  url: `${context.secrets.storeFunction}/${context.body.db}/${context.body._id}`,
   qs: {token: context.secrets.token},
   json: {
     state: 'minified'
@@ -39,7 +39,7 @@ module.exports = function(context, cb) {
     }, next),
     (info, next) => loader({
       method: 'patch',
-      url: `${context.secrets.storeFunction}/${context.body._id}`,
+      url: `${context.secrets.storeFunction}/${context.body.db}/${context.body._id}`,
       qs: {token: context.secrets.token},
       json: {shortUrl: _.get(info, 'shortUrl', '')}
     }, () => next(null, info)),
