@@ -27,6 +27,7 @@ const createDbConnection = (db) => {
   return dbConnection;
 };
 const createStoreSchema = (req) => {
+  const db = req.params.db;
   console.log('2----', req.params.db);
   if(!StoreSchema) {
     StoreSchema = mongoose.Schema({
@@ -40,7 +41,7 @@ const createStoreSchema = (req) => {
     });
     StoreSchema.post('save', function(item, next) {
       if(!!this.isStreamRequired) {
-        console.log('3----', req.params.db);
+        console.log('3----', req.params.db, db);
         streamer(req)(item, ()=>{});
       }
       next();
