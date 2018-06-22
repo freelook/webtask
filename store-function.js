@@ -16,6 +16,7 @@ const streamer = (req) => (item, next) => loader({
     url: req.webtaskContext.secrets.notificationFunction,
     qs: {token: req.webtaskContext.secrets.token, topic: item.state},
     json: (() => {
+      console.log('----', req.params.db);
       item.db = req.params.db;
       return item;
     })()
