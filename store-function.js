@@ -17,7 +17,6 @@ const streamer = (req) => (item, next) => loader({
     qs: {token: req.webtaskContext.secrets.token, topic: item.state},
     json: (() => {
       var json = Object.assign({db:req.params.db}, item.toObject());
-      console.log(json);
       return json;
     })()
 }, next);
