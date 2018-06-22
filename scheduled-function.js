@@ -31,7 +31,7 @@ module.exports = function(context, cb) {
     (params, next) => context.storage.set(params.storage, () => next(null, params)),
     (params, next) => loader({
         method: 'put',
-        url: `${context.secrets.storeFunction}/${params.msg.payload.id}`,
+        url: `${context.secrets.storeFunction}/${context.body.db}/${params.msg.payload.id}`,
         qs: {token: context.secrets.token},
         json: {
           state: 'scheduled'
