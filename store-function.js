@@ -41,7 +41,7 @@ const createStoreSchema = (req) => {
     });
     StoreSchema.post('save', function(item, next) {
       if(!!this.isStreamRequired) {
-        console.log('2----', req.params.db);
+        console.log('3----', req.params.db);
         streamerReq(item, ()=>{});
       }
       next();
