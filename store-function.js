@@ -16,7 +16,7 @@ const streamer = (req) => (item, next) => loader({
     url: req.webtaskContext.secrets.notificationFunction,
     qs: {token: req.webtaskContext.secrets.token, topic: item.state},
     json: (() => {
-      var json = Object.assign({db:req.params.db}, item.toObject());
+      var json = Object.assign({db:req.dbName}, item.toObject());
       return json;
     })()
 }, next);
@@ -40,7 +40,7 @@ const createStoreSchema = (req) => {
     });
     StoreSchema.post('save', function(item, next) {
       if(!!this.isStreamRequired) {
-        req.params.db = db;
+        req.dbName = db;
         streamer(req)(item, ()=>{});
       }
       next();
