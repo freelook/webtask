@@ -18,7 +18,7 @@ const publisher = (context) => (params, next) => as.map(
       json: context.body
     }, () => loader({
       method: 'patch',
-      url: `${context.secrets.storeFunction}/${context.body._id}`,
+      url: `${context.secrets.storeFunction}/${context.body.db}/${context.body._id}`,
       qs: {token: context.secrets.token},
       json: _.once(() => {
         var json = {};
