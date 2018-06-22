@@ -16,7 +16,7 @@ const streamer = (req) => (item, next) => loader({
     url: req.webtaskContext.secrets.notificationFunction,
     qs: {token: req.webtaskContext.secrets.token, topic: item.state},
     json: (() => {
-      console.log('----', req.params.db);
+      console.log('2----', req.params.db);
       item.db = req.params.db;
       return item;
     })()
@@ -68,6 +68,7 @@ const validateMiddleware = (req, res, next) => {
   return next();
 };
 const mongoDbMiddleware = (req, res, next) => {
+  console.log('1----', req.params.db);
   req.Store = createDbConnection(req.db).model('Store', createStoreSchema(req));
   next();
 };
