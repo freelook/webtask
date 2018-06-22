@@ -16,7 +16,6 @@ const streamer = (req) => (item, next) => loader({
     url: req.webtaskContext.secrets.notificationFunction,
     qs: {token: req.webtaskContext.secrets.token, topic: item.state},
     json: (() => {
-      console.log('2----', req.params.db);
       item.db = req.params.db;
       return item;
     })()
@@ -28,7 +27,7 @@ const createDbConnection = (db) => {
   return dbConnection;
 };
 const createStoreSchema = (req) => {
-  console.log('3----', req.params.db);
+  console.log('2----', req.params.db);
   var streamerReq = streamer(req);
   if(!StoreSchema) {
     StoreSchema = mongoose.Schema({
@@ -42,6 +41,7 @@ const createStoreSchema = (req) => {
     });
     StoreSchema.post('save', function(item, next) {
       if(!!this.isStreamRequired) {
+        console.log('2----', req.params.db);
         streamerReq(item, ()=>{});
       }
       next();
