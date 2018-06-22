@@ -28,6 +28,7 @@ const createDbConnection = (db) => {
   return dbConnection;
 };
 const createStoreSchema = (req) => {
+  console.log('3----', req.params.db);
   var streamerReq = streamer(req);
   if(!StoreSchema) {
     StoreSchema = mongoose.Schema({
