@@ -18,6 +18,7 @@ const streamer = (req) => (item, next) => loader({
     json: (() => {
       console.log('1----', req.params.db);
       item.db = req.params.db;
+      console.log(item);
       return item;
     })()
 }, next);
