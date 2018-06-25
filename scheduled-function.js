@@ -14,7 +14,7 @@ module.exports = function(context, cb) {
     return as.waterfall([
       (next) => context.storage.get(next),
       (storage) => context.storage.set({last: {}})
-    ], cb);
+    ], ()=>cb());
   }
   return as.waterfall([
    (next) => context.storage.get(next),
