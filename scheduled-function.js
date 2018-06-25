@@ -13,7 +13,7 @@ module.exports = function(context, cb) {
   if(!!context.query.reset) {
     return as.waterfall([
       (next) => context.storage.get(next),
-      (storage) => context.storage.set({last: {}})
+      (storage, next) => context.storage.set({last: {}}, next)
     ], ()=>cb());
   }
   return as.waterfall([
