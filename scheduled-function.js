@@ -11,7 +11,10 @@ module.exports = function(context, cb) {
     return cb('No token.');
   }
   if(!!context.query.reset) {
-    return context.storage.set({last: {}});
+    return as.waterfall([
+      (next) => context.storage.get(next),
+      (storage) => context.storage.set({last: {}})
+    ], cb);
   }
   return as.waterfall([
    (next) => context.storage.get(next),
