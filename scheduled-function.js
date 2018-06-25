@@ -10,6 +10,9 @@ module.exports = function(context, cb) {
   if(context.secrets.token !== context.query.token) {
     return cb('No token.');
   }
+  if(!!context.query.reset) {
+    return context.storage.set({last: {}});
+  }
   return as.waterfall([
    (next) => context.storage.get(next),
    (storage, next) => loader({
