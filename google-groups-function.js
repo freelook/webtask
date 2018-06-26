@@ -25,6 +25,14 @@ const validateMiddleware = (req, res, next) => {
      responseHandler(errMsgUrl, res);
      return next(errMsgUrl);
   }
+  var db = _.get(req, 'body.db');
+  var groupEmail = req.webtaskContext.secrets[`${db}-groupEmail`];
+    if(!groupEmail) {
+     const errMsgGG = 'No gg publisher.';
+     responseHandler(errMsgGG, res);
+     return next(errMsgGG);
+  }
+  req.groupEmail = groupEmail;
   return next();
 };
 const generateMail = (payload, to) => {
@@ -58,7 +66,7 @@ router
         method: 'post',
         url: req.webtaskContext.secrets.gmailFunction,
         qs: {token: req.webtaskContext.secrets.token},
-        json: generateMail(_.get(req, 'body.payload'), req.webtaskContext.secrets.groupEmail)
+        json: generateMail(_.get(req, 'body.payload'), req.groupEmail)
       }, (err, info) => next(null, err || info))
   ],
   (err, response) => {
