@@ -25,6 +25,14 @@ const validateMiddleware = (req, res, next) => {
      responseHandler(errMsgUrl, res);
      return next(errMsgUrl);
   }
+  var db = _.get(req, 'body.db');
+  var facebookPublisherUrl = req.webtaskContext.secrets[`${db}-fb-dyno`];
+    if(!facebookPublishUrl) {
+     const errMsgFb = 'No FB publisher.';
+     responseHandler(errMsgFb, res);
+     return next(errMsgFb);
+  }
+  req.facebookPublisherUrl = facebookPublisherUrl;
   return next();
 };
 
@@ -35,7 +43,7 @@ router
   as.waterfall([
    (next) => loader({
     method: 'post',
-    url: req.webtaskContext.secrets.facebookPublishDyno,
+    url: req.facebookPublisherUrl,
     qs: {token: req.webtaskContext.secrets.token}, 
     json: {
       text: `${req.body.payload.promoText} ${url}`
