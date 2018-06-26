@@ -29,7 +29,16 @@ const validateMiddleware = (req, res, next) => {
   return next();
 };
 const pinterestMiddleware = (req, res, next) => {
-  req.pinterest = pinterest.init(req.webtaskContext.secrets.access_token);
+  var db = _.get(req, 'body.db');
+  var access_token = req.webtaskContext.secrets[`${db}-access_token`];
+  var board_id = req.webtaskContext.secrets[`${db}-board_id`];
+  if(!(access_token || board_id)) {
+     const errMsgPinterest = 'No pinterest publisher.';
+     responseHandler(errMsgPinterest, res);
+     return next(errMsgPinterest);
+  }
+  req.pinterest = pinterest.init(access_token);
+  req.board_id = board_id;
   next();
 };
 
@@ -44,7 +53,7 @@ router
      req.pinterest.api('pins', {
         method: 'POST',
         body: {
-            board: req.webtaskContext.secrets.board_id,
+            board: req.board_id,
             note: promoText,
             link: url,
             image_url: imgUrl
