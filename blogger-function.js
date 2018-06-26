@@ -27,6 +27,14 @@ const validateMiddleware = (req, res, next) => {
      responseHandler(errMsgUrl, res);
      return next(errMsgUrl);
   }
+  var db = _.get(req, 'body.db');
+  var blogId = req.webtaskContext.secrets[`${db}-blogId`];
+    if(!blogId) {
+     const errMsgFb = 'No blogger publisher.';
+     responseHandler(errMsgFb, res);
+     return next(errMsgFb);
+  }
+  req.blogId = blogId;
   return next();
 };
 const refreshToken = (context, cb) => {
@@ -94,7 +102,7 @@ router
       blogger.posts.insert({
         auth: authObj,
         key: _.get(req, 'webtaskContext.secrets.api_key'),
-        blogId: _.get(req, 'webtaskContext.secrets.blogId'),
+        blogId: _.get(req, 'blogId'),
         requestBody: {
           title: _.get(req, 'body.payload.promoText') || _.get(req, 'body.payload.info.title'),
           content: generateContent(_.get(req, 'body.payload')),
