@@ -30,9 +30,9 @@ const validateMiddleware = (req, res, next) => {
   var db = _.get(req, 'body.db');
   var blogId = req.webtaskContext.secrets[`${db}-blogId`];
     if(!blogId) {
-     const errMsgFb = 'No blogger publisher.';
-     responseHandler(errMsgFb, res);
-     return next(errMsgFb);
+     const errMsgBlogger = 'No blogger publisher.';
+     responseHandler(errMsgBlogger, res);
+     return next(errMsgBlogger);
   }
   req.blogId = blogId;
   return next();
