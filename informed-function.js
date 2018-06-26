@@ -26,12 +26,14 @@ module.exports = function(context, cb) {
   if(!_.chain(context).get('body.payload.info').isEmpty().value()) {
     return informed(context, () => cb('Info already provided.'));
   }
-  var asin = context.body.payload.asin;
+  var asin = _.get(context, 'body.payload.asin');
+  var db = _.get(context, 'body.db');
+  var market = context.secrets[`${db}-market`];
   console.log(`-- asin: ${asin}`);
   if(!!asin) {
     return as.waterfall([
       (next) => loader({
-        url: `${context.secrets.amazonFunction}/${context.body.payload.asin}`,
+        url: `${context.secrets.amazonFunction}/${market}/lookup/${asin}`,
         qs: {token: context.secrets.token}
       }, (err, info) => next(null, err || info)),
       (info, next) => loader({
