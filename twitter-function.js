@@ -29,11 +29,21 @@ const validateMiddleware = (req, res, next) => {
   return next();
 };
 const twitterMiddleware = (req, res, next) => {
+  var db = _.get(req, 'body.db');
+  var consumer_key = req.webtaskContext.secrets[`${db}-TWITTER_CONSUMER_KEY`];
+  var consumer_secret = req.webtaskContext.secrets[`${db}-TWITTER_CONSUMER_SECRET`];
+  var access_token_key = req.webtaskContext.secrets[`${db}-TWITTER_ACCESS_TOKEN_KEY`];
+  var access_token_secret = req.webtaskContext.secrets[`${db}-TWITTER_ACCESS_TOKEN_SECRET`];
+  if(!(consumer_key || consumer_secret || access_token_key || access_token_secret)) {
+     const errMsgTwitter = 'No twitter publisher.';
+     responseHandler(errMsgTwitter, res);
+     return next(errMsgTwitter);
+  }
   req.twitter = new twitter({
-    consumer_key: req.webtaskContext.secrets.TWITTER_CONSUMER_KEY,
-    consumer_secret: req.webtaskContext.secrets.TWITTER_CONSUMER_SECRET,
-    access_token_key: req.webtaskContext.secrets.TWITTER_ACCESS_TOKEN_KEY,
-    access_token_secret: req.webtaskContext.secrets.TWITTER_ACCESS_TOKEN_SECRET
+    consumer_key: consumer_key,
+    consumer_secret: consumer_secret,
+    access_token_key: access_token_key,
+    access_token_secret: access_token_secret
   });
   next();
 };
