@@ -27,7 +27,7 @@ const validateMiddleware = (req, res, next) => {
   }
   var db = _.get(req, 'body.db');
   var facebookPublisherUrl = req.webtaskContext.secrets[`${db}-fb-dyno`];
-    if(!facebookPublishUrl) {
+    if(!facebookPublisherUrl) {
      const errMsgFb = 'No FB publisher.';
      responseHandler(errMsgFb, res);
      return next(errMsgFb);
