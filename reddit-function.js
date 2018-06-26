@@ -29,12 +29,24 @@ const validateMiddleware = (req, res, next) => {
   return next();
 };
 const redditMiddleware = (req, res, next) => {
+  var db = _.get(req, 'body.db');
+  var userAgent = req.webtaskContext.secrets[`${db}-userAgent`];
+  var clientId = req.webtaskContext.secrets[`${db}-clientId`];
+  var clientSecret = req.webtaskContext.secrets[`${db}-clientSecret`];
+  var refreshToken = req.webtaskContext.secrets[`${db}-refreshToken`];
+  var subreddit = req.webtaskContext.secrets[`${db}-subreddit`];
+  if(!(userAgent || clientId || clientSecret || refreshToken || subreddit)) {
+     const errMsgReddit = 'No reddit publisher.';
+     responseHandler(errMsgReddit, res);
+     return next(errMsgReddit);
+  }
   req.reddit = new snoowrap({
-    userAgent: req.webtaskContext.secrets.userAgent,
-    clientId: req.webtaskContext.secrets.clientId,
-    clientSecret: req.webtaskContext.secrets.clientSecret,
-    refreshToken: req.webtaskContext.secrets.refreshToken
+    userAgent: userAgent,
+    clientId: clientId,
+    clientSecret: clientSecret,
+    refreshToken: refreshToken
   });
+  req.subreddit = subreddit;
   next();
 };
 
@@ -46,7 +58,7 @@ router
   as.waterfall([
    (next) => {
     req.reddit
-    .getSubreddit(req.webtaskContext.secrets.subreddit)
+    .getSubreddit(req.subreddit)
     .submitLink({
       title: promoText,
       url: url
