@@ -46,6 +46,7 @@ router
     url: req.facebookPublisherUrl,
     qs: {token: req.webtaskContext.secrets.token}, 
     json: {
+      db: req.body.db,
       text: `${req.body.payload.promoText} ${url}`
     }
    }, next)
