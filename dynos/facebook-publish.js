@@ -50,9 +50,11 @@ const responseEnd = (res, code, content) => {
 module.exports = function(context, req, res) {
 
   var instance, page, status, content, error;
+  var db = req.body.db || req.query.db;
   var fbText = req.body.text || req.query.text;
-  if (!fbText) {
-    return responseEnd(res, 400, 'No text provided.');
+  var fbPage = context.secrets[`${db}-page`];
+  if (!(fbText || fbPage)) {
+    return responseEnd(res, 400, 'No data for facebook provided: db, text');
   }
 
   phantom
@@ -66,7 +68,7 @@ module.exports = function(context, req, res) {
     })
     .then((_page) => {
       page = _page;
-      return page.open('https://m.facebook.com/amzn.deals.us/');
+      return page.open(fbPage);
     })
     .then((_status) => {
       status = _status;
