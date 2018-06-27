@@ -50,12 +50,14 @@ const responseEnd = (res, code, content) => {
 module.exports = function(context, req, res) {
 
   var instance, page, status, content, error;
-  var db = req.body.db || req.query.db;
+  var db = (req.body.db || req.query.db || '').replace(/-/gim, '_');
   var fbText = req.body.text || req.query.text;
-  var fbPage = context.secrets[`${db}-page`];
-  if (!(fbText || fbPage)) {
+  var fbPagePath = context.secrets[`${db}_page`];
+  if (!(fbText || fbPagePath)) {
     return responseEnd(res, 400, 'No data for facebook provided: db, text');
   }
+  var fbPage = `https://m.facebook.com/${fbPagePath}/`;
+  console.log('Open: ', fbPage);
 
   phantom
     .create([
