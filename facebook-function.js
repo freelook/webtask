@@ -20,11 +20,13 @@ const validateMiddleware = (req, res, next) => {
      responseHandler(errMsgId, res);
      return next(errMsgId);
   }
-  if(!(_.get(req, 'body.payload.shortUrl') || _.get(req, 'body.payload.url'))) {
+  var fUrl = _.get(req, 'body.payload.shortUrl') || _.get(req, 'body.payload.url');
+  if(!fUrl) {
      const errMsgUrl = 'No url provided.';
      responseHandler(errMsgUrl, res);
      return next(errMsgUrl);
   }
+  req.fUrl = fUrl;
   var db = _.get(req, 'body.db');
   var facebookPublisherUrl = req.webtaskContext.secrets[`${db}-fb-dyno`];
     if(!facebookPublisherUrl) {
@@ -38,7 +40,7 @@ const validateMiddleware = (req, res, next) => {
 
 router
 .all('/publish', function (req, res) {
-  const url = _.get(req, 'body.payload.shortUrl') || _.get(req, 'body.payload.url');
+  const url = req.fUrl;
   console.log(`-- facebook published: ${req.body.payload.promoText} ${url}`);
   as.waterfall([
    (next) => loader({
