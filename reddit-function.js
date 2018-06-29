@@ -21,11 +21,13 @@ const validateMiddleware = (req, res, next) => {
      responseHandler(errMsgId, res);
      return next(errMsgId);
   }
-  if(!(_.get(req, 'body.payload.shortUrl') || _.get(req, 'body.payload.url'))) {
+  var rUrl = _.get(req, 'body.payload.shortUrl') || _.get(req, 'body.payload.url');
+  if(!rUrl) {
      const errMsgUrl = 'No url provided.';
      responseHandler(errMsgUrl, res);
      return next(errMsgUrl);
   }
+  req.rUrl = rUrl;
   return next();
 };
 const redditMiddleware = (req, res, next) => {
@@ -35,7 +37,7 @@ const redditMiddleware = (req, res, next) => {
   var clientSecret = req.webtaskContext.secrets[`${db}-clientSecret`];
   var refreshToken = req.webtaskContext.secrets[`${db}-refreshToken`];
   var subreddit = req.webtaskContext.secrets[`${db}-subreddit`];
-  if(!(userAgent || clientId || clientSecret || refreshToken || subreddit)) {
+  if(!(userAgent && clientId && clientSecret && refreshToken && subreddit)) {
      const errMsgReddit = 'No reddit publisher.';
      responseHandler(errMsgReddit, res);
      return next(errMsgReddit);
@@ -52,7 +54,7 @@ const redditMiddleware = (req, res, next) => {
 
 router
 .all('/publish', function (req, res) {
-  const url = _.get(req, 'body.payload.url');
+  const url = req.rUrl;
   const promoText = _.get(req, 'body.payload.promoText') || _.get(req, 'body.payload.info.title');
   console.log(`-- reddit published: ${promoText} ${url}`);
   as.waterfall([
