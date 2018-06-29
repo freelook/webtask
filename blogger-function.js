@@ -79,7 +79,7 @@ const auth = (context, cb) => {
 };
 const generateContent = (payload) => {
   const title = _.get(payload, 'promoText') || _.get(payload, 'info.title') || '';
-  const url = req.bUrl || '';
+  const url = _.get(req, 'body.payload.shortUrl') || _.get(req, 'body.payload.url');
   const img = _.get(payload, 'promoImg') || _.get(payload, 'info.image') || '';
   const description = _.get(payload, 'promoDescription') || '';
   const content = _.get(payload, 'info.content') || '';
