@@ -21,18 +21,20 @@ const validateMiddleware = (req, res, next) => {
      responseHandler(errMsgId, res);
      return next(errMsgId);
   }
-  if(!(_.get(req, 'body.payload.shortUrl') || _.get(req, 'body.payload.url'))) {
+  var pUrl = _.get(req, 'body.payload.shortUrl') || _.get(req, 'body.payload.url');
+  if(!pUrl) {
      const errMsgUrl = 'No url provided.';
      responseHandler(errMsgUrl, res);
      return next(errMsgUrl);
   }
+  req.pUrl = pUrl;
   return next();
 };
 const pinterestMiddleware = (req, res, next) => {
   var db = _.get(req, 'body.db');
   var access_token = req.webtaskContext.secrets[`${db}-access_token`];
   var board_id = req.webtaskContext.secrets[`${db}-board_id`];
-  if(!(access_token || board_id)) {
+  if(!(access_token && board_id)) {
      const errMsgPinterest = 'No pinterest publisher.';
      responseHandler(errMsgPinterest, res);
      return next(errMsgPinterest);
@@ -44,7 +46,7 @@ const pinterestMiddleware = (req, res, next) => {
 
 router
 .all('/publish', function (req, res) {
-  const url = _.get(req, 'body.payload.shortUrl') || _.get(req, 'body.payload.url');
+  const url = req.pUrl;
   const imgUrl = _.get(req, 'body.payload.promoImg') || _.get(req, 'body.payload.info.image');
   const promoText = _.get(req, 'body.payload.promoText') || _.get(req, 'body.payload.info.title');
   console.log(`-- pinterest published: ${promoText} ${url}`);
