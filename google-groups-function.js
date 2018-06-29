@@ -39,7 +39,7 @@ const validateMiddleware = (req, res, next) => {
 };
 const generateMail = (payload, to) => {
   const title = _.get(payload, 'promoText') || _.get(payload, 'info.title') || '';
-  const url = _.get(req, 'body.payload.shortUrl') || _.get(req, 'body.payload.url') || '';
+  const url = _.get(payload, 'shortUrl') || _.get(payload, 'url') || '';
   const img = _.get(payload, 'promoImg') || _.get(payload, 'info.image') || '';
   const description = _.get(payload, 'promoDescription') || '';
   const content = _.get(payload, 'info.content') || '';
