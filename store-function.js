@@ -30,7 +30,7 @@ const createStoreSchema = (req) => {
   const db = req.params.db;
   if(!StoreSchema) {
     StoreSchema = mongoose.Schema({
-      updated: {type: Date, default: Date.now},
+      updated: {type: Date, default: Date.now()},
       state: {type: String, default: 'new'},
       payload: {type: mongoose.Schema.Types.Mixed, default: {}}
     }, {minimize: false});
