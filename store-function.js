@@ -82,11 +82,10 @@ router
 })
 .get('/query/updated/:updated', function (req, res) {
   as.waterfall([
-    (next) => {
-      var query = req.Store.find();
-      query.$where(()=>/2018-06-29/mi.test(this.updated.toString()));
-      query.exec(next);
-    }
+    (next) => req.Store.find(
+      { '$where': '/2018-06-29/mi.test(this.updated.toJSON())' },
+      next
+    )
   ],
   (err, data) => responseHandler(err, res, data));
 })
