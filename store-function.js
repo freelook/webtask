@@ -82,7 +82,7 @@ router
 })
 .get('/query/updated/:updated', function (req, res) {
   as.waterfall([
-    (next) => req.Store.find({updated: new RegExp(`/${req,params.updated}/`)}, next)
+    (next) => req.Store.find({updated: new RegExp(`/${req.params.updated}/`)}, next)
   ],
   (err, data) => responseHandler(err, res, data));
 })
