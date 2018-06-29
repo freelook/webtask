@@ -1,13 +1,15 @@
-const request = require('request');
+const fli = require('fli-webtask');
 const express = require('express');
 const wt = require('webtask-tools');
 const bodyParser = require('body-parser');
-const as = require('async');
-const _ = require('lodash');
+const request = fli.npm.request;
+const as = fli.npm.async;
+const _ = fli.npm.lodash;
+const loader = fli.lib.loader;
+const responseHandler = fli.lib.responseHandler;
 const operationHelper = require('apac').OperationHelper;
 const app = express();
 const router = express.Router();
-const loader = require('fli-webtask').lib.loader;
 const validateMiddleware = (req, res, next) => {
   if(req.webtaskContext.secrets.token !== req.query.token) {
      const errMsgToken = 'No token.';
@@ -29,12 +31,6 @@ const apacMiddleware = (req, res, next) => {
       locale: req.params.market.toUpperCase()
   });
   next();
-};
-const responseHandler = (err, res, data) => {
-  if(!!err) {
-    return res.status(400).json(err);
-  }
-  return res.status(200).json(data);
 };
 const jsonMapper = (asin) => (info , next) => {
   var item = _.get(info, 'result.ItemLookupResponse.Items.Item');
