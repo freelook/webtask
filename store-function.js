@@ -83,7 +83,7 @@ router
 .get('/query/updated/:updated', function (req, res) {
   as.waterfall([
     (next) => req.Store.find(
-      { '$where': `/${req.params.updated}/mi.test(this.updated)` },
+      { '$where': `/${req.params.updated}/mi.test(this.updated.toString())` },
       next
     )
   ],
