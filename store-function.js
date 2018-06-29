@@ -83,7 +83,7 @@ router
 .get('/query/updated/:updated', function (req, res) {
   as.waterfall([
     (next) => req.Store.find(
-      { '$where': '/2018-06-29/mi.test(this.updated.toJSON())' },
+      { '$where': '/2018-06-28/mi.test(this.updated.toJSON())' },
       next
     )
   ],
