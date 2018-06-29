@@ -13,12 +13,12 @@ const router = express.Router();
 const validateMiddleware = (req, res, next) => {
   if(req.webtaskContext.secrets.token !== req.query.token) {
      const errMsgToken = 'No token.';
-     res.status(400).send(errMsgToken);
+     responseHandler(errMsgToken, res);
      return next(errMsgToken);
   }
   if(!_.get(req, 'params.market')) {
      const errMsgMarket = 'No market name provided.';
-     res.status(400).send(errMsgMarket);
+     responseHandler(errMsgMarket, res);
      return next(errMsgMarket);
   }
   return next();
