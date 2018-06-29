@@ -51,12 +51,12 @@ const createStoreSchema = (req) => {
 const validateMiddleware = (req, res, next) => {
   if(req.webtaskContext.secrets.token !== req.query.token) {
      const errMsgToken = 'No token.';
-     res.status(400).send(errMsgToken);
+     responseHandler(errMsgToken, res);
      return next(errMsgToken);
   }
   if(!req.params.db) {
      const errMsgDB = 'No DB provided.';
-     res.status(400).send(errMsgDB);
+     responseHandler(errMsgDB, res);
      return next(errMsgDB);
   }
   const db = req.webtaskContext.secrets[req.params.db];
