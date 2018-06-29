@@ -21,11 +21,13 @@ const validateMiddleware = (req, res, next) => {
      responseHandler(errMsgId, res);
      return next(errMsgId);
   }
-  if(!(_.get(req, 'body.payload.shortUrl') || _.get(req, 'body.payload.url'))) {
+  var twUrl = _.get(req, 'body.payload.shortUrl') || _.get(req, 'body.payload.url');
+  if(!twUrl) {
      const errMsgUrl = 'No url provided.';
      responseHandler(errMsgUrl, res);
      return next(errMsgUrl);
   }
+  req.twUrl = twUrl;
   return next();
 };
 const twitterMiddleware = (req, res, next) => {
@@ -34,7 +36,7 @@ const twitterMiddleware = (req, res, next) => {
   var consumer_secret = req.webtaskContext.secrets[`${db}-TWITTER_CONSUMER_SECRET`];
   var access_token_key = req.webtaskContext.secrets[`${db}-TWITTER_ACCESS_TOKEN_KEY`];
   var access_token_secret = req.webtaskContext.secrets[`${db}-TWITTER_ACCESS_TOKEN_SECRET`];
-  if(!(consumer_key || consumer_secret || access_token_key || access_token_secret)) {
+  if(!(consumer_key && consumer_secret && access_token_key && access_token_secret)) {
      const errMsgTwitter = 'No twitter publisher.';
      responseHandler(errMsgTwitter, res);
      return next(errMsgTwitter);
@@ -50,7 +52,7 @@ const twitterMiddleware = (req, res, next) => {
 
 router
 .all('/publish', function (req, res) {
-  const url = _.get(req, 'body.payload.shortUrl') || _.get(req, 'body.payload.url');
+  const url = req.twUrl;
   const imgUrl = _.get(req, 'body.payload.promoImg') || _.get(req, 'body.payload.info.image');
   const promoText = _.get(req, 'body.payload.promoText') || _.get(req, 'body.payload.info.title');
   console.log(`-- twitter published: ${promoText} ${url}`);
