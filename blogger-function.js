@@ -22,11 +22,13 @@ const validateMiddleware = (req, res, next) => {
      responseHandler(errMsgId, res);
      return next(errMsgId);
   }
-  if(!(_.get(req, 'body.payload.shortUrl') || _.get(req, 'body.payload.url'))) {
+  var bUrl = _.get(req, 'body.payload.shortUrl') || _.get(req, 'body.payload.url');
+  if(!bUrl) {
      const errMsgUrl = 'No url provided.';
      responseHandler(errMsgUrl, res);
      return next(errMsgUrl);
   }
+  req.bUrl = bUrl;
   var db = _.get(req, 'body.db');
   var blogId = req.webtaskContext.secrets[`${db}-blogId`];
     if(!blogId) {
@@ -77,7 +79,7 @@ const auth = (context, cb) => {
 };
 const generateContent = (payload) => {
   const title = _.get(payload, 'promoText') || _.get(payload, 'info.title') || '';
-  const url = _.get(payload, 'shortUrl') || _.get(payload, 'url') || '';
+  const url = req.bUrl || '';
   const img = _.get(payload, 'promoImg') || _.get(payload, 'info.image') || '';
   const description = _.get(payload, 'promoDescription') || '';
   const content = _.get(payload, 'info.content') || '';
