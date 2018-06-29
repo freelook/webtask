@@ -12,7 +12,7 @@ const router = express.Router();
 const validateMiddleware = (req, res, next) => {
   if(req.webtaskContext.secrets.token !== req.query.token) {
      const errMsgToken = 'No token.';
-     responseHandler(errMsgToken, res);
+     responseHandler(errMsgToken, res); 
      return next(errMsgToken);
   }
   return next();
