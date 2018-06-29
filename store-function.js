@@ -82,7 +82,7 @@ router
 })
 .get('/query/updated/:updated', function (req, res) {
   as.waterfall([
-    (next) => req.Store.find({updated: {$date: /2018-06-29/mi}}, next)
+    (next) => req.Store.find({updated: {$regex: /2018-06-29/mi}}, next)
   ],
   (err, data) => responseHandler(err, res, data));
 })
