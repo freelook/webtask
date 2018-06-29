@@ -20,11 +20,13 @@ const validateMiddleware = (req, res, next) => {
      responseHandler(errMsgId, res);
      return next(errMsgId);
   }
-  if(!(_.get(req, 'body.payload.shortUrl') || _.get(req, 'body.payload.url'))) {
+  var gUrl = _.get(req, 'body.payload.shortUrl') || _.get(req, 'body.payload.url');
+  if(!gUrl) {
      const errMsgUrl = 'No url provided.';
      responseHandler(errMsgUrl, res);
      return next(errMsgUrl);
   }
+  req.gUrl = gUrl;
   var db = _.get(req, 'body.db');
   var groupEmail = req.webtaskContext.secrets[`${db}-groupEmail`];
     if(!groupEmail) {
@@ -37,7 +39,7 @@ const validateMiddleware = (req, res, next) => {
 };
 const generateMail = (payload, to) => {
   const title = _.get(payload, 'promoText') || _.get(payload, 'info.title') || '';
-  const url = _.get(payload, 'shortUrl') || _.get(payload, 'url') || '';
+  const url = req.gUrl || '';
   const img = _.get(payload, 'promoImg') || _.get(payload, 'info.image') || '';
   const description = _.get(payload, 'promoDescription') || '';
   const content = _.get(payload, 'info.content') || '';
