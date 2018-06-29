@@ -84,7 +84,7 @@ router
   as.waterfall([
     (next) => {
       var query = req.Store.find();
-      query.where(()=>/2018-06-29/mi.test(this.updated));
+      query.$where(()=>/2018-06-29/mi.test(this.updated));
       query.exec(next);
     }
   ],
