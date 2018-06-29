@@ -21,7 +21,7 @@ const validateMiddleware = (req, res, next) => {
      responseHandler(errMsgId, res);
      return next(errMsgId);
   }
-  var rUrl = _.get(req, 'body.payload.shortUrl') || _.get(req, 'body.payload.url');
+  var rUrl = _.get(req, 'body.payload.url');
   if(!rUrl) {
      const errMsgUrl = 'No url provided.';
      responseHandler(errMsgUrl, res);
