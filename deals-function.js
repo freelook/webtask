@@ -22,6 +22,7 @@ const validateMiddleware = (req, res, next) => {
      responseHandler(errMsgMarket, res);
      return next(errMsgMarket);
   }
+  req.market = market;
   req.marketDB = marketDB;
   return next();
 };
