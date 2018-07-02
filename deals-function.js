@@ -37,7 +37,7 @@ router
       }
    }, next),
    (data, next) => as.mapSeries(_.get(data, 'deals', []),
-    (deal, next) => {
+   (deal, next) => {
       var item = {};
       if(item.url && item.promoText) {
         loader({
@@ -50,10 +50,9 @@ router
         }, () => {});
       }
       return next(null, item);
-    }, 
-   next)
-    ], (err, goldbox) => {
-      responseHandler(err, res, goldbox);
+   }, next)
+  ], (err, goldbox) => {
+    responseHandler(err, res, goldbox);
   });
 });
 
