@@ -39,14 +39,17 @@ router
    (data, next) => as.mapSeries(_.get(data, 'deals', []),
     (deal, next) => {
       var item = {};
-      loader({
-        method: 'post',
-        url: req.marketDB,
-        qs: {
-          token: req.webtaskContext.secrets.token
-        },
-        json: item
-      }, () => next(null, item));
+      if(item.url && item.promoText) {
+        return loader({
+          method: 'post',
+          url: req.marketDB,
+          qs: {
+            token: req.webtaskContext.secrets.token
+          },
+          json: item
+        }, () => next(null, item));
+      }
+      return next(null, item);
     }, 
    next)
     ], (err, goldbox) => {
