@@ -38,8 +38,8 @@ router
    }, next),
    (data, next) => as.mapSeries(_.get(data, 'deals', []),
    (deal, next) => {
-      var item = {};
-      if(item.url && item.promoText) {
+      var item = deal;
+      if(item.url && item.promoText && false) {
         loader({
           method: 'post',
           url: req.marketDB,
