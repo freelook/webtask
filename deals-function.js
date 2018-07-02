@@ -31,10 +31,9 @@ router
   console.log('- deals');
   as.waterfall([
    (next) => loader({
-      url: req.webtaskContext.secrets.goldboxFunction,
+      url: `${req.webtaskContext.secrets.goldboxFunction}/${req.market}`,
       qs: {
-        token: context.secrets.token,
-        rss: storage.endpoint
+        token: context.secrets.token
       }
    }, next),
    (data, next) => as.mapSeries(_.get(data, 'rss', []),
