@@ -1,11 +1,15 @@
 const fli = require('fli-webtask');
-const loader = fli.lib.loader;
-const _ = fli.npm.lodash;
+const express = require('express');
+const wt = require('webtask-tools');
+const bodyParser = require('body-parser');
+const request = fli.npm.request;
 const as = fli.npm.async;
+const _ = fli.npm.lodash;
+const loader = fli.lib.loader;
+const responseHandler = fli.lib.responseHandler;
+const app = express();
+const router = express.Router();
 
-/**
-* @param context {WebtaskContext}
-*/
 module.exports = function(context, cb) {
   console.log('- deals');
   if(context.secrets.token !== context.query.token) {
