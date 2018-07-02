@@ -40,14 +40,14 @@ router
     (deal, next) => {
       var item = {};
       if(item.url && item.promoText) {
-        return loader({
+        loader({
           method: 'post',
           url: req.marketDB,
           qs: {
             token: req.webtaskContext.secrets.token
           },
           json: item
-        }, () => next(null, item));
+        }, () => {});
       }
       return next(null, item);
     }, 
