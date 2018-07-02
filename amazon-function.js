@@ -35,7 +35,7 @@ const apacMiddleware = (req, res, next) => {
 const jsonMapper = (asin) => (info , next) => {
   var item = _.get(info, 'result.ItemLookupResponse.Items.Item');
   if(!item || item.ASIN !== asin) {
-    return next(null, {err: 'Incorrect info.'});
+    return next(null, {err: 'Incorrect info.', info: info});
   }
   var title = _.get(item, 'ItemAttributes.Title');
   var content = _.get(item, 'EditorialReviews.EditorialReview.Content') || 
@@ -59,8 +59,7 @@ const jsonMapper = (asin) => (info , next) => {
     content: content,
     image: image,
     price: price,
-    labels: labels,
-    info: info
+    labels: labels
   });
 };
 
