@@ -38,18 +38,17 @@ router
    }, next),
    (data, next) => as.mapSeries(_.get(data, 'deals', []),
    (deal, next) => {
-      var item = deal;
-      if(item.url && item.promoText) {
+      if(deal && deal.url && deal.promoText) {
         loader({
           method: 'post',
           url: req.marketDB,
           qs: {
             token: req.webtaskContext.secrets.token
           },
-          json: item
+          json: deal
         }, () => {});
       }
-      return next(null, item);
+      return next(null, deal);
    }, next)
   ], (err, goldbox) => {
     responseHandler(err, res, goldbox);
