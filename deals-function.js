@@ -36,12 +36,12 @@ router
         token: context.secrets.token
       }
    }, next),
-   (data, next) => as.mapSeries(_.get(data, 'rss', []),
+   (data, next) => as.mapSeries(_.get(data, 'deals', []),
     (deal, next) => {
       var item = {};
       loader({
         method: 'post',
-        url: req.webtaskContext.secrets.storeFunction,
+        url: req.marketDB,
         qs: {
           token: req.webtaskContext.secrets.token
         },
