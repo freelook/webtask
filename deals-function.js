@@ -9,16 +9,28 @@ const loader = fli.lib.loader;
 const responseHandler = fli.lib.responseHandler;
 const app = express();
 const router = express.Router();
-
-module.exports = function(context, cb) {
-  console.log('- deals');
-  if(context.secrets.token !== context.query.token) {
-    return cb('No token.');
+const validateMiddleware = (req, res, next) => {
+  if(req.webtaskContext.secrets.token !== req.query.token) {
+     const errMsgToken = 'No token.';
+     responseHandler(errMsgToken, res);
+     return next(errMsgToken);
   }
-  return as.waterfall([
-   (next) => context.storage.get(next),
-   (storage, next) => loader({
-      url: context.secrets.rssFunction,
+  var market = _.get(req, 'params.market', '').toUpperCase();
+  var marketDB = req.webtaskContext.secrets[`${market}-db`];
+  if(!(market && marketDB)) {
+     const errMsgMarket = 'No market provided.';
+     responseHandler(errMsgMarket, res);
+     return next(errMsgMarket);
+  }
+  req.marketDB = marketDB;
+  return next();
+};
+router
+.all('/', function (req, res) {
+  console.log('- deals');
+  as.waterfall([
+   (next) => loader({
+      url: req.webtaskContext.secrets.goldboxFunction,
       qs: {
         token: context.secrets.token,
         rss: storage.endpoint
@@ -26,32 +38,24 @@ module.exports = function(context, cb) {
    }, next),
    (data, next) => as.mapSeries(_.get(data, 'rss', []),
     (deal, next) => {
-      const link = _.get(deal, 'link', '');
-      const description = _.get(deal, 'description', '');
-      var item = {
-       promoText: _.get(deal, 'title', ''),
-       promoImg: ((description.match(/.+img src="(.+?)".+/) || [])[1] || '')
-                 .replace('._SL160_.', '._SL1000_.'),
-       promoListPrice: (description.match(/.+List Price: <strike>\$(.+?)<.+/) || [])[1] || '',
-       promoDealPrice: (description.match(/.+Deal Price: \$(.+?)<.+/) || [])[1] || '',
-       promoExpired: (description.match(/.+Expires (.+?)<.+/) || [])[1] || '',
-       promoDescription: description
-        .replace(/<a(.+?)<\/a>/gim, "")
-        .replace("<tr><td></td><td>", "")
-        .replace(context.secrets.rssTag, context.secrets.fliTag),
-       asin: (link.match(/.+\/dp\/([\w]+)\/.+/) || [])[1] || '',
-       node: (link.match(/.+node=([\w]+)&.+/) || [])[1] || '',
-       url: link.replace(context.secrets.rssTag, context.secrets.fliTag)
-      };
+      var item = {};
       loader({
         method: 'post',
-        url: context.secrets.storeFunction,
+        url: req.webtaskContext.secrets.storeFunction,
         qs: {
-          token: context.secrets.token
+          token: req.webtaskContext.secrets.token
         },
         json: item
       }, () => next(null, item));
     }, 
    next)
-  ], cb);
-};
+    ], (err, goldbox) => {
+      responseHandler(err, res, goldbox);
+  });
+});
+
+app
+.use(bodyParser.json())
+.use('/:market', validateMiddleware, router);
+
+module.exports = wt.fromExpress(app);
