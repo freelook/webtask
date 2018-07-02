@@ -33,7 +33,7 @@ router
    (next) => loader({
       url: `${req.webtaskContext.secrets.goldboxFunction}/${req.market}`,
       qs: {
-        token: context.secrets.token
+        token: req.webtaskContext.secrets.token
       }
    }, next),
    (data, next) => as.mapSeries(_.get(data, 'deals', []),
