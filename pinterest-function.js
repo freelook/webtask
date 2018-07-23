@@ -84,6 +84,6 @@ router
 
 app
 .use(bodyParser.json())
-.use('/', validateMiddleware, pinterestMiddleware, router);
+.use('/', /*validateMiddleware,*/ pinterestMiddleware, router);
 
 module.exports = wt.fromExpress(app);
