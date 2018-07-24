@@ -31,7 +31,7 @@ const validateMiddleware = (req, res, next) => {
   return next();
 };
 const pinterestMiddleware = (req, res, next) => {
-  var db = _.get(req, 'body.db') || _.get(req, 'params.db');
+  var db = _.get(req, 'body.db') || _.get(req, 'query.db');
   var access_token = req.webtaskContext.secrets[`${db}-access_token`];
   var board_id = req.webtaskContext.secrets[`${db}-board_id`];
   if(!(access_token && board_id)) {
