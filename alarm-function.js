@@ -85,8 +85,8 @@ router
   (err, status) => {
     responseHandler(err, res, {status: status});
   });
-}).all('/alarm', function (req, res) {
-  console.log(`-- alarm flow`);
+}).all('/trigger', function (req, res) {
+  console.log(`-- alarm trigger flow`);
   as.waterfall([
     (next) => {
       const alarmBody = _.get(req, 'params.msg') || _.get(req, 'body.msg');
