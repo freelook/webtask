@@ -59,7 +59,6 @@ router
       method: 'post',
       url: req.marketUrlDetails,
       json: ((p) => {
-       return responseHandler(null, res, params);
        return {
       	"requestMetadata": {
       		"marketplaceID": params.marketplaceId,
