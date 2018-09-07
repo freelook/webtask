@@ -77,7 +77,7 @@ router
     (data, next) => {
       if(data && !data.length) {
         const alarmBody = `Alarm: No deals data. Date: ${yesterday}. Market DB: ${req.db}.`;
-        return triggerAlarm(alarmBody);
+        return triggerAlarm(req)(alarmBody);
       }
       return next(null, 'ok');
     }
@@ -90,9 +90,8 @@ router
   as.waterfall([
     (next) => {
       const alarmBody = _.get(req, 'params.msg') || _.get(req, 'body.msg');
-      console.log(`-- alarm trigger alarm msg `, alarmBody);
       if(!!alarmBody) {
-        return triggerAlarm(alarmBody);
+        return triggerAlarm(req)(alarmBody);
       }
       return next(null, 'No alarm msg.');
     }
