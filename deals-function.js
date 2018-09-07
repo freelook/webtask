@@ -68,6 +68,7 @@ router
       return next(null, deal);
    }, next)
   ], (err, goldbox) => {
+    console.log(err, goldbox);
     responseHandler(err, res, goldbox);
   });
 });
