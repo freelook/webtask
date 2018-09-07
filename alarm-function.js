@@ -93,7 +93,7 @@ router
       if(!!alarmBody) {
         return triggerAlarm(alarmBody);
       }
-      return next(null, 'no alarm msg');
+      return next(null, 'No alarm msg.');
     }
   ],
   (err, status) => {
