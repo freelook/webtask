@@ -49,7 +49,7 @@ router
         json: {
           msg: `Alarm: No new deals for: Market - ${req.market}. DB - ${req.marketDB}. Fix me.`
         }
-      }, () => {});
+      }, () => next('No deals'));
      }
      return next(null, deals);
    },
