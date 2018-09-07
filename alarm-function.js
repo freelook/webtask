@@ -54,29 +54,6 @@ router
     (data, next) => {
       if(data && !data.length) {
         const alarmBody = `Alarm: No deals data. Date: ${yesterday}. Market DB: ${req.db}.`;
-        return triggerAlarm(alarmBody);
-      }
-      return next(null, 'ok');
-    }
-  ],
-  (err, status) => {
-    responseHandler(err, res, {status: status});
-  });
-})
-.all('/test', function (req, res) {
-  console.log(`-- alarm test flow`);
-  const yesterday = moment().subtract(1, 'days').format('YYYY-MM-DD');
-  as.waterfall([
-    // 1 - get db update for yesterday
-    // 2 - send email if alarm is not ok
-    (next) => loader({
-      method: 'get',
-      url: `${req.webtaskContext.secrets.storeFunction}/${req.db}/query/updated/${yesterday}`,
-      qs: {token: req.webtaskContext.secrets.token}
-    }, (err, data) => next(null, data || [])),
-    (data, next) => {
-      if(data && !data.length) {
-        const alarmBody = `Alarm: No deals data. Date: ${yesterday}. Market DB: ${req.db}.`;
         triggerAlarm(req)(alarmBody);
         return next(null, alarmBody);
       }
