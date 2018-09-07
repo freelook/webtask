@@ -86,11 +86,12 @@ router
   (err, status) => {
     responseHandler(err, res, {status: status});
   });
-}).all('/trigger', function (req, res) {
+})
+.all('/trigger', function (req, res) {
   console.log(`-- alarm trigger flow`);
   as.waterfall([
     (next) => {
-      const alarmBody = _.get(req, 'params.msg') || _.get(req, 'body.msg');
+      const alarmBody = _.get(req, 'query.msg') || _.get(req, 'body.msg');
       if(!!alarmBody) {
         return triggerAlarm(req)(alarmBody);
       }
