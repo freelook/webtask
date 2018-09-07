@@ -38,7 +38,7 @@ router
    }, next),
    (data, next) => {
      const deals = _.get(data, 'deals', []);
-     if(!deals.length) {
+     if(!!deals.length) {
        // Trigger alarm
         loader({
           method: 'post',
