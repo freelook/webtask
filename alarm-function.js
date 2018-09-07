@@ -40,7 +40,7 @@ router
     }, (err, data) => next(null, data || [])),
     (data, next) => {
       if(data && !data.length) {
-        const alarmBody = `Alarm: No deals data. Date: ${yesterday}. Market DB: ${req.db}.`;
+        const alarmBody = `Alarm: No deals data. Date: ${yesterday}. Market DB: ${req.db}.`; 
         return loader({
           method: 'post',
           url: req.webtaskContext.secrets.gmailFunction,
