@@ -101,6 +101,7 @@ router
       return next(null, {deals:deals, data:data});
     }
     ], (err, goldbox) => {
+      console.log(goldbox);
       responseHandler(err, res, goldbox);
   });
 });
