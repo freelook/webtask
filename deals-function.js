@@ -40,16 +40,16 @@ router
      const deals = _.get(data, 'deals', []);
      if(!!deals.length) {
        // Trigger alarm
-        loader({
-          method: 'post',
-          url: `${req.webtaskContext.secrets.ararmFunction}/${req.market}/trigger`,
-          qs: {
-            token: req.webtaskContext.secrets.token
-          },
-          json: {
-            msg: `Alarm: No new deals for: Market - ${req.market}. DB - ${req.marketDB}. Fix me.`
-          }
-        }, () => {});
+      return loader({
+        method: 'post',
+        url: `${req.webtaskContext.secrets.ararmFunction}/${req.market}/trigger`,
+        qs: {
+          token: req.webtaskContext.secrets.token
+        },
+        json: {
+          msg: `Alarm: No new deals for: Market - ${req.market}. DB - ${req.marketDB}. Fix me.`
+        }
+      }, () => {});
      }
      return next(null, deals);
    },
