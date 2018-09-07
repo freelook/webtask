@@ -36,6 +36,23 @@ router
         token: req.webtaskContext.secrets.token
       }
    }, next),
+   (data, next) => {
+     const deals = _.get(data, 'deals', []);
+     if(!deals.length) {
+       // Trigger alarm
+        loader({
+          method: 'post',
+          url: req.webtaskContext.secrets.ararmFunction,
+          qs: {
+            token: req.webtaskContext.secrets.token
+          },
+          json: {
+            msg: `Alarm: No new deals for: Market - ${req.market}. DB - ${req.marketDB}. Fix me.`
+          }
+        }, () => {});
+     }
+     return next(null, deals);
+   },
    (data, next) => as.mapSeries(_.get(data, 'deals', []),
    (deal, next) => {
       if(deal && deal.url && deal.promoText) {
