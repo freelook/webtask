@@ -26,6 +26,19 @@ const validateMiddleware = (req, res, next) => {
   return next();
 };
 
+const triggerAlarm = (req) => (alarmBody) => {
+  return loader({
+    method: 'post',
+    url: req.webtaskContext.secrets.gmailFunction,
+    qs: {token: req.webtaskContext.secrets.token},
+    json: {
+      to: req.webtaskContext.secrets.admin,
+      subject: 'Alarm!',
+      body: alarmBody
+    }
+  }, () => next(null, alarmBody));
+};
+
 router
 .all('/test', function (req, res) {
   console.log(`-- alarm test flow`);
@@ -41,16 +54,7 @@ router
     (data, next) => {
       if(data && !data.length) {
         const alarmBody = `Alarm: No deals data. Date: ${yesterday}. Market DB: ${req.db}.`;
-        return loader({
-          method: 'post',
-          url: req.webtaskContext.secrets.gmailFunction,
-          qs: {token: req.webtaskContext.secrets.token},
-          json: {
-            to: req.webtaskContext.secrets.admin,
-            subject: 'Alarm!',
-            body: alarmBody
-          }
-        }, () => next(null, alarmBody));
+        return triggerAlarm(alarmBody);
       }
       return next(null, 'ok');
     }
