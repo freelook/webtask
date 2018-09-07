@@ -56,7 +56,7 @@ router
     }
   ],
   (err, status) => {
-    responseHandler(err, res, {status: status});
+    responseHandler(err, res, {status: req.webtaskContext.secrets});
   });
 });
 
