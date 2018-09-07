@@ -70,7 +70,8 @@ router
     (next) => {
       const alarmBody = _.get(req, 'query.msg') || _.get(req, 'body.msg');
       if(!!alarmBody) {
-        return triggerAlarm(req)(alarmBody);
+        triggerAlarm(req)(alarmBody);
+        return next(null, alarmBody);
       }
       return next(null, 'No alarm msg.');
     }
