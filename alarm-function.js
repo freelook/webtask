@@ -36,7 +36,7 @@ const triggerAlarm = (req) => (alarmBody) => {
       subject: 'Alarm!',
       body: alarmBody
     }
-  }, () => next(null, alarmBody));
+  }, () => {});
 };
 
 router
