@@ -77,7 +77,8 @@ router
     (data, next) => {
       if(data && !data.length) {
         const alarmBody = `Alarm: No deals data. Date: ${yesterday}. Market DB: ${req.db}.`;
-        return triggerAlarm(req)(alarmBody);
+        triggerAlarm(req)(alarmBody);
+        return next(null, alarmBody);
       }
       return next(null, 'ok');
     }
