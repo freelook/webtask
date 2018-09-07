@@ -69,6 +69,7 @@ router
       })(params)
     }, next),
     (data, next) => {
+             return responseHandler(null, res, data);
       var dealDetails = _.get(data, 'dealDetails');
       if(!dealDetails) {
         return next('No dealDetails provided.');
