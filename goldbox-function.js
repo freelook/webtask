@@ -70,6 +70,7 @@ router
     }, next),
     (data, next) => {
       var dealDetails = _.get(data, 'dealDetails');
+      return next(null, 'No dealDetails provided.'); 
       if(!dealDetails) {
         return next('No dealDetails provided.');
       }
