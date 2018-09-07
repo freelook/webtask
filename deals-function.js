@@ -53,7 +53,7 @@ router
      }
      return next(null, deals);
    },
-   (data, next) => as.mapSeries(_.get(data, 'deals', []),
+   (deals, next) => as.mapSeries(deals,
    (deal, next) => {
       if(deal && deal.url && deal.promoText) {
         loader({
