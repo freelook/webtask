@@ -42,7 +42,7 @@ router
        // Trigger alarm
         loader({
           method: 'post',
-          url: req.webtaskContext.secrets.ararmFunction,
+          url: `${req.webtaskContext.secrets.ararmFunction}/${req.market}/trigger`,
           qs: {
             token: req.webtaskContext.secrets.token
           },
