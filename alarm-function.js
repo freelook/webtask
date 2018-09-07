@@ -42,7 +42,7 @@ const triggerAlarm = (req) => (alarmBody) => {
 router
 .all('/test', function (req, res) {
   console.log(`-- alarm test flow`);
-  const yesterday = moment().subtract(1, 'days').format('YYYY-MM-DD');
+  const yesterday = moment().subtract(2, 'days').format('YYYY-MM-DD');
   as.waterfall([
     // 1 - get db update for yesterday
     // 2 - send email if alarm is not ok
