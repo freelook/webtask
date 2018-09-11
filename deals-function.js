@@ -35,7 +35,7 @@ router
       qs: {
         token: req.webtaskContext.secrets.token
       }
-   }, next),
+   }, (err, data) => next(null, err || data)),
    (data, next) => {
      const deals = _.get(data, 'deals', []);
      if(!deals.length) {
