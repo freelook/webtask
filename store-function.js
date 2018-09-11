@@ -30,6 +30,7 @@ const createStoreSchema = (req) => {
   const db = req.params.db;
   if(!StoreSchema) {
     StoreSchema = mongoose.Schema({
+      timestamp: {type: Number, default: Date.now},
       updated: {type: Date, default: Date.now},
       state: {type: String, default: 'new'},
       payload: {type: mongoose.Schema.Types.Mixed, default: {}}
@@ -106,7 +107,9 @@ router
     (next) => req.Store.findById(req.params.id, next),
     (item, next) => {
       if(!!item) {
-        item.updated = Date.now();
+        var now = Date.now();
+        item.timestamp = now;
+        item.updated = now;
         item.payload = _.merge({}, item.payload, req.body);
         return item.save(next);
       }
@@ -120,7 +123,9 @@ router
     (next) => req.Store.findById(req.params.id, next),
     (item, next) => {
       if(!!item) {
-        item.updated = Date.now();
+        var now = Date.now();
+        item.timestamp = now;
+        item.updated = now;
         if(!!req.body.state) {
           item.state = req.body.state;
         }
