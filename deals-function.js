@@ -38,7 +38,7 @@ router
    }, (err, data) => next(null, err || data)),
    (data, next) => {
      const deals = _.get(data, 'deals', []);
-     if(!deals.length) {
+     if(!deals.length && req.query.alarm) {
        // Trigger alarm
       return loader({
         method: 'post',
