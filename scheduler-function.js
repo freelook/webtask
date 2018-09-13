@@ -10,7 +10,7 @@ const worker = (context) => (params, next) => as.map(
   (task, next) => {
     loader({
     url: context.secrets[task], 
-    qs: {token: context.secrets.token}
+    qs: {token: context.secrets.token, alarm: true}
   }, () => {});
   next();
   }, 
