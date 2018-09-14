@@ -72,8 +72,7 @@ router
    ),
    (media, next) => req.twitter.post('statuses/update', 
       {
-        status: `${promoText} ${url} 
-        Tags:${hashTags}`,
+        status: `${promoText} ${url} Tags:${hashTags}`,
         media_ids: media.media_id_string // Pass the media id string
       },
     (error, tweet, response) => next(error, tweet)
