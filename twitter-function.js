@@ -55,7 +55,7 @@ router
   const url = req.twUrl;
   const imgUrl = _.get(req, 'body.payload.promoImg') || _.get(req, 'body.payload.info.image');
   const promoText = _.get(req, 'body.payload.promoText') || _.get(req, 'body.payload.info.title');
-  const hashTags = [''].concat(_.get(req, 'body.payload.info.labels', []).map(h => h.replace(/[^\w\d]/mig, ''))).concat(['Today', 'Amazon', 'Deal']).join(' #');
+  const hashTags = [''].concat(_.get(req, 'body.payload.info.labels', []).map(h => h.replace(/[^\w\d]/mig, ''))).concat(['Amazon', 'Deal']).join(' #');
   console.log(`-- twitter published: ${promoText} ${url}`);
   as.waterfall([
    (next) => fli.npm.request({
