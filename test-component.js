@@ -10,7 +10,11 @@ const app = components.editor.init({
       req.webtaskContext = {
         query: req.query,
         headers: {host: "xxxx.test.com"},
-        storage:{backchannel:{webtaskName: 'express-with-view'}}
+        storage:{
+          get: (next) => next(null, {}),
+          set: (data, next) => next(null, data),
+          backchannel:{webtaskName: 'express-with-view'}
+        }
       };
       next();
     },
@@ -22,7 +26,12 @@ const app = components.editor.init({
       res.status(constants.code.success).json({run: true});
   },
   api: (req, res) => {
-      res.status(constants.code.success).json({api: true});
+    switch(_.chain(req).get('body.task').value()) {
+      case 'save':
+        return components.editor.save(req, res);
+      default:
+        return res.status(constants.code.success).json({api: true});
+    }
   },
   edit: (req, res) => {
       const html = components.editor.render({
@@ -32,7 +41,7 @@ const app = components.editor.init({
           input: {},
           output: {},
           handler: function(P) {
-            console.log(P.editor.getValue());
+            P.save();
           }
         }
       });
