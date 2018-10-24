@@ -39,7 +39,6 @@ module.exports = function(context, cb) {
   const now = m().add(2, 'h').startOf('m');
   const tick = m(now).add(1, 'm');
   if(context.secrets.container !== _.get(context, 'body.container')) {
-    console.log(now, m());
     return cb('No container token.');
   }
   return as.waterfall([
