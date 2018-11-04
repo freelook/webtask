@@ -44,7 +44,7 @@ router
    }, (err, response, data) => next(null, err || data)),
    (data, next) => {
      const promos = _.get(data, req.webtaskContext.secrets.promo, []);
-     return next(promos);
+     return next(data);
      if(!promos.length) {
       return next('No promo');
      }
