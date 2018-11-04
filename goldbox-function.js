@@ -50,7 +50,7 @@ router
       url: req.marketUrl,
       encoding: null
     },
-    (err, response, body) => next(err, body)
+    (err, response, body) => next(body)
     ),
     (html, next) => {
       var marketplaceId = getMatch(html, `[\\s\\S]+?"${'marketplaceId'}"[\\s\\S]+?"([\\s\\S]+?)"[\\s\\S]+?`);
