@@ -48,7 +48,7 @@ router
   as.waterfall([
    (next) => fli.npm.request({
       url: req.marketUrl,
-      //gzip: true,
+      gzip: true,
       headers: {
         'Accept-Charset': 'utf-8',
         //'Accept-Encoding': 'gzip',
