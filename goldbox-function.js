@@ -51,11 +51,11 @@ router
       gzip: true,
       headers: {
         'Accept-Charset': 'utf-8',
-        //'Accept-Encoding': 'gzip',
+        'Accept-Encoding': 'gzip',
       },
       encoding: 'utf8'
     },
-    (err, response, body) => next(body)
+    (err, response, body) => next(err, body)
     ),
     (html, next) => {
       var marketplaceId = getMatch(html, `[\\s\\S]+?"${'marketplaceId'}"[\\s\\S]+?"([\\s\\S]+?)"[\\s\\S]+?`);
