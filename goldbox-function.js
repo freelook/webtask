@@ -55,13 +55,13 @@ router
       },
       encoding: 'utf8'
     },
-    (err, response, body) => next(body)
+    (err, response, body) => next(err, body)
     ),
     (html, next) => {
       var marketplaceId = getMatch(html, `[\\s\\S]+?"${'marketplaceId'}"[\\s\\S]+?"([\\s\\S]+?)"[\\s\\S]+?`);
       var deals = getElements(html, req.webtaskContext.secrets.element)
                   .slice(0, req.webtaskContext.secrets.max);
-      next(null, {marketplaceId:marketplaceId, deals:deals});
+      next({marketplaceId:marketplaceId, deals:deals});
     },
     (params, next) => loader({
       method: 'post',
