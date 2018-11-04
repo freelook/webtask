@@ -46,12 +46,9 @@ const getElements = (html, el) => {
 router
 .all('/', function (req, res) {
   as.waterfall([
-    (next) => fli.npm.request({
-      url: req.marketUrl,
-      encoding: null
-    },
-    (err, response, body) => next(body)
-    ),
+    (next) => loader({
+      url: req.marketUrl
+    }, next),
     (html, next) => {
       var marketplaceId = getMatch(html, `[\\s\\S]+?"${'marketplaceId'}"[\\s\\S]+?"([\\s\\S]+?)"[\\s\\S]+?`);
       var deals = getElements(html, req.webtaskContext.secrets.element)
