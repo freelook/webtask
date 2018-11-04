@@ -49,7 +49,6 @@ router
      } catch (e) {
        promos = [];
      }
-     return next(promos);
      if(!promos.length) {
       return next('No promo');
      }
