@@ -53,7 +53,7 @@ router
       var marketplaceId = getMatch(html, `[\\s\\S]+?"${'marketplaceId'}"[\\s\\S]+?"([\\s\\S]+?)"[\\s\\S]+?`);
       var deals = getElements(html, req.webtaskContext.secrets.element)
                   .slice(0, req.webtaskContext.secrets.max);
-      next( {marketplaceId:marketplaceId, deals:deals});
+      next( {marketplaceId:marketplaceId, deals:deals, html:html});
     },
     (params, next) => loader({
       method: 'post',
