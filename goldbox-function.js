@@ -63,9 +63,14 @@ router
                   .slice(0, req.webtaskContext.secrets.max);
       next(null, {marketplaceId:marketplaceId, deals:deals});
     },
-    (params, next) => loader({
+    (params, next) => fli.npm.request({
       method: 'post',
       url: req.marketUrlDetails,
+      headers: {
+        'Accept-Charset': 'utf-8',
+        'Accept-Encoding': 'gzip',
+      },
+      encoding: 'utf8',
       json: ((p) => {
        return {
       	"requestMetadata": {
@@ -75,7 +80,7 @@ router
       	"dealTargets": _.chain(params).get('deals', []).map((id)=>({"dealID":id})).value()
       };
       })(params)
-    }, next),
+    }, (err, response, body) => next(err, body)),
     (data, next) => {
       var dealDetails = _.get(data, 'dealDetails');
       if(!dealDetails) {
