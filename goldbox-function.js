@@ -48,14 +48,14 @@ router
   as.waterfall([
    (next) => fli.npm.request({
       url: req.marketUrl,
-      gzip: true,
+      //gzip: true,
       headers: {
         'Accept-Charset': 'utf-8',
-        'Accept-Encoding': 'gzip',
+        //'Accept-Encoding': 'gzip',
       },
       encoding: 'utf8'
     },
-    (err, response, body) => next(err, body)
+    (err, response, body) => next(body)
     ),
     (html, next) => {
       var marketplaceId = getMatch(html, `[\\s\\S]+?"${'marketplaceId'}"[\\s\\S]+?"([\\s\\S]+?)"[\\s\\S]+?`);
@@ -79,7 +79,7 @@ router
     (data, next) => {
       var dealDetails = _.get(data, 'dealDetails');
       if(!dealDetails) {
-        return next(data, 'No dealDetails provided.');
+        return next('No dealDetails provided.');
       }
       var deals = _.keys(dealDetails).map((k) => {
         var d = dealDetails[k];
