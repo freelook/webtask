@@ -47,7 +47,7 @@ router
      try {
        promos = _.get(JSON.parse(data), req.webtaskContext.secrets.promo, []);
      } catch (e) {
-       promos = null;
+       promos = [];
      }
      return next(promos);
      if(!promos.length) {
