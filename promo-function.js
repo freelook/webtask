@@ -35,10 +35,16 @@ router
   as.waterfall([
    (next) => fli.npm.request({
       gzip: true,
+      headers: {
+        'Accept-Charset': 'utf-8',
+        'Accept-Encoding': 'gzip',
+      },
+      encoding: 'utf8',
       url: `${req.webtaskContext.secrets.promoFunction}`
    }, (err, response, data) => next(null, err || data)),
    (data, next) => {
      const promos = _.get(data, req.webtaskContext.secrets.promo, []);
+     return next(promos);
      if(!promos.length) {
       return next('No promo');
      }
