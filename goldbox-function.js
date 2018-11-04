@@ -65,6 +65,7 @@ router
     },
     (params, next) => fli.npm.request({
       method: 'post',
+      gzip: true,
       url: req.marketUrlDetails,
       headers: {
         'Accept-Charset': 'utf-8',
