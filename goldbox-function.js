@@ -84,7 +84,7 @@ router
     (data, next) => {
       var dealDetails = _.get(data, 'dealDetails');
       if(!dealDetails) {
-        return next('No dealDetails provided.');
+        return next(data, 'No dealDetails provided.');
       }
       var deals = _.keys(dealDetails).map((k) => {
         var d = dealDetails[k];
