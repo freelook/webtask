@@ -33,9 +33,10 @@ router
 .all('/', function (req, res) {
   console.log('- promo');
   as.waterfall([
-   (next) => loader({
+   (next) => fli.npm.request({
+      gzip: true,
       url: `${req.webtaskContext.secrets.promoFunction}`
-   }, (err, data) => next(null, err || data)),
+   }, (err, response, data) => next(null, err || data)),
    (data, next) => {
      const promos = _.get(data, req.webtaskContext.secrets.promo, []);
      if(!promos.length) {
