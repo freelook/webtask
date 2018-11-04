@@ -43,8 +43,13 @@ router
       url: `${req.webtaskContext.secrets.promoFunction}`
    }, (err, response, data) => next(null, err || data)),
    (data, next) => {
-     const promos = _.get(data, req.webtaskContext.secrets.promo, []);
-     return next(data);
+     let promos;
+     try {
+       promos = _.get(JSON.parse(data), req.webtaskContext.secrets.promo, []);
+     } catch (e) {
+       promos = null;
+     }
+     return next(promos);
      if(!promos.length) {
       return next('No promo');
      }
