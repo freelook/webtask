@@ -33,6 +33,7 @@ const apacMiddleware = (req, res, next) => {
   next();
 };
 const jsonMapper = (asin) => (info , next) => {
+  return next(info);
   var item = _.get(info, 'result.ItemLookupResponse.Items.Item');
   if(!item || item.ASIN !== asin) {
     return next(null, {err: 'Incorrect info.'});
