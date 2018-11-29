@@ -33,7 +33,8 @@ router
    (next) => loader({
       url: `${req.webtaskContext.secrets.goldboxFunction}/${req.market}`,
       qs: {
-        token: req.webtaskContext.secrets.token
+        token: req.webtaskContext.secrets.token,
+        max: req.query.max
       }
    }, (err, data) => next(null, err || data)),
    (data, next) => {
