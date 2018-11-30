@@ -33,15 +33,15 @@ const validateMiddleware = (req, res, next) => {
 const getMatch = (html, srex) => {
   return (html && html.match(new RegExp(srex, 'mi')) || [])[1];
 }; 
-const getElements = (html, el) => {
-  var result = [];
+const getElements = (html, el, limit, _result) => {
+  var result = _result || [];
   var match = getMatch(html, `[\\s\\S]+?${el}[\\s\\S]+?\\[([\\s\\S]+?)\\][\\s\\S]+?`);
   var index = html.indexOf(match);
-  if(!!match && index > 0) {
+  if(!!match && index > 0 && limit > result.length) {
   	var nHtml = html.substring(index);
     try {
-  	result = JSON.parse(`[${match}]`).concat(getElements(nHtml, el));
-    } catch(e) {console.log(e);}
+  	  result = getElements(nHtml, el, limit, result.concat(JSON.parse(`[${match}]`)));
+    } catch(e) { console.log(e); }
   }
   return result;
 };
@@ -63,10 +63,10 @@ router
     }),
     (html, next) => {
       var marketplaceId, deals;
+      let limit = req.query.max || req.webtaskContext.secrets.max;
       try {
         marketplaceId = getMatch(html, `[\\s\\S]+?"${'marketplaceId'}"[\\s\\S]+?"([\\s\\S]+?)"[\\s\\S]+?`);
-        deals = getElements(html, req.webtaskContext.secrets.element)
-                  .slice(0, req.query.max || req.webtaskContext.secrets.max);
+        deals = getElements(html, req.webtaskContext.secrets.element, limit).slice(0, limit);
       } catch(e){ console.log(e); }
       next(null, {marketplaceId:marketplaceId, deals:deals});
     },
