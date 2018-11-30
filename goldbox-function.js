@@ -31,7 +31,7 @@ const validateMiddleware = (req, res, next) => {
   return next();
 };
 const getMatch = (html, srex) => {
-  return (html.match(new RegExp(srex, 'mi')) || [])[1];
+  return (html && html.match(new RegExp(srex, 'mi')) || [])[1];
 }; 
 const getElements = (html, el) => {
   var result = [];
