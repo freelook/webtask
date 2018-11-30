@@ -87,7 +87,7 @@ router
           token: req.webtaskContext.secrets.token
         },
         json: {
-          enpoint: `${enpoint}/dp/${asin}`,
+          endpoint: `${enpoint}/dp/${asin}`,
           config: {
             keywords: {
               selector: 'meta[name="keywords"]',
