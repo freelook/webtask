@@ -34,13 +34,16 @@ const getMatch = (html, srex) => {
   return (html.match(new RegExp(srex, 'mi')) || [])[1];
 }; 
 const getElements = (html, el) => {
+  var result = [];
   var match = getMatch(html, `[\\s\\S]+?${el}[\\s\\S]+?\\[([\\s\\S]+?)\\][\\s\\S]+?`);
   var index = html.indexOf(match);
   if(!!match && index > 0) {
   	var nHtml = html.substring(index);
-  	return JSON.parse(`[${match}]`).concat(getElements(nHtml, el));
+    try {
+  	result = JSON.parse(`[${match}]`).concat(getElements(nHtml, el));
+    } catch(e) {console.log(e);}
   }
-  return [];
+  return result;
 };
 
 router
@@ -59,7 +62,6 @@ router
       next(err, body);
     }),
     (html, next) => {
-      console.log(html);
       var marketplaceId = getMatch(html, `[\\s\\S]+?"${'marketplaceId'}"[\\s\\S]+?"([\\s\\S]+?)"[\\s\\S]+?`);
       var deals = getElements(html, req.webtaskContext.secrets.element)
                   .slice(0, req.query.max || req.webtaskContext.secrets.max);
