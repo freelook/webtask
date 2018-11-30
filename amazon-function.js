@@ -113,7 +113,6 @@ router
       _.get(info, 'labels', []), 
       _.chain(keywords).split(',').compact().map(_.trim).value()
     );
-    console.log(keywords);
     responseHandler(null, res, info);
   });
 })
