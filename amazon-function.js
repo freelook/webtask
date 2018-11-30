@@ -16,11 +16,13 @@ const validateMiddleware = (req, res, next) => {
      responseHandler(errMsgToken, res);
      return next(errMsgToken);
   }
-  if(!_.get(req, 'params.market')) {
+  const market = _.get(req, 'params.market');
+  if(!market) {
      const errMsgMarket = 'No market name provided.';
      responseHandler(errMsgMarket, res);
      return next(errMsgMarket);
   }
+  req.market = _.upperCase(market);
   return next();
 };
 const apacMiddleware = (req, res, next) => {
@@ -28,7 +30,7 @@ const apacMiddleware = (req, res, next) => {
       awsId: req.webtaskContext.secrets.awsId,
       awsSecret: req.webtaskContext.secrets.awsSecret,
       assocId: req.webtaskContext.secrets.assocId,
-      locale: req.params.market.toUpperCase()
+      locale: req.market
   });
   next();
 };
@@ -67,6 +69,47 @@ const jsonMapper = (asin) => (info, next) => {
 };
 
 router
+.get('/lookup2/:asin', function (req, res) {
+  const asin = _.get(req, 'params.asin');
+  if(!asin) {
+    return responseHandler('No asin provided.', res);
+  }
+  as.parallel([
+    (next) => {
+      const enpoint = req.webtaskContext.secrets[req.market];
+      if(!enpoint) {
+        return next('No market endpoint');
+      } 
+      return loader({
+        method: 'post',
+        url: req.webtaskContext.secrets.scrapeItFunction,
+        qs: {
+          token: req.webtaskContext.secrets.token
+        },
+        json: {
+          enpoint: `${enpoint}/dp/${asin}`,
+          config: {
+            keywords: {
+              selector: 'meta[name="keywords"]',
+              attr: 'content'
+            }
+          }
+        }
+      }, next)
+    },
+    (next) => {
+      req.oph.execute('ItemLookup', {
+        'ItemId': asin,
+        'ResponseGroup': 'Large'
+      })
+      .then((info) => jsonMapper(asin)(info, next))
+      .catch((err) => next(err));
+    }
+  ],
+  (err, info) => {
+    responseHandler(err, res, info);
+  });
+})
 .get('/lookup/:asin', function (req, res) {
   as.waterfall([
     (next) => {
