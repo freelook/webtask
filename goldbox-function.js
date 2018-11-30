@@ -68,7 +68,6 @@ router
         deals = getElements(html, req.webtaskContext.secrets.element)
                   .slice(0, req.query.max || req.webtaskContext.secrets.max);
       } catch(e){ console.log(e); }
-      console.log('-- test');
       next(null, {marketplaceId:marketplaceId, deals:deals});
     },
     (params, next) => fli.npm.request({
