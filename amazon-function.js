@@ -107,7 +107,7 @@ router
     }
   ],
   (err, info) => {
-    responseHandler(err, res, info);
+    responseHandler(null, res, info);
   });
 })
 .get('/lookup/:asin', function (req, res) {
