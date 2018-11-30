@@ -69,7 +69,7 @@ const jsonMapper = (asin) => (info, next) => {
 };
 
 router
-.get('/lookup2/:asin', function (req, res) {
+.get('/lookup/:asin', function (req, res) {
   const asin = _.get(req, 'params.asin');
   if(!asin) {
     return responseHandler('No asin provided.', res);
@@ -115,23 +115,6 @@ router
     );
     responseHandler(null, res, info);
   });
-})
-.get('/lookup/:asin', function (req, res) {
-  as.waterfall([
-    (next) => {
-      var asin = _.get(req, 'params.asin');
-      if(!asin) {
-        return next('No asin provided.');
-      }
-      req.oph.execute('ItemLookup', {
-        'ItemId': asin,
-        'ResponseGroup': 'Large'
-      })
-      .then((info) => jsonMapper(asin)(info, next))
-      .catch((err) => next(err));
-    }
-  ],
-  (err, info) => responseHandler(err, res, info));
 })
 .get('/browsenodelookup/:node', function (req, res) {
   as.waterfall([
