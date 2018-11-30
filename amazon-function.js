@@ -111,7 +111,7 @@ router
     const info = _.get(result, '[1]', {});
     info.labels = _.concat(
       _.get(info, 'labels', []), 
-      _.chain(keywords).split(',').compact().value()
+      _.chain(keywords).split(',').compact().map(_.trim).value()
     );
     responseHandler(null, res, info);
   });
