@@ -89,7 +89,7 @@ router
         json: {
           endpoint: `${enpoint}/dp/${asin}`,
           config: {
-            keywords: {
+            labels: {
               selector: 'meta[name="keywords"]',
               attr: 'content'
             }
