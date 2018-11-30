@@ -46,6 +46,9 @@ const jsonMapper = (asin) => (info, next) => {
               _.get(item, 'OfferSummary.LowestNewPrice.FormattedPrice');
   var labels = [];
   (function fetchNodeName(node) {
+    if(_.isArray(node)) {
+      return _.map((n) => fetchNodeName(n));
+    }
     var nodeName = _.get(node, 'Name');
     var nodeAncestor = _.get(node, 'Ancestors.BrowseNode');
     nodeName && labels.push(nodeName);
