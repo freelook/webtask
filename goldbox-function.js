@@ -67,7 +67,7 @@ router
         marketplaceId = getMatch(html, `[\\s\\S]+?"${'marketplaceId'}"[\\s\\S]+?"([\\s\\S]+?)"[\\s\\S]+?`);
         deals = getElements(html, req.webtaskContext.secrets.element)
                   .slice(0, req.query.max || req.webtaskContext.secrets.max);
-      } catch(e){ console.log(e); next(e); }
+      } catch(e){ console.log(e); }
       next(null, {marketplaceId:marketplaceId, deals:deals});
     },
     (params, next) => fli.npm.request({
