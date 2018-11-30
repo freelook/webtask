@@ -62,10 +62,12 @@ router
       next(err, body);
     }),
     (html, next) => {
-      console.log('--- html');
-      var marketplaceId = getMatch(html, `[\\s\\S]+?"${'marketplaceId'}"[\\s\\S]+?"([\\s\\S]+?)"[\\s\\S]+?`);
-      var deals = getElements(html, req.webtaskContext.secrets.element)
+      var marketplaceId, deals;
+      try {
+        marketplaceId = getMatch(html, `[\\s\\S]+?"${'marketplaceId'}"[\\s\\S]+?"([\\s\\S]+?)"[\\s\\S]+?`);
+        deals = getElements(html, req.webtaskContext.secrets.element)
                   .slice(0, req.query.max || req.webtaskContext.secrets.max);
+      } catch(e){ console.log(e) }
       next(null, {marketplaceId:marketplaceId, deals:deals});
     },
     (params, next) => fli.npm.request({
