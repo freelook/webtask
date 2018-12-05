@@ -1,4 +1,5 @@
-var dbConnection, StoreSchema;
+let dbConnections = {};
+let StoreSchemas = {};
 const fli = require('fli-webtask');
 const wt = require('webtask-tools');
 const bodyParser = require('body-parser');
@@ -21,13 +22,16 @@ const streamer = (req) => (item, next) => loader({
     })()
 }, next);
 const createDbConnection = (db) => {
+  let dbConnection = dbConnections[db];
   if(!dbConnection) {
     dbConnection = mongoose.createConnection(db);
+    dbConnections[db] = dbConnection;
   }
   return dbConnection;
 };
 const createStoreSchema = (req) => {
   const db = req.params.db;
+  let StoreSchema = StoreSchemas[db];
   if(!StoreSchema) {
     StoreSchema = mongoose.Schema({
       timestamp: {type: Number, default: Date.now},
@@ -46,6 +50,7 @@ const createStoreSchema = (req) => {
       }
       next();
     });
+    StoreSchemas[db] = StoreSchema;
   }
   return StoreSchema;
 };
