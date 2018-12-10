@@ -14,7 +14,7 @@ const worker = (context) => (params, next) => as.map(
   }, () => {});
   next();
   }, 
-  next
+  () => next()
 );
 
 const cronHandler = (context) => (params, next) => {
@@ -47,6 +47,6 @@ module.exports = function(context, cb) {
      storage: storage,
      now: now,
      tick: tick
-   }, next)
+   }, () => next())
   ], cb);
 };
