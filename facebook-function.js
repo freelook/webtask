@@ -41,7 +41,7 @@ const validateMiddleware = (req, res, next) => {
 const refreshToken = (context, cb) => {
   as.waterfall([
     (next) => request.get({
-      url: `${context.secrets.fb-refresh-token-url}`,
+      url: `${context.secrets['fb-refresh-token-url']}`,
     }, (err, httpResponse, body) => next(null, JSON.parse(body))),
     (data, next) => {
       var token = {
