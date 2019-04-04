@@ -70,7 +70,6 @@ const getToken = (req, cb) => {
     if(!!err) {
       return cb(err);
     }
-    console.log(access_token);
     return cb(null, access_token); 
   });
 };
