@@ -2,7 +2,7 @@ const fli = require('fli-webtask');
 const wt = require('webtask-tools');
 const bodyParser = require('body-parser');
 const mongodb = require('mongodb');
-const mongoDbQueue = require('mongodb-queue');
+const mongoDbQueue = require('mongodb-queue'); 
 const express = fli.npm.express;
 const as = fli.npm.async;
 const _ = fli.npm.lodash;
@@ -27,7 +27,7 @@ const mongoDbQueueMiddleware = (req, res, next) => {
     req.queue = mongoDbQueue(db, req.params.qq, {
       visibility: 1,
       delay: 0,
-      maxRetries: 1,
+      maxRetries: 2,
       deadQueue: mongoDbQueue(db, `${req.params.qq}-dead`)
     });
     next(err);
