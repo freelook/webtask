@@ -2,7 +2,7 @@ const fli = require('fli-webtask');
 const request = fli.npm.request;
 const _ = fli.npm.lodash;
 const as = fli.npm.async;
-const loader = fli.lib.loader;
+const loader = fli.lib.loader; 
 
 const publisher = (context) => (params, next) => as.map(
   params.sources,
@@ -28,7 +28,7 @@ const publisher = (context) => (params, next) => as.map(
     }, () => {}));
     return next();
   },
-  next
+  () => next()
 );
 
 /**
@@ -48,6 +48,6 @@ module.exports = function(context, cb) {
    (next) => context.storage.get(next),
    (storage, next) => publisher(context)({
      sources: storage.sources
-   }, next),
+   }, () => next()),
   ], cb);
 };
