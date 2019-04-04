@@ -39,7 +39,7 @@ const validateMiddleware = (req, res, next) => {
   req.facebookPublisherUrl = facebookPublisherUrl;
   return next();
 };
-const refreshToken = (req, cb) => {
+const refreshToken = (req, storage, cb) => {
   let context = req.webtaskContext;
   as.waterfall([
     (next) => request.get({
@@ -50,7 +50,8 @@ const refreshToken = (req, cb) => {
         access_token: _.get(data, 'access_token'),
         expire: Date.now() + 1000 * (_.get(data, 'expires_in', 0) - 60)
       };
-      context.storage.set(token, () => next(null, token.access_token));
+      storage[req.db] = token;
+      context.storage.set(storage, () => next(null, token.access_token));
     }
   ], cb);
 };
@@ -62,7 +63,7 @@ const getToken = (req, cb) => {
       if (Date.now() < _.get(storage, `${req.db}.expire`, 0)) {
          return next(null, _.get(storage, 'access_token'));
       }
-      return refreshToken(context, next);
+      return refreshToken(req, storage, next);
     }
   ], (err, access_token) => {
     if(!!err) {
