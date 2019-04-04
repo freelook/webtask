@@ -29,16 +29,18 @@ const validateMiddleware = (req, res, next) => {
   req.fUrl = fUrl;
   var db = _.get(req, 'body.db');
   var facebookPublisherUrl = req.webtaskContext.secrets[`${db}-fb`];
-  var facebookPublisherToken = req.webtaskContext.secrets[`${db}-fb-token`];
-    if(!facebookPublisherUrl || !facebookPublisherToken) {
+    if(!facebookPublisherUrl) {
      const errMsgFb = 'No FB publisher.';
      responseHandler(errMsgFb, res);
      return next(errMsgFb);
   }
+  req.fUrl = fUrl;
+  req.db = db;
   req.facebookPublisherUrl = facebookPublisherUrl;
   return next();
 };
-const refreshToken = (context, cb) => {
+const refreshToken = (req, cb) => {
+  let context = req.webtaskContext;
   as.waterfall([
     (next) => request.get({
       url: `${context.secrets['fb-refresh-token-url']}`,
@@ -52,11 +54,12 @@ const refreshToken = (context, cb) => {
     }
   ], cb);
 };
-const getToken = (context, cb) => {
+const getToken = (req, cb) => {
+  let context = req.webtaskContext;
   as.waterfall([
     (next) => context.storage.get(next),
     (storage, next) => {
-      if (Date.now() < _.get(storage, 'expire', 0)) {
+      if (Date.now() < _.get(storage, `${req.db}.expire`, 0)) {
          return next(null, _.get(storage, 'access_token'));
       }
       return refreshToken(context, next);
@@ -80,7 +83,7 @@ router
     ).concat(['Amazon', 'Deal']).join(' %23');
   console.log(`-- facebook published: ${promoText} ${url}`);
   as.waterfall([
-   (next) => getToken(req.webtaskContext, next),
+   (next) => getToken(req, next),
    (access_token, next) => loader({
     method: 'post',
     url: req.facebookPublisherUrl,
