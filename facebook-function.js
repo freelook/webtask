@@ -96,7 +96,10 @@ router
     },
    }, next)
   ],
-  (err, info) => responseHandler(err, res, info));
+  (err, info) => {
+    console.log(err, info);
+    responseHandler(err, res, info)
+  });
 });
 
 app
