@@ -3,6 +3,7 @@ const express = require('express');
 const wt = require('webtask-tools');
 const bodyParser = require('body-parser');
 const moment = require('moment');
+const RE2 = require('re2');
 const request = fli.npm.request;
 const as = fli.npm.async;
 const _ = fli.npm.lodash;
@@ -31,7 +32,7 @@ const validateMiddleware = (req, res, next) => {
   return next();
 };
 const getMatch = (html, srex) => {
-  return (html && html.match(new RegExp(srex, 'mi')) || [])[1];
+  return (html && html.match(new RE2(srex, 'mi')) || [])[1];
 }; 
 const getElements = (html, el, limit, _result) => {
   var result = _result || [];
@@ -62,7 +63,7 @@ router
       next(err, body);
     }),
     (html, next) => {
-      var marketplaceId, deals;
+      var marketplaceId, deals; 
       let limit = req.query.max || req.webtaskContext.secrets.max;
       try {
         marketplaceId = getMatch(html, `[\\s\\S]+?"${'marketplaceId'}"[\\s\\S]+?"([\\s\\S]+?)"[\\s\\S]+?`);
