@@ -97,8 +97,7 @@ router
    }, next)
   ],
   (err, info) => {
-    console.log(err, info);
-    responseHandler(err, res, info)
+    responseHandler(err, res, info);
   });
 });
 
