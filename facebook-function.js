@@ -90,7 +90,7 @@ router
     method: 'post',
     url: req.facebookPublisherUrl,
     qs: {
-      message: `${promoText} ${hashTags}`,
+      message: `${promoText}`,
       link: url,
       access_token: access_token
     },
