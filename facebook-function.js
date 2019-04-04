@@ -43,7 +43,7 @@ const refreshToken = (req, storage, cb) => {
   let context = req.webtaskContext;
   as.waterfall([
     (next) => request.get({
-      url: `${context.secrets['fb-refresh-token-url']}`,
+      url: `${context.secrets['fb-refresh-token-url']}${_.get(storage,`${req.db}.access_token`)}`,
     }, (err, httpResponse, body) => next(null, JSON.parse(body))),
     (data, next) => {
       console.log(data);
