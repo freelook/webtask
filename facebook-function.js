@@ -28,8 +28,9 @@ const validateMiddleware = (req, res, next) => {
   }
   req.fUrl = fUrl;
   var db = _.get(req, 'body.db');
-  var facebookPublisherUrl = req.webtaskContext.secrets[`${db}-fb-dyno`];
-    if(!facebookPublisherUrl) {
+  var facebookPublisherUrl = req.webtaskContext.secrets[`${db}-fb`];
+  var facebookPublisherToken = req.webtaskContext.secrets[`${db}-fb-token`];
+    if(!facebookPublisherUrl || !facebookPublisherToken) {
      const errMsgFb = 'No FB publisher.';
      responseHandler(errMsgFb, res);
      return next(errMsgFb);
@@ -37,20 +38,57 @@ const validateMiddleware = (req, res, next) => {
   req.facebookPublisherUrl = facebookPublisherUrl;
   return next();
 };
+const refreshToken = (context, cb) => {
+  as.waterfall([
+    (next) => request.get({
+      url: `${context.secrets.fb-refresh-token-url}`,
+    }, (err, httpResponse, body) => next(null, JSON.parse(body))),
+    (data, next) => {
+      var token = {
+        access_token: _.get(data, 'access_token'),
+        expire: Date.now() + 1000 * (_.get(data, 'expires_in', 0) - 60)
+      };
+      context.storage.set(token, () => next(null, token.access_token));
+    }
+  ], cb);
+};
+const getToken = (context, cb) => {
+  as.waterfall([
+    (next) => context.storage.get(next),
+    (storage, next) => {
+      if (Date.now() < _.get(storage, 'expire', 0)) {
+         return next(null, _.get(storage, 'access_token'));
+      }
+      return refreshToken(context, next);
+    }
+  ], (err, access_token) => {
+    if(!!err) {
+      return cb(err);
+    }
+    return cb(null, access_token); 
+  });
+};
 
 router
 .all('/publish', function (req, res) {
   const url = req.fUrl;
-  console.log(`-- facebook published: ${req.body.payload.promoText} ${url}`);
+  const promoText = _.get(req, 'body.payload.promoText') || _.get(req, 'body.payload.info.title');
+  const hashTags = [''].concat(
+    _.get(req, 'body.payload.info.labels', [])
+    .map(h => h.replace(/[^\w\d]/mig, ''))
+    .filter(h => h && h.length < 33)
+    ).concat(['Amazon', 'Deal']).join(' %23');
+  console.log(`-- facebook published: ${promoText} ${url}`);
   as.waterfall([
-   (next) => loader({
+   (next) => getToken(req.webtaskContext, next),
+   (access_token, next) => loader({
     method: 'post',
     url: req.facebookPublisherUrl,
-    qs: {token: req.webtaskContext.secrets.token}, 
-    json: {
-      db: req.body.db,
-      text: `${req.body.payload.promoText} ${url}`
-    }
+    qs: {
+      message: `${promoText} ${hashTags}`,
+      link: url,
+      access_token: access_token
+    },
    }, next)
   ],
   (err, info) => responseHandler(err, res, info));
