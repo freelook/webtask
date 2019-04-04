@@ -46,6 +46,7 @@ const refreshToken = (req, storage, cb) => {
       url: `${context.secrets['fb-refresh-token-url']}`,
     }, (err, httpResponse, body) => next(null, JSON.parse(body))),
     (data, next) => {
+      console.log(data);
       var token = {
         access_token: _.get(data, 'access_token'),
         expire: Date.now() + 1000 * (_.get(data, 'expires_in', 0) - 60)
