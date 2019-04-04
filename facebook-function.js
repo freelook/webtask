@@ -46,7 +46,6 @@ const refreshToken = (req, storage, cb) => {
       url: `${context.secrets['fb-refresh-token-url']}${_.get(storage,`${req.db}.access_token`)}`,
     }, (err, httpResponse, body) => next(null, JSON.parse(body))),
     (data, next) => {
-      console.log(data);
       var token = {
         access_token: _.get(data, 'access_token'),
         expire: Date.now() + 1000 * (_.get(data, 'expires_in', 0) - 60)
@@ -62,7 +61,7 @@ const getToken = (req, cb) => {
     (next) => context.storage.get(next),
     (storage, next) => {
       if (Date.now() < _.get(storage, `${req.db}.expire`, 0)) {
-         return next(null, _.get(storage, 'access_token'));
+         return next(null, _.get(storage, `${req.db}.access_token`));
       }
       return refreshToken(req, storage, next);
     }
