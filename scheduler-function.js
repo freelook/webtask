@@ -29,7 +29,7 @@ const cronHandler = (context) => (params, next) => {
       tasks.push.apply(tasks, params.storage.tasks[key]);
     });
   console.log(tasks);
-  worker(context)({tasks: tasks}, () => {});
+  //worker(context)({tasks: tasks}, () => {});
   return next(null, tasks);
 };
 
@@ -40,7 +40,7 @@ module.exports = function(context, cb) {
   const now = m().add(2, 'h').startOf('m');
   const tick = m(now).add(1, 'm');
   if(context.secrets.container !== _.get(context, 'body.container')) {
-    return cb('No container token.');
+    //return cb('No container token.');
   }
   return as.waterfall([
    (next) => context.storage.get(next),
