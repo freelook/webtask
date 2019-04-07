@@ -48,5 +48,5 @@ module.exports = function(context, cb) {
      now: now,
      tick: tick
    }, () => next())
-  ], cb);
+  ], () => cb());
 };
