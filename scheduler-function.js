@@ -28,6 +28,7 @@ const cronHandler = (context) => (params, next) => {
     .map((key) => {
       tasks.push.apply(tasks, params.storage.tasks[key]);
     });
+  console.log(tasks);
   worker(context)({tasks: tasks}, () => {});
   return next(null, tasks);
 };
