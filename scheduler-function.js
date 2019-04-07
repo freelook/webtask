@@ -28,8 +28,7 @@ const cronHandler = (context) => (params, next) => {
     .map((key) => {
       tasks.push.apply(tasks, params.storage.tasks[key]);
     });
-  console.log(tasks);
-  //worker(context)({tasks: tasks}, () => {});
+  worker(context)({tasks: tasks}, () => {});
   return next(null, tasks);
 };
 
@@ -37,7 +36,6 @@ const cronHandler = (context) => (params, next) => {
 * @param context {WebtaskContext}
 */
 module.exports = function(context, cb) {
-  return cb();
   const now = m().add(2, 'h').startOf('m');
   const tick = m(now).add(1, 'm');
   if(context.secrets.container !== _.get(context, 'body.container')) {
@@ -52,3 +50,4 @@ module.exports = function(context, cb) {
    }, () => next())
   ], () => cb());
 };
+
