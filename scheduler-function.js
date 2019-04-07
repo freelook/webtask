@@ -18,7 +18,6 @@ const worker = (context) => (params, next) => as.map(
 );
 
 const cronHandler = (context) => (params, next) => {
-  return next();
   var tasks = [];
   _.keys(params.storage.tasks)
     .filter((key) => {
@@ -39,7 +38,6 @@ const cronHandler = (context) => (params, next) => {
 module.exports = function(context, cb) {
   const now = m().add(2, 'h').startOf('m');
   const tick = m(now).add(1, 'm');
-  console.log(new Date(), now);
   if(context.secrets.container !== _.get(context, 'body.container')) {
     //return cb('No container token.');
   }
