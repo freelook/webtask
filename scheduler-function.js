@@ -39,7 +39,7 @@ const cronHandler = (context) => (params, next) => {
 module.exports = function(context, cb) {
   const now = m().add(2, 'h').startOf('m');
   const tick = m(now).add(1, 'm');
-  console.log(Date.now());
+  console.log(new Date(), now);
   if(context.secrets.container !== _.get(context, 'body.container')) {
     //return cb('No container token.');
   }
