@@ -38,8 +38,8 @@ const cronHandler = (context) => (params, next) => {
 module.exports = (context, cb) => {
   const now = m().add(2, 'h').startOf('m');
   const tick = m(now).add(1, 'm');
-  if(context.secrets.container !== _.get(context, 'query.token')) {
-    return cb(context, 'No container token.');
+  if(context.secrets.container !== _.get(context, 'details.query.token')) {
+    return cb('No container token.');
   }
   return as.waterfall([
    (next) => context.storage.get(next),
