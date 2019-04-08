@@ -38,9 +38,9 @@ module.exports = (context, req, res) => {
   console.log('-----start');
   const now = m().add(2, 'h').startOf('m');
   const tick = m(now).add(1, 'm');
-  if(context.secrets.container !== _.get(context, 'body.container')) {
-    return cb('No container token.');
-  }
+  //if(context.secrets.container !== _.get(context, 'body.container')) {
+    //return cb('No container token.');
+  //}
   return as.waterfall([
    (next) => context.storage.get(next),
    (storage, next) => cronHandler(context)({
