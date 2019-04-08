@@ -1,9 +1,9 @@
-const fli = require('fli-webtask');
+//const fli = require('fli-webtask');
 const m = require('moment');
 const cron = require('cron-converter');
-const as = fli.npm.async;
-const _ = fli.npm.lodash;
-const loader = fli.lib.loader;
+const as = require('async');
+const _ = require('lodash');
+const loader = require('request');
 
 const worker = (context) => (params, next) => as.map(
   params.tasks,
