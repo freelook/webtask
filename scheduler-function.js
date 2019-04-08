@@ -48,5 +48,5 @@ module.exports = (context, cb) => {
      now: now,
      tick: tick
    }, () => next())
-  ], () => cb());
+  ], (err, tasks) => cb(null, err || tasks));
 };
