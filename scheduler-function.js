@@ -34,7 +34,7 @@ const cronHandler = (context) => (params, next) => {
 /**
 * @param context {WebtaskContext}
 */
-module.exports = (context, cb) => {
+module.exports = (context, req, res) => {
   console.log('-----start');
   const now = m().add(2, 'h').startOf('m');
   const tick = m(now).add(1, 'm');
@@ -48,5 +48,5 @@ module.exports = (context, cb) => {
      now: now,
      tick: tick
    }, () => next())
-  ], () => cb());
+  ], () => res.end());
 };
