@@ -36,6 +36,7 @@ const cronHandler = (context) => (params, next) => {
 * @param context {WebtaskContext}
 */
 module.exports = (context, cb) => {
+  console.log('-----start');
   const now = m().add(2, 'h').startOf('m');
   const tick = m(now).add(1, 'm');
   if(context.secrets.container !== _.get(context, 'body.container')) {
