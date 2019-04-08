@@ -1,8 +1,9 @@
+const fli = require('fli-webtask');
 const m = require('moment');
 const cron = require('cron-converter');
-const as = require('async');
-const _ = require('lodash');
-const loader = require('request');
+const as = fli.npm.async;
+const _ = fli.npm.lodash;
+const loader = fli.lib.loader;
 
 const worker = (context) => (params, next) => as.map(
   params.tasks,
@@ -34,13 +35,12 @@ const cronHandler = (context) => (params, next) => {
 /**
 * @param context {WebtaskContext}
 */
-module.exports = (context, req, res) => {
-  console.log('-----start');
+module.exports = (context, cb) => {
   const now = m().add(2, 'h').startOf('m');
   const tick = m(now).add(1, 'm');
-  //if(context.secrets.container !== _.get(context, 'body.container')) {
-    //return cb('No container token.');
-  //}
+  if(context.secrets.container !== _.get(context, 'body.container')) {
+    return cb('No container token.');
+  }
   return as.waterfall([
    (next) => context.storage.get(next),
    (storage, next) => cronHandler(context)({
@@ -48,5 +48,5 @@ module.exports = (context, req, res) => {
      now: now,
      tick: tick
    }, () => next())
-  ], () => res.end());
+  ], () => cb());
 };
