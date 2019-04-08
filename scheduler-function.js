@@ -1,4 +1,3 @@
-//const fli = require('fli-webtask');
 const m = require('moment');
 const cron = require('cron-converter');
 const as = require('async');
