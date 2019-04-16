@@ -77,6 +77,7 @@ router
 .all('/publish', function (req, res) {
   const url = req.fUrl;
   const promoText = _.get(req, 'body.payload.promoText') || _.get(req, 'body.payload.info.title');
+  const imgUrl = _.get(req, 'body.payload.promoImg') || _.get(req, 'body.payload.info.image');
   const hashTags = [''].concat(
     _.get(req, 'body.payload.info.labels', [])
     .map(h => h.replace(/[^\w\d]/mig, ''))
@@ -89,8 +90,8 @@ router
     method: 'post',
     url: req.facebookPublisherUrl,
     qs: {
-      message: `${promoText} ${hashTags}`,
-      link: url,
+      message: `${promoText} ${url} ${hashTags}`,
+      link: imgUrl,
       access_token: access_token
     },
    }, next)
