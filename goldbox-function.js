@@ -101,8 +101,6 @@ router
         link += !/\?/.test(link) ? '?' : '&';
         link += `tag=${req.marketTag}`;
         var promoImg = _.get(d, 'primaryImage', '');
-        promoImg += !/\?/.test(promoImg) ? '?' : '&';
-        promoImg += `tag=${req.marketTag}`;
         var title =  _.get(d, 'title', '');
         var description = _.get(d, 'description', '');
         var promoDescription = description;
