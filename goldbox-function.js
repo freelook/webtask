@@ -100,6 +100,9 @@ router
         var link = _.get(d, 'egressUrl', '') || _.get(d, 'ingressUrl', '');
         link += !/\?/.test(link) ? '?' : '&';
         link += `tag=${req.marketTag}`;
+        var promoImg = _.get(d, 'primaryImage', '');
+        promoImg += !/\?/.test(promoImg) ? '?' : '&';
+        promoImg += `tag=${req.marketTag}`;
         var title =  _.get(d, 'title', '');
         var description = _.get(d, 'description', '');
         var promoDescription = description;
@@ -110,7 +113,7 @@ router
         }
         return {
           promoText: title,
-          promoImg: _.get(d, 'primaryImage', ''),
+          promoImg: promoImg,
           promoListPrice: _.get(d, 'minCurrentPrice', ''),
           promoDealPrice: _.get(d, 'minDealPrice', ''),
           promoExpired: expare.unix(),
