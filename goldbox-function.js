@@ -66,7 +66,8 @@ router
       var marketplaceId, deals; 
       let limit = req.query.max || req.webtaskContext.secrets.max;
       try {
-        marketplaceId = getMatch(html, `[\\s\\S]+?"${'marketplaceId'}"[\\s\\S]+?"([\\s\\S]+?)"[\\s\\S]+?`);
+        //marketplaceId = getMatch(html, `[\\s\\S]+?"${'marketplaceId'}"[\\s\\S]+?"([\\s\\S]+?)"[\\s\\S]+?`);
+        marketplaceId = getMatch(html, `{"marketplaceId":"([\\s\\S]+?)"`);
         deals = getElements(html, req.webtaskContext.secrets.element, limit).slice(0, limit);
       } catch(e){ console.log(e); }
       next(null, {marketplaceId:marketplaceId, deals:deals});
