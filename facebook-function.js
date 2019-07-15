@@ -41,13 +41,14 @@ const validateMiddleware = (req, res, next) => {
 };
 const refreshToken = (req, storage, cb) => {
   let context = req.webtaskContext;
+  let refreshToken = _.get(storage,`${req.db}.access_token`);
   as.waterfall([
     (next) => request.get({
-      url: `${context.secrets['fb-refresh-token-url']}${_.get(storage,`${req.db}.access_token`)}`,
+      url: `${context.secrets['fb-refresh-token-url']}${refreshToken}`,
     }, (err, httpResponse, body) => next(null, JSON.parse(body))),
     (data, next) => {
       var token = {
-        access_token: _.get(data, 'access_token'),
+        access_token: _.get(data, 'access_token', refreshToken),
         expire: Date.now() + 1000 * (_.get(data, 'expires_in', 0) - 60)
       };
       storage[req.db] = token;
