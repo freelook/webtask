@@ -112,6 +112,7 @@ router
         return {
           promoText: title,
           promoImg: promoImg,
+          promoDiscount: discount,
           promoListPrice: _.get(d, 'minCurrentPrice', ''),
           promoDealPrice: _.get(d, 'minDealPrice', ''),
           promoExpired: expare.unix(),
