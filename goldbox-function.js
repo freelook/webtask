@@ -105,7 +105,7 @@ router
         var description = _.get(d, 'description', '');
         var promoDescription = description;
         var expare = moment().add(_.get(d, 'msToEnd', 0), 'ms');
-        var discount = _.get(d, 'maxPercentOff', '');
+        var discount = _.get(d, 'maxPercentOff', _.get(d, 'minPercentOff', ''));
         if(title === description && !/%/.test(description) && discount) {
           promoDescription = `<table><tr><td>Save ${discount}% off on ${title}<\/td><\/tr><tr><td>Expires ${expare.format('MMM DD, YYYY')}<\/td><\/tr><\/td><\/tr><\/table>`;
         }
