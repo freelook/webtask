@@ -83,10 +83,10 @@ router
 .all('/record', function (req, res) {
   console.log(`-- alarm record flow`);
   const alarmName = _.get(req, 'query.name') || _.get(req, 'body.name');
+  let context = req.webtaskContext;
   as.waterfall([
     (next) => {
       if(!!alarmName) {
-        let context = req.webtaskContext;
         return context.storage.get(next);
       }
       return next(null, 'No alarm name.');
