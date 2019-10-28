@@ -79,6 +79,23 @@ router
   (err, status) => {
     responseHandler(err, res, {status: status});
   });
+})
+.all('/record', function (req, res) {
+  console.log(`-- alarm record flow`);
+  as.waterfall([
+    (next) => {
+      const alarmName = _.get(req, 'query.name') || _.get(req, 'body.name');
+      if(!!alarmName) {
+          let context = req.webtaskContext;
+          
+        return next(null, alarmName);
+      }
+      return next(null, 'No alarm name.');
+    }
+  ],
+  (err, status) => {
+    responseHandler(err, res, {status: status});
+  });
 });
 
 app
