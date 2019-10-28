@@ -39,6 +39,18 @@ const validateMiddleware = (req, res, next) => {
   req.facebookPublisherUrl = facebookPublisherUrl;
   return next();
 };
+const recordAlarm = (req) => (name) => {
+  let context = req.webtaskContext;
+  // Record alarm
+  return loader({
+    method: 'post',
+    url: `${context.secrets.alarmFunction}/${req.db}/record`,
+    qs: {
+      token: context.secrets.token,
+      name: name
+    },
+  }, () => {});
+};
 const refreshToken = (req, storage, cb) => {
   let context = req.webtaskContext;
   let refreshToken = _.get(storage,`${req.db}.access_token`);
@@ -68,15 +80,6 @@ const getToken = (req, cb) => {
     }
   ], (err, access_token) => {
     if(!!err) {
-      // Record alarm
-      return loader({
-        method: 'post',
-        url: `${context.secrets.alarmFunction}/${req.db}/record`,
-        qs: {
-          token: context.secrets.token,
-          name: 'facebook_publish_error'
-        },
-      }, () => {});
       return cb(err);
     }
     return cb(null, access_token); 
@@ -111,6 +114,9 @@ router
    }, next)
   ],
   (err, info) => {
+    if(!!err) {
+      recordAlarm(req)('facebook_publish_error');
+    }
     responseHandler(err, res, info);
   });
 });
