@@ -16,7 +16,7 @@ const validateMiddleware = (req, res, next) => {
      return next(errMsgToken);
   }
   const market = _.get(req, 'params.market', '').toUpperCase();
-  const db = req.webtaskContext.secrets[market];
+  const db = /amzn-/.test(market) ? market : req.webtaskContext.secrets[market];
   if(!db) {
     const errMsgMarketDB = 'No db name provided for market.';
     responseHandler(errMsgMarketDB, res);
