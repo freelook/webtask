@@ -114,7 +114,7 @@ router
    }, next)
   ],
   (err, info) => {
-    if(!err) {
+    if(!!err) {
       recordAlarm(req)('facebook_publish_error');
     }
     responseHandler(err, res, info);
