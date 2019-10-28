@@ -89,7 +89,7 @@ router
       if(!!alarmName) {
         return context.storage.get(next);
       }
-      return next(null, 'No alarm name.');
+      return next('No alarm name.');
     },
     (storage, next) => {
       storage[req.db] = storage[req.db] || {};
@@ -99,7 +99,7 @@ router
     }
   ],
   (err, status) => {
-    responseHandler(err, res, {status: status});
+    responseHandler(err, res, {status: err || status});
   });
 });
 
