@@ -94,8 +94,12 @@ router
     (storage, next) => {
       storage[req.db] = storage[req.db] || {};
       storage[req.db][alarmName] = storage[req.db][alarmName] || 0;
-      storage[req.db][alarmName] += 1;
-      context.storage.set(storage, () => next(null, storage[req.db][alarmName]));
+      let alarmValue = storage[req.db][alarmName] + 1;
+      storage[req.db][alarmName] = alarmValue;
+      if(alarmValue % 33 === 0) {
+        triggerAlarm(req)(`Take a look on alarm ${alarmName} in ${req.db}`);
+      }
+      context.storage.set(storage, () => next(null, alarmValue));
     }
   ],
   (err, status) => {
