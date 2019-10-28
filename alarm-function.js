@@ -92,7 +92,6 @@ router
       return next('No alarm name.');
     },
     (storage, next) => {
-      console.log(storage, next);
       storage[req.db] = storage[req.db] || {};
       storage[req.db][alarmName] = storage[req.db][alarmName] || 0;
       storage[req.db][alarmName] += 1;
