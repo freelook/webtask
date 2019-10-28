@@ -68,6 +68,15 @@ const getToken = (req, cb) => {
     }
   ], (err, access_token) => {
     if(!!err) {
+      // Record alarm
+      return loader({
+        method: 'post',
+        url: `${context.secrets.alarmFunction}/${req.db}/record`,
+        qs: {
+          token: context.secrets.token,
+          name: 'facebook_publish_error'
+        },
+      }, () => {});
       return cb(err);
     }
     return cb(null, access_token); 
