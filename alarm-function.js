@@ -82,15 +82,20 @@ router
 })
 .all('/record', function (req, res) {
   console.log(`-- alarm record flow`);
+  const alarmName = _.get(req, 'query.name') || _.get(req, 'body.name');
   as.waterfall([
     (next) => {
-      const alarmName = _.get(req, 'query.name') || _.get(req, 'body.name');
       if(!!alarmName) {
-          let context = req.webtaskContext;
-          
-        return next(null, alarmName);
+        let context = req.webtaskContext;
+        return context.storage.get(next);
       }
       return next(null, 'No alarm name.');
+    },
+    (storage, next) => {
+      storage[req.db] = storage[req.db] || {};
+      storage[req.db][alarmName] = storage[req.db][alarmName] || 0;
+      storage[req.db][alarmName] += 1;
+      context.storage.set(storage, () => next(null, storage[req.db][alarmName]));
     }
   ],
   (err, status) => {
