@@ -1,4 +1,4 @@
-const fli = require('fli-webtask');
+const fli = require('fli-webtask'); 
 const request = fli.npm.request;
 const as = fli.npm.async;
 const _ = fli.npm.lodash;
@@ -10,7 +10,7 @@ const informed = (context, next) => loader({
   json: {
     state: 'informed'
   }
-}, next);
+}, () => next());
 
 /**
 * @param context {WebtaskContext}
@@ -35,7 +35,7 @@ module.exports = function(context, cb) {
       (next) => loader({
         url: `${context.secrets.amazonFunction}/${market}/lookup/${asin}`,
         qs: {token: context.secrets.token}
-      }, (err, info) => next(null, err || info)),
+      }, (err, info) => next(null, info)),
       (info, next) => loader({
         method: 'patch',
         url: `${context.secrets.storeFunction}/${context.body.db}/${context.body._id}`,
