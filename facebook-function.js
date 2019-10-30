@@ -117,7 +117,7 @@ router
     if(!!err) {
       recordAlarm(req)('facebook_publish_error');
     }
-    responseHandler(err, res, info);
+    responseHandler(null, res, info);
   });
 });
 
