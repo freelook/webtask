@@ -11,6 +11,7 @@ const responseHandler = fli.lib.responseHandler;
 const app = express();
 const router = express.Router();
 const validateMiddleware = (req, res, next) => {
+  console.log('-- Twitter validateMiddleware');
   if(req.webtaskContext.secrets.token !== req.query.token) {
      const errMsgToken = 'No token.';
      responseHandler(errMsgToken, res);
