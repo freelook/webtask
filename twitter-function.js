@@ -67,7 +67,7 @@ router
       url: imgUrl,
       encoding: null
    },
-   (err, res, body) => next(err, body)
+   (err, _res, body) => next(err, body)
    ),
    (image, next) => req.twitter.post('media/upload',
       {
