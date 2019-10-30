@@ -79,7 +79,7 @@ router
      .catch(next);
    }
   ],
-  (err, info) => responseHandler(err, res, info));
+  (err, info) => responseHandler(null, res, info));
 });
 
 app
