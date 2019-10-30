@@ -73,7 +73,7 @@ router
     });
    }
   ],
-  (err, info) => responseHandler(err, res, info));
+  (err, info) => responseHandler(null, res, info));
 });
 
 app
