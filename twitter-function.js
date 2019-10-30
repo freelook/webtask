@@ -90,8 +90,4 @@ app
 .use(bodyParser.json())
 .use('/', validateMiddleware, twitterMiddleware, router);
 
-//module.exports = wt.fromExpress(app);
-
-module.exports = function(context, cb) {
-  cb(null, { hello: context.query.name || 'Anonymous' });
-};
+module.exports = wt.fromExpress(app);
