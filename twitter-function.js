@@ -82,7 +82,7 @@ router
     (error, tweet, response) => next(error, tweet)
    )
   ],
-  (err, info) => responseHandler(null, res, {}));
+  (err, info) => responseHandler(null, res, info));
 });
 
 app
