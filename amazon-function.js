@@ -64,7 +64,8 @@ const jsonMapper = (asin) => (info, next) => {
     content: content,
     image: image,
     price: price,
-    labels: _.uniq(labels)
+    labels: _.uniq(labels),
+    info: info
   });
 };
 
