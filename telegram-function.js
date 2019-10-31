@@ -69,12 +69,13 @@ router
     method: 'post',
     url: telegramPublisherUrl,
     json: {
+      disable_web_page_preview: false,
       parse_mode: 'Markdown',
-      text: `${promoText}
+      text: `[ ](${imgUrl}) ${promoText}
 
 ${url}
      
-[ ](${imgUrl}) ${hashTags}`
+${hashTags}`
     }
    }, next)
   ],
