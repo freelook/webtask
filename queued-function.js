@@ -18,7 +18,7 @@ module.exports = function(context, cb) {
   if(!db) {
     return cb('No db provided.');
   }
-  let queueName = context.secrets[db.split('-')[0]];
+  let queueName = context.secrets[db.split('-')[0] || db];
     if(!queueName) {
     return cb('No queueName provided.');
   }
