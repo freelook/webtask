@@ -1,0 +1,15 @@
+{
+  "name": "webtask-vps",
+  "version": "1.0.0",
+  "description": "VPS for webtask",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "freelook",
+  "license": "ISC",
+  "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.0.20",
+    "fluent-ffmpeg": "^2.1.2"
+  }
+}
