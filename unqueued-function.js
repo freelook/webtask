@@ -10,13 +10,23 @@ module.exports = function(context, cb) {
   if(context.secrets.token !== context.query.token) {
     return cb('No token.');
   }
+  let _id = _.get(context, 'body._id');
   if(!_.get(context, 'body._id')) {
     return cb('No _id provided.');
+  }
+  let db = _.get(context, 'body.db');
+  if(!db) {
+    return cb('No db provided.');
+  }
+  let queueNameKey = db.split('-')[0];
+  let queueName = context.secrets[queueNameKey];
+  if(!queueName) {
+    return cb('No queueName provided.');
   }
   console.log('- unqueued ', context.body._id);
   return as.waterfall([
    (next) => loader({
-      url: `${context.secrets.queueFunction}/ack`,
+      url: `${context.secrets.queueFunction}/${queueName}/ack`,
       qs: {token: context.secrets.token}
     }, (err, msg) => next(null, err || msg)),
     (msg, next) => loader({
