@@ -31,7 +31,7 @@ module.exports = function(context, cb) {
     }, (err, msg) => next(null, err || msg)),
     (msg, next) => loader({
       method: 'put',
-      url: `${context.secrets.storeFunction}/${context.body.db}/${context.body._id}`,
+      url: `${context.secrets.storeFunction}/${db}/${_id}`,
       qs: {token: context.secrets.token},
       json: {
         state: 'unqueued'
