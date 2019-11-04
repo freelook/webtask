@@ -23,7 +23,7 @@ module.exports = function(context, cb) {
   if(!queueName) {
     return cb('No queueName provided.');
   }
-  console.log('- unqueued ', context.body._id);
+  console.log('- unqueued ', _id);
   return as.waterfall([
    (next) => loader({
       url: `${context.secrets.queueFunction}/${queueName}/ack`,
