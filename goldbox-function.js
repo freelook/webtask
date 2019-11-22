@@ -37,9 +37,9 @@ const getMatch = (html, srex) => {
 const getElements = (html, el, limit, _result) => {
   var result = _result || [];
   var match = getMatch(html, `[\\s\\S]+?${el}[\\s\\S]+?\\[([\\s\\S]+?)\\][\\s\\S]+?`);
-  var index = html.indexOf(match);
+  var index = html.indexOf(el);
   if(!!match && index > 0 && limit > result.length) {
-  	var nHtml = html.substring(index);
+  	var nHtml = html.substring(index + 1);
     try {
   	  result = getElements(nHtml, el, limit, result.concat(JSON.parse(`[${match}]`)));
     } catch(e) { console.log(e); }
