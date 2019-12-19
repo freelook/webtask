@@ -4,7 +4,7 @@ const objectHash = require('object-hash');
 const request = require('request');
 const fli = require('fli-webtask');
 const _ = fli.npm.lodash;
-const ttl = 60;
+const ttl = 3600; // sec. => one hour
 
 let _mongoCacheStore;
 
