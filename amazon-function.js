@@ -48,7 +48,7 @@ const paapiMiddleware = (req, res, next) => {
   let country = _.get(PaapiOptions.Country, countryName);
   if(!country) {
     const errMsgCountry = 'Country not supported or empty.';
-    responseHandler(errMsgCountry, res); 
+    responseHandler(errMsgCountry, res);
     return next(errMsgCountry);
   }
   let paapiConfig = new PaapiConfig(resourceList, country);
