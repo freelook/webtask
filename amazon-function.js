@@ -8,8 +8,12 @@ const _ = fli.npm.lodash;
 const loader = fli.lib.loader;
 const responseHandler = fli.lib.responseHandler;
 const operationHelper = require('apac').OperationHelper;
+const Paapi = require('amazon-pa-api50');
+const PaapiConfig = require('amazon-pa-api50/lib/config');
+const PaapiOptions = require('amazon-pa-api50/lib/options');
 const app = express();
 const router = express.Router();
+const routerPaapi = express.Router();
 const validateMiddleware = (req, res, next) => {
   if(req.webtaskContext.secrets.token !== req.query.token) {
      const errMsgToken = 'No token.';
@@ -34,6 +38,26 @@ const apacMiddleware = (req, res, next) => {
   });
   next();
 };
+const paapiMiddleware = (req, res, next) => {
+  let resourceList = null;
+  let countryName = {
+    'US': 'UnitedStates',
+    'DE': 'Germany',
+    'UK': 'UnitedKingdom'
+  }[req.market];
+  let country = _.get(PaapiOptions.Country, countryName);
+  if(!country) {
+    const errMsgCountry = 'Country not supported or empty.';
+    responseHandler(errMsgCountry, res); 
+    return next(errMsgCountry);
+  }
+  let paapiConfig = new PaapiConfig(resourceList, country);
+  paapiConfig.accessKey = req.webtaskContext.secrets.awsId;
+  paapiConfig.secretKey = req.webtaskContext.secrets.awsSecret;
+  paapiConfig.partnerTag = req.webtaskContext.secrets.assocId;
+  req.paapi = new Paapi(paapiConfig);
+  return next();
+};
 const jsonMapper = (asin) => (info, next) => {
   var item = _.get(info, 'result.ItemLookupResponse.Items.Item');
   if(!item || item.ASIN !== asin) {
@@ -53,8 +77,12 @@ const jsonMapper = (asin) => (info, next) => {
     }
     var nodeName = _.get(node, 'Name');
     var nodeAncestor = _.get(node, 'Ancestors.BrowseNode');
-    nodeName && labels.push(nodeName);
-    nodeAncestor && fetchNodeName(nodeAncestor);
+    if(nodeName) {
+      labels.push(nodeName);
+    }
+    if(nodeAncestor) {
+      fetchNodeName(nodeAncestor);
+    }
   })(_.get(item, 'BrowseNodes.BrowseNode'));
   if(!title || !content || !image || !price) {
     return next('No content.');
@@ -79,7 +107,7 @@ router
       const enpoint = req.webtaskContext.secrets[req.market];
       if(!enpoint) {
         return next('No market endpoint');
-      } 
+      }
       return loader({
         method: 'post',
         url: req.webtaskContext.secrets.scrapeItFunction,
@@ -95,7 +123,7 @@ router
             }
           }
         }
-      }, next)
+      }, next);
     },
     (next) => {
       req.oph.execute('ItemLookup', {
@@ -143,17 +171,43 @@ router
     if(!req.query.url) {
       return next('No url provided.');
     }
-    return loader({
+    return fli.npm.request({
+      auth: {
+        bearer: req.webtaskContext.secrets.minifyToken
+      },
       url: req.webtaskContext.secrets.minifyFunction,
-      qs: {longUrl: req.query.url}
-    }, next);
+      method: 'post',
+      json: {
+        long_url: req.query.url
+      }
+    }, (err, shortRes, shortBody) => next(err, shortBody));
+   },
+   (shortBody, next) => {
+     return next(null, {
+       isOk: true,
+       longUrl: _.get(shortBody, 'long_url', ''),
+       shortUrl: _.get(shortBody, 'link', '')
+     });
    }
   ],
   (err, info) => responseHandler(err, res, info));
 });
 
+routerPaapi
+.post('/v5/:method', async function (req, res) {
+  let error, data;
+  try {
+    // https://github.com/arifulhb/amazon-pa-api50#usage
+    data = _.get(await req.paapi[req.params.method].apply(req.paapi, req.body), 'data');
+  } catch (e) {
+    error = e;
+  }
+  responseHandler(error, res, data);
+});
+
 app
 .use(bodyParser.json())
-.use('/:market', validateMiddleware, apacMiddleware, router);
+.use('/:market', validateMiddleware, apacMiddleware, router)
+.use('/:market/paapi', validateMiddleware, paapiMiddleware, routerPaapi);
 
 module.exports = wt.fromExpress(app);
