@@ -202,8 +202,8 @@ routerPaapi
   let error, data;
   let requestConfig = _.merge(
     {
-      //PartnerTag: req.paapi.props.partnerTag,
-      //PartnerType: req.paapi.props.partnerType,
+      PartnerTag: req.paapi.props.partnerTag,
+      PartnerType: req.paapi.props.partnerType,
       //Resources: req.paapi.props.resourceParameters
     },
     _.get(req, 'body', {})
