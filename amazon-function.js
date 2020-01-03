@@ -203,8 +203,7 @@ routerPaapi
   let requestConfig = _.merge(
     {
       PartnerTag: req.paapi.props.partnerTag,
-      PartnerType: req.paapi.props.partnerType,
-      //Resources: req.paapi.props.resourceParameters
+      PartnerType: req.paapi.props.partnerType
     },
     _.get(req, 'body', {})
   );
