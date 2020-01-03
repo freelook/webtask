@@ -209,6 +209,7 @@ routerPaapi
     _.get(req, 'body', {})
   );
   try {
+    /* global Promise */
     data = await new Promise((resolve, reject) => {
       req.paapi._api[req.params.method](requestConfig, (e, d) => {
         if(!!e) {
