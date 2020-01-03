@@ -195,14 +195,33 @@ router
 
 routerPaapi
 .post('/v5/:method', async function (req, res) {
+  /** https://github.com/arifulhb/amazon-pa-api50#usage
+   *  https://webservices.amazon.com/paapi5/documentation/operations.html
+   *  Methods: getItems, getBrowseNodes, getVariations, searchItems
+   **/
   let error, data;
+  let requestConfig = _.merge(
+    {
+      PartnerTag: req.paapi.props.partnerTag, 
+      PartnerType: req.paapi.props.partnerType,
+      Resources: req.paapi.props.resourceParameters,
+    },
+    _.get(req, 'body', {})
+  );
   try {
-    // https://github.com/arifulhb/amazon-pa-api50#usage
-    data = _.get(await req.paapi[req.params.method].apply(req.paapi, req.body), 'data');
-  } catch (e) {
-    error = e;
+    data = await new Promise((resolve, reject) => {
+      req.paapi._api[req.params.method](requestConfig, (e, d) => {
+        if(!!e) {
+        return reject(e);
+        }
+        return resolve(d);
+      });
+    });
+  } catch(e) {
+    error = { error: _.toString(e) };
+  } finally {
+    responseHandler(error, res, data);
   }
-  responseHandler(error, res, data);
 });
 
 app
