@@ -204,7 +204,7 @@ routerPaapi
     {
       PartnerTag: req.paapi.props.partnerTag,
       PartnerType: req.paapi.props.partnerType,
-      Resources: req.paapi.props.resourceParameters,
+      Resources: req.paapi.props.resourceParameters
     },
     _.get(req, 'body', {})
   );
