@@ -180,7 +180,7 @@ router
       json: {
         long_url: req.query.url
       }
-    }, (err, shortRes, shortBody) => next(err, shortBody));
+    }, (err, shortRes, shortBody) => next(null, shortBody));
    },
    (shortBody, next) => {
      return next(null, {
