@@ -183,10 +183,12 @@ router
     }, (err, shortRes, shortBody) => next(null, shortBody));
    },
    (shortBody, next) => {
+     let shortUrl = _.get(shortBody, 'link', '');
+     let longUrl = _.get(shortBody, 'long_url', '');
      return next(null, {
-       isOk: true,
-       longUrl: _.get(shortBody, 'long_url', ''),
-       shortUrl: _.get(shortBody, 'link', '')
+       isOk: !!shortUrl,
+       longUrl: longUrl,
+       shortUrl: shortUrl
      });
    }
   ],
