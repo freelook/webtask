@@ -10,7 +10,7 @@ module.exports = function(context, cb) {
   if(context.secrets.token !== context.query.token) {
     return cb('No token.');
   }
-  const rss = _.get(context, 'query.rss', _.get(context, 'body.rss')); 
+  const rss = _.get(context, 'query.rss', _.get(context, 'body.rss'));
   if(!rss) { 
       return cb('No rss param provided.');
   }
