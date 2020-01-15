@@ -11,7 +11,6 @@ module.exports = function(context, cb) {
     return cb('No token.');
   }
   const rss = _.get(context, 'query.rss', _.get(context, 'body.rss'));
-  console.log(context);
   if(!rss) {
       return cb('No rss param provided.');
   }
