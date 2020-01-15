@@ -11,7 +11,7 @@ module.exports = function(context, cb) {
     return cb('No token.');
   }
   const rss = _.get(context, 'query.rss', _.get(context, 'body.rss'));
-  if(!rss) { 
+  if(!rss) {
       return cb('No rss param provided.');
   }
   const max = _.get(context, 'query.max', _.get(context, 'body.max', _.get(context, 'secrets.max')));
