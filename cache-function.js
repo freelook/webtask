@@ -32,8 +32,8 @@ const fetchRequest = (options, next) => {
 const fetchFromCache = (context) => (mongoCache, next) => {
   const options = _.get(context, 'body', {});
   const key = objectHash(options);
-  console.log(options, key);
   mongoCache.wrap(key, (cacheCallback) => {
+      console.log('fetch: ', options);
       fetchRequest(options, cacheCallback);
   }, {ttl: _.get(context, 'query.ttl', ttl)}, next);
 };
