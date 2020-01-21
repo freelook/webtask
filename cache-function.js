@@ -51,6 +51,6 @@ module.exports = (context, cb) => {
   // context.body -> https://www.npmjs.com/package/request#requestoptions-callback
   return fetchFromCache(context)(mongoCache, (err, result) => {
     console.log(err, result);
-    return cb(err, JSON.parse(result));
+    return cb(err, result ? JSON.parse(result) : result);
   });
 };
