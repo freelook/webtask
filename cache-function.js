@@ -54,7 +54,7 @@ module.exports = (context, cb) => {
   return fetchFromCache(context)(mongoCache, (err, result) => {
     console.log(err, result);
     if(!err && result) {
-      try { result = JSON.parse(result);} catch(e) { err = e; }
+      try { result = JSON.parse(result);} catch(e) { /**/ }
     }
     return cb(err, result);
   });
