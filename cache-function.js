@@ -24,7 +24,6 @@ const createMongoCache = (context) => {
 
 const fetchRequest = (options, next) => {
   request(options, (err, res, body) => {
-    console.log(err, body);
     next(err, body);
   });
 };
@@ -33,7 +32,6 @@ const fetchFromCache = (context) => (mongoCache, next) => {
   const options = _.get(context, 'body', {});
   const key = objectHash(options);
   mongoCache.wrap(key, (cacheCallback) => {
-      console.log('fetch: ', options);
       fetchRequest(options, cacheCallback);
   }, {ttl: _.get(context, 'query.ttl', ttl)}, next);
 };
@@ -52,7 +50,6 @@ module.exports = (context, cb) => {
   const mongoCache = createMongoCache(context);
   // context.body -> https://www.npmjs.com/package/request#requestoptions-callback
   return fetchFromCache(context)(mongoCache, (err, result) => {
-    console.log(err, result);
     if(!err && result) {
       try { result = JSON.parse(result);} catch(e) { /**/ }
     }
