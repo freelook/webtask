@@ -24,6 +24,7 @@ const createMongoCache = (context) => {
 
 const fetchRequest = (options, next) => {
   request(options, (err, res, body) => {
+    console.log(err, body);
     next(err, body);
   });
 };
