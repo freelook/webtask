@@ -15,7 +15,6 @@ module.exports = function(context, cb) {
       return cb('No rss param provided.');
   }
   const max = _.get(context, 'query.max', _.get(context, 'body.max', _.get(context, 'secrets.max')));
-  console.log('rss: ', rss);
   return request(rss)
       .pipe(new feedparser())
       .pipe(es.writeArray(function (err, arr) {
