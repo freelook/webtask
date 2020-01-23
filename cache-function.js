@@ -6,21 +6,22 @@ const fli = require('fli-webtask');
 const _ = fli.npm.lodash;
 
 const DEFAULT_TTL = 3600; // sec. => one hour
-
-let _mongoCacheStore;
+let _mongoCacheStore = {};
 
 const createMongoCache = (context) => {
-  if(!_mongoCacheStore) {
-    _mongoCacheStore = cacheManager.caching({
+  const store = _.get(context, 'query.store', 'db');
+  if(!_mongoCacheStore[store]) {
+    const uri = _.get(context.secrets, store, context.secrets.db);
+    _mongoCacheStore[store] = cacheManager.caching({
       store: mongoStore,
-      uri: context.secrets.db,
+      uri: uri,
       options: {
         collection: 'cacheManager',
         useUnifiedTopology: true
       }
     });
   }
-  return _mongoCacheStore;
+  return _mongoCacheStore[store];
 };
 
 const fetchRequest = (options, next) => {
