@@ -4,7 +4,8 @@ const objectHash = require('object-hash');
 const request = require('request');
 const fli = require('fli-webtask');
 const _ = fli.npm.lodash;
-const ttl = 3600; // sec. => one hour
+
+const DEFAULT_TTL = 3600; // sec. => one hour
 
 let _mongoCacheStore;
 
@@ -31,9 +32,11 @@ const fetchRequest = (options, next) => {
 const fetchFromCache = (context) => (mongoCache, next) => {
   const options = _.get(context, 'body', {});
   const key = objectHash(options);
+  const queryTtl = +_.get(context, 'query.ttl');
+  const ttl = _.isInteger(queryTtl) ? queryTtl : DEFAULT_TTL;
   mongoCache.wrap(key, (cacheCallback) => {
       fetchRequest(options, cacheCallback);
-  }, {ttl: _.get(context, 'query.ttl', ttl)}, next);
+  }, { ttl }, next);
 };
 
 /**
