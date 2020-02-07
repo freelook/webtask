@@ -15,6 +15,7 @@ const createMongoCache = (context) => {
     _mongoCacheStore[store] = cacheManager.caching({
       store: mongoStore,
       uri: uri,
+      ignoreCacheErrors: true,
       options: {
         collection: 'cacheManager',
         useUnifiedTopology: true
