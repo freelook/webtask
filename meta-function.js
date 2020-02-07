@@ -15,7 +15,7 @@ module.exports = async function(context, cb) {
   }
   let meta = {};
   try {
-    meta = await util.promisify(metaget.fetch)(url);
+    meta = await util.promisify(metaget.fetch)(url, {headers: {"User-Agent": context.secrets.user}});
   } catch(e) {
     meta = { error: _.toString(e) };
   } finally {
