@@ -97,7 +97,7 @@ const jsonMapper = (asin) => (info, next) => {
 };
 
 router
-.get('/lookup/:asin', function (req, res) {
+.get('/lookup/:asin', function (req, res) { 
   const asin = _.get(req, 'params.asin');
   if(!asin) {
     return responseHandler('No asin provided.', res);
