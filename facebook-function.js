@@ -95,7 +95,7 @@ router
     _.get(req, 'body.payload.info.labels', [])
     .map(h => h.replace(/[^\w\d]/mig, ''))
     .filter(h => h && h.length < 33)
-    ).join(' #'); 
+    ).join(' #');
   console.log(`-- facebook published: ${promoText} ${url}`);
   as.waterfall([
    (next) => getToken(req, next),
