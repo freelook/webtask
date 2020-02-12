@@ -62,7 +62,7 @@ router
     _.get(req, 'body.payload.info.labels', [])
     .map(h => h.replace(/[^\w\d]/mig, ''))
     .filter(h => h && h.length < 33)
-    ).concat(['Amazon', 'Deal']).join(' #');
+    ).join(' #');
   console.log(`-- telegram published: ${promoText} ${url}`);
   as.waterfall([
    (next) => loader({
