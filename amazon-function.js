@@ -126,7 +126,7 @@ router
       }, next);
     },
     (next) => {
-      req.oph.execute('ItemLookup', {
+      req.oph.execute('ItemLookup1', {
         'ItemId': asin,
         'ResponseGroup': 'Large'
       })
