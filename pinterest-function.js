@@ -61,9 +61,7 @@ router
         method: 'POST',
         body: {
             board: req.board_id,
-            note: _.get(req, 'body.payload.as') === 'link' ? `${promoText}
-
-${hashTags}` : promoText,
+            note: _.get(req, 'body.payload.as') === 'link' ? hashTags : promoText,
             link: url,
             image_url: imgUrl
         }
