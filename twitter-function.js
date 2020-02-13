@@ -75,9 +75,12 @@ router
       },
       (error, media, response) => next(error, media)
    ),
-   (media, next) => req.twitter.post('statuses/update', 
+   (media, next) => req.twitter.post('statuses/update',
       {
-        status: `${url} ${promoText} ${hashTags}`.substring(0, 279),
+        status: (() => {
+          let status = `${url} ${promoText} ${hashTags}`.substring(0, 279);
+          return status;
+        })(),
         media_ids: media.media_id_string // Pass the media id string
       },
     (error, tweet, response) => next(error, tweet)
