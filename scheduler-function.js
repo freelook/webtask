@@ -5,7 +5,7 @@ const as = fli.npm.async;
 const _ = fli.npm.lodash;
 const loader = fli.lib.loader;
 
-const worker = (context) => (params, next) => as.map(
+const worker = (context) => (params, cb) => as.map(
   params.tasks,
   (task, next) => {
     loader({
@@ -13,12 +13,12 @@ const worker = (context) => (params, next) => as.map(
     qs: {token: context.secrets.token, alarm: true}
   }, () => {});
   next();
-  }, 
-  () => next()
+  },
+  () => cb()
 );
 
 const cronHandler = (context) => (params, next) => {
-  var tasks = [];
+  var tasks = []; 
   _.keys(params.storage.tasks)
     .filter((key) => {
       var cronInstance = new cron();
