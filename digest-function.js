@@ -35,6 +35,7 @@ router
             json: {
               url: req.webtaskContext.secrets.url + id,
               state: 'publish',
+              as: 'link',
               info: {title, image, labels}
             }
           }, () => {});
