@@ -21,6 +21,7 @@ router
       if(id) {
         let video = await util.promisify(loader)({
             method: 'post',
+            qs: {token: req.webtaskContext.secrets.token},
             url: `${req.webtaskContext.secrets.youtubeFunction}/list/${id}`
         });
         let title = _.get(video, 'items[0].snippet.title');
