@@ -57,7 +57,7 @@ router
   console.log(`-- pinterest published: ${promoText} ${url}`);
   as.waterfall([
    (next) => {
-     req.pinterest.api('pins', { 
+     req.pinterest.api('pins', {
         method: 'POST',
         body: {
             board: req.board_id,
