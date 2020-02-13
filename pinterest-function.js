@@ -49,14 +49,21 @@ router
   const url = req.pUrl;
   const imgUrl = _.get(req, 'body.payload.promoImg') || _.get(req, 'body.payload.info.image');
   const promoText = _.get(req, 'body.payload.promoText') || _.get(req, 'body.payload.info.title');
+  const hashTags = [''].concat(
+  _.get(req, 'body.payload.info.labels', [])
+  .map(h => h.replace(/[^\w\d]/mig, ''))
+  .filter(h => h && h.length < 33)
+  ).join(' #').trim();
   console.log(`-- pinterest published: ${promoText} ${url}`);
   as.waterfall([
    (next) => {
-     req.pinterest.api('pins', {
+     req.pinterest.api('pins', { 
         method: 'POST',
         body: {
             board: req.board_id,
-            note: promoText,
+            note: _.get(req, 'body.payload.as') === 'link' ? `${promoText}
+
+${hashTags}` : promoText,
             link: url,
             image_url: imgUrl
         }
