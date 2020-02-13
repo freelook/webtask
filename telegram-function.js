@@ -68,13 +68,19 @@ router
    (next) => loader({
     method: 'post',
     url: telegramPublisherUrl,
-    json: {
+    json: _.get(req, 'body.payload.as') === 'link' ? {
+      text: `${promoText}
+
+${url}
+
+${hashTags}`
+    } : {
       disable_web_page_preview: false,
       parse_mode: 'Markdown',
       text: `[ ](${imgUrl}) ${promoText}
 
 ${url}
-     
+
 ${hashTags}`
     }
    }, next)
