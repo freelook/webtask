@@ -53,14 +53,14 @@ const twitterMiddleware = (req, res, next) => {
 
 router
 .all('/publish', function (req, res) {
-  const url = req.twUrl;
+  const url = req.twUrl; 
   const imgUrl = _.get(req, 'body.payload.promoImg') || _.get(req, 'body.payload.info.image');
   const promoText = _.get(req, 'body.payload.promoText') || _.get(req, 'body.payload.info.title');
   const hashTags = [''].concat(
     _.get(req, 'body.payload.info.labels', [])
     .map(h => h.replace(/[^\w\d]/mig, ''))
     .filter(h => h && h.length < 33)
-    ).concat(['Amazon', 'Deal']).join(' #');
+    ).join(' #').trim();
   console.log(`-- twitter published: ${promoText} ${url}`);
   as.waterfall([
    (next) => fli.npm.request({
