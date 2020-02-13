@@ -18,7 +18,7 @@ const worker = (context) => (params, cb) => as.map(
 );
 
 const cronHandler = (context) => (params, next) => {
-  var tasks = []; 
+  var tasks = [];
   _.keys(params.storage.tasks)
     .filter((key) => {
       var cronInstance = new cron();
