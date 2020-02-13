@@ -1,5 +1,5 @@
 const fli = require('fli-webtask');
-const wt = require('webtask-tools');
+const wt = require('webtask-tools'); 
 const bodyParser = require('body-parser');
 const express = fli.npm.express;
 const request = fli.npm.request;
@@ -14,12 +14,7 @@ const youtube = google.youtube('v3');
 const scopes = [
   'https://www.googleapis.com/auth/youtube'
 ];
-const validateMiddleware = (req, res, next) => {
-  if(req.webtaskContext.secrets.token !== req.query.token) {
-     const errMsgToken = 'No token.';
-     responseHandler(errMsgToken, res);
-     return next(errMsgToken);
-  }
+const validatePublish = (req, res, next) => {
   var db = _.get(req, 'body.db');
   var youtubePublisher = req.webtaskContext.secrets[`${db}-youtube`];
   if(!youtubePublisher) {
@@ -39,6 +34,14 @@ const validateMiddleware = (req, res, next) => {
   req.discount = discount;
   return next();
 };
+const validateMiddleware = (req, res, next) => {
+  if(req.webtaskContext.secrets.token !== req.query.token) {
+     const errMsgToken = 'No token.';
+     responseHandler(errMsgToken, res);
+     return next(errMsgToken);
+  }
+  return next();
+};
 const refreshToken = (context, cb) => {
   as.waterfall([
     (next) => request.post({
@@ -46,10 +49,12 @@ const refreshToken = (context, cb) => {
       form: {
         grant_type: 'refresh_token',
         client_id: context.secrets.client_id,
-        client_secret: context.secrets.client_secret, 
+        client_secret: context.secrets.client_secret,
         refresh_token: context.secrets.refresh_token
       }
-    }, (err, httpResponse, body) => next(null, JSON.parse(body))),
+    }, (err, httpResponse, body) => {
+      next(null, JSON.parse(body));
+    }),
     (data, next) => {
       var token = {
         access_token: _.get(data, 'access_token'),
@@ -59,7 +64,7 @@ const refreshToken = (context, cb) => {
     }
   ], cb);
 };
-const auth = (context, cb) => {
+const authenticate = (context, cb) => {
   as.waterfall([
     (next) => context.storage.get(next),
     (storage, next) => {
@@ -72,40 +77,36 @@ const auth = (context, cb) => {
     if(!!err) {
       return cb(err);
     }
-    var authObj = new google.auth.OAuth2();
+    var authObj = new google.auth.OAuth2(
+      context.secrets.client_id,
+      context.secrets.client_secret
+      );
     authObj.setCredentials({
-      access_token: access_token
+      access_token: access_token,
+      refresh_token: context.secrets.refresh_token
     });
-    return cb(null, authObj); 
+    return cb(null, authObj);
   });
 };
-const generateText = (params) => {
-  const title = _.get(params.payload, 'promoText') || _.get(params.payload, 'info.title') || '';
-  const discount = _.get(params.payload, 'promoDiscount', '');
-  const shortUrl = _.get(params.payload, 'shortUrl', '');
-  return `[${discount}% off] ${title} ${shortUrl}`;
-};
-const generateQuery = (payload) => {
-  const query =  _.get(payload, 'info.title') ||
-  _.get(payload, 'promoText', '')
-  .replace(/\$[\d|.|,]+ /i, "")
-  .replace(/[\d|.|,]+% /i, "")
-  .replace(/save /i, "")
-  .replace(/on /i, "")
-  .replace(/off /i, "")
-  .replace(/up to /i, "")
-  .replace(/or more /i, "");
-  return query
-  .replace(/,|;|:|\[|\(|\]|\)|\{|\}/mig, "")
-  .replace(/-|\+/mig, " ")
-  .replace(/ /mig, "+")
-  .substring(0, 50);
+const list = (params, next) => {
+  if(params.auth && params.id) {
+    return youtube.videos.list({
+      part: 'id,snippet',
+      auth: params.auth,
+      key: params.context.secrets.api_key,
+      id: params.id
+    }, (err, data) => {
+      next(err, data);
+    });
+  }
+  return next(null, "Not enough params for list");
 };
 const search = (params, next) => {
   if(params.auth && params.query) {
     return youtube.search.list({
       part: 'id,snippet',
       auth: params.auth,
+      key: params.context.secrets.api_key,
       q: params.query,
       maxResults: 3,
       order: 'relevance'
@@ -118,6 +119,7 @@ const comment = (params, next) => {
     return youtube.commentThreads.insert({
       part: 'id,snippet',
       auth: params.auth,
+      key: params.context.secrets.api_key,
       requestBody: {
         snippet: {
           channelId: params.channelId,
@@ -135,43 +137,41 @@ const comment = (params, next) => {
 };
 
 router
-.all('/publish', function (req, res) {
-  console.log(`-- google youtube published`);
+.all('/list/:id', function (req, res) {
+  console.log(`-- google youtube item(s) list`);
   as.waterfall([
-    (next) => auth(req.webtaskContext, next),
+    (next) => authenticate(req.webtaskContext, next),
     (auth, next) => {
-      let query = generateQuery(_.get(req, 'body.payload'));
-      return search({auth, query}, 
-      (err, searchResult) => next(err, {
-        auth,
-        query,
-        search: _.get(searchResult, 'data', {})
-      }));
-    },
-    (params, cd) => {
-      as.map(
-        _.get(params, 'search.items', []),
-        (item, next) => {
-          return comment({
-            auth: params.auth,
-            channelId: _.get(item, 'snippet.channelId'),
-            videoId: _.get(item, 'id.videoId'),
-            text: generateText({video: item, payload: _.get(req, 'body.payload')})
-          }, (err, commentResult) => next(err, _.get(commentResult, 'data', commentResult)));
-        },
-        (err, commentsResult) => {
-         cd(null, {
-           commentsResult: commentsResult,
-           query: params.query,
-           search: params.search
-         });
-       }
-      );
+      let id = req.params.id;
+      return list({auth, id, context: req.webtaskContext}, next);
     }
-  ],
-  (err, response) => {
-    responseHandler(err, res, _.get(response, 'data', response));
-  });
+  ], (err, listResult) => responseHandler(null, res, _.get(listResult, 'data', {})));
+})
+.all('/search', function (req, res) {
+  console.log(`-- google youtube search`);
+  as.waterfall([
+    (next) => authenticate(req.webtaskContext, next),
+    (auth, next) => {
+      let query = req.query.q;
+      return search({auth, query, context: req.webtaskContext}, next);
+    }
+  ], (err, searchResult) => responseHandler(null, res, _.get(searchResult, 'data', {})));
+})
+.all('/comment', function (req, res) {
+  console.log(`-- google youtube comment`);
+  as.waterfall([
+    (next) => authenticate(req.webtaskContext, next),
+    (auth, next) => {
+      let item = req.body;
+      return comment({
+        auth: auth,
+        context: req.webtaskContext,
+        channelId: _.get(item, 'channelId'),
+        videoId: _.get(item, 'videoId'),
+        text: item.text || ''
+      }, next);
+    }
+  ], (err, commentResult) => responseHandler(null, res, _.get(commentResult, 'data', {})));
 });
 
 app
