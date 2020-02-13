@@ -60,7 +60,7 @@ router
     _.get(req, 'body.payload.info.labels', [])
     .map(h => h.replace(/[^\w\d]/mig, ''))
     .filter(h => h && h.length < 33)
-    ).join(' #').trim().substring(0, 279);
+    ).join(' #').trim();
   console.log(`-- twitter published: ${promoText} ${url}`);
   as.waterfall([
    (next) => fli.npm.request({
