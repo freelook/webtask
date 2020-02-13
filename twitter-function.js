@@ -53,7 +53,7 @@ const twitterMiddleware = (req, res, next) => {
 
 router
 .all('/publish', function (req, res) {
-  const url = req.twUrl; 
+  const url = req.twUrl;
   const imgUrl = _.get(req, 'body.payload.promoImg') || _.get(req, 'body.payload.info.image');
   const promoText = _.get(req, 'body.payload.promoText') || _.get(req, 'body.payload.info.title');
   const hashTags = [''].concat(
