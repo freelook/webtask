@@ -204,6 +204,7 @@ router
             text: _.get(req, 'query.text', _.get(req, 'body.text'))
           }), 'data' );
         });
+        console.log(comments, videos);
         return {data: {comments, videos}};
       } catch(err) {
         return err;
