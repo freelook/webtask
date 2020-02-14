@@ -110,14 +110,11 @@ const search = (params, next) => {
       key: params.context.secrets.api_key,
       maxResults: _.get(params, 'max', 3),
       order: _.get(params, 'order', 'relevance'),
+      publishedAfter: _.get(params, 'publishedAfter'),
+      q: _.get(params, 'query'),
+      relatedToVideoId: _.get(params, 'related'),
       type: 'video'
     };
-    if(params.query) {
-      config.q = params.query;
-    }
-    if(params.related) {
-      config.relatedToVideoId = params.related;
-    }
     return youtube.search.list(config, next);
   }
   return next(null, "Not enough params for search");
@@ -194,7 +191,7 @@ router
         let videoData = await util.promisify(search)({
           query, auth,
           context: req.webtaskContext,
-          order: 'date',
+          publishedAfter: (d => new Date(d.setDate(d.getDate() - 1)))(new Date()).toISOString(),
           max: 1
         });
         let videos = _.get(videoData, 'data.items', []);
