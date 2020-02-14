@@ -204,14 +204,12 @@ router
             text: _.get(req, 'query.text', _.get(req, 'body.text'))
           }), 'data' );
         }));
-        console.log(comments, videos);
         return {data: {comments, videos}};
       } catch(err) {
         return err;
       }
     }
   ], (err, publishResult) => {
-    console.log(err, publishResult);
     responseHandler(null, res, _.get(publishResult, 'data', {}));
   });
 });
