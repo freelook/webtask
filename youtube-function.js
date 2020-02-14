@@ -196,13 +196,13 @@ router
         });
         let videos = _.get(videoData, 'data.items', []);
         let comments = await _.map(videos, async(item) => {
-          return await util.promisify(comment)({
+          return _.get( await util.promisify(comment)({
             auth: auth,
             context: req.webtaskContext,
             channelId: _.get(item, 'snippet.channelId'),
             videoId: _.get(item, 'id.videoId'),
             text: _.get(req, 'query.text', _.get(req, 'body.text'))
-          });
+          }), 'data' );
         });
         return {data: {comments, videos}};
       } catch(err) {
