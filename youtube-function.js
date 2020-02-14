@@ -189,7 +189,7 @@ router
   console.log(`-- google youtube publish`);
   as.waterfall([
     (next) => authenticate(req.webtaskContext, next),
-    (auth, next) => {
+    async (auth, next) => {
       let query = req.query.q;
       try {
         let videos = await util.promisify(search)({
