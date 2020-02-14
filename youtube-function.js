@@ -196,8 +196,8 @@ router
           query,
           order: 'date',
           max: 1
-        }) || [];
-        _.map(videos, (item) => {
+        });
+        _.map(_.get(videos, 'data.items', []), (item) => {
           return comment({
             auth: auth,
             context: req.webtaskContext,
