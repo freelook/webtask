@@ -189,8 +189,8 @@ router
   as.waterfall([
     (next) => authenticate(req.webtaskContext, next),
     async (auth, next) => {
-      let query = req.query.q;
       try {
+        let query = req.query.q;
         let videos = await util.promisify(search)({
           query, auth,
           context: req.webtaskContext,
