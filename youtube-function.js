@@ -193,6 +193,7 @@ router
       try {
         let videos = await util.promisify(search)({
           query, auth,
+          context: req.webtaskContext,
           order: 'date',
           max: 1
         });
