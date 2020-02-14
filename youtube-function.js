@@ -159,7 +159,8 @@ router
     (next) => authenticate(req.webtaskContext, next),
     (auth, next) => {
       let query = req.query.q;
-      return search({auth, query, context: req.webtaskContext}, next);
+      let related = req.query.related;
+      return search({auth, query, related, context: req.webtaskContext}, next);
     }
   ], (err, searchResult) => responseHandler(null, res, _.get(searchResult, 'data', {})));
 })
