@@ -1,5 +1,6 @@
 const fli = require('fli-webtask');
 const wt = require('webtask-tools');
+const util = require('util');
 const bodyParser = require('body-parser');
 const express = fli.npm.express;
 const request = fli.npm.request;
@@ -107,7 +108,7 @@ const search = (params, next) => {
       part: 'id,snippet',
       auth: params.auth,
       key: params.context.secrets.api_key,
-      maxResults: 3,
+      maxResults: _.get(params, 'max', 3),
       order: _.get(params, 'order', 'relevance'),
       type: 'video'
     };
@@ -181,6 +182,33 @@ router
         videoId: _.get(item, 'videoId'),
         text: item.text || ''
       }, next);
+    }
+  ], (err, commentResult) => responseHandler(null, res, _.get(commentResult, 'data', {})));
+})
+.all('/publish', async (req, res) => {
+  console.log(`-- google youtube publish`);
+  as.waterfall([
+    (next) => authenticate(req.webtaskContext, next),
+    (auth, next) => {
+      let query = req.query.q;
+      try {
+        let videos = await util.promisify(search)({
+          query,
+          order: 'date',
+          max: 1
+        }) || [];
+        _.map(videos, (item) => {
+          return comment({
+            auth: auth,
+            context: req.webtaskContext,
+            channelId: _.get(item, 'snippet.channelId'),
+            videoId: _.get(item, 'id.videoId'),
+            text: "Sooo cute!"
+          }, console.log);
+        });
+      } catch(err) {
+        next(err);
+      }
     }
   ], (err, commentResult) => responseHandler(null, res, _.get(commentResult, 'data', {})));
 });
