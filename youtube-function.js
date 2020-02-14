@@ -195,7 +195,7 @@ router
           max: 1
         });
         let videos = _.get(videoData, 'data.items', []);
-        let comments = await _.map(videos, async(item) => {
+        let comments = _.map(videos, async(item) => {
           return _.get( await util.promisify(comment)({
             auth: auth,
             context: req.webtaskContext,
