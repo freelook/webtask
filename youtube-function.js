@@ -192,7 +192,7 @@ router
           query, auth,
           context: req.webtaskContext,
           publishedAfter: (d => new Date(d.setDate(d.getDate() - 1)))(new Date()).toISOString(),
-          max: 1
+          max: 3
         });
         let videos = _.get(videoData, 'data.items', []);
         let comments = await Promise.all(_.map(videos, async(item) => {
