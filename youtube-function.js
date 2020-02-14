@@ -176,7 +176,7 @@ router
         context: req.webtaskContext,
         channelId: _.get(item, 'channelId'),
         videoId: _.get(item, 'videoId'),
-        text: item.text || ''
+        text: _.get(item, 'text')
       }, next);
     }
   ], (err, commentResult) => responseHandler(null, res, _.get(commentResult, 'data', {})));
@@ -201,7 +201,7 @@ router
             context: req.webtaskContext,
             channelId: _.get(item, 'snippet.channelId'),
             videoId: _.get(item, 'id.videoId'),
-            text: "Sooo cute!"
+            text: req.query.text
           });
         });
         return {data: {comments, videos}};
