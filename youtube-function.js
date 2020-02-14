@@ -191,13 +191,14 @@ router
     async (auth) => {
       try {
         let query = req.query.q;
-        let videos = await util.promisify(search)({
+        let videoData = await util.promisify(search)({
           query, auth,
           context: req.webtaskContext,
           order: 'date',
           max: 1
         });
-        let comments = await _.map(_.get(videos, 'data.items', []), async(item) => {
+        let videos = _.get(videoData, 'data.items', []);
+        let comments = await _.map(videos, async(item) => {
           return await util.promisify(comment)({
             auth: auth,
             context: req.webtaskContext,
@@ -212,7 +213,6 @@ router
       }
     }
   ], (err, publishResult) => {
-    console.log(err, publishResult);
     responseHandler(null, res, _.get(publishResult, 'data', {}));
   });
 });
