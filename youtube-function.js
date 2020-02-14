@@ -90,7 +90,7 @@ const authenticate = (context, cb) => {
   });
 };
 const list = (params, next) => {
-  if(params.auth && params.id) {
+  if(params.context && params.auth && params.id) {
     return youtube.videos.list({
       part: 'id,snippet',
       auth: params.auth,
@@ -103,7 +103,7 @@ const list = (params, next) => {
   return next(null, "Not enough params for list");
 };
 const search = (params, next) => {
-  if(params.auth && (params.query || params.related)) {
+  if(params.context && params.auth && (params.query || params.related)) {
     let config = {
       part: 'id,snippet',
       auth: params.auth,
@@ -123,7 +123,7 @@ const search = (params, next) => {
   return next(null, "Not enough params for search");
 };
 const comment = (params, next) => {
-  if(params.auth && params.channelId && params.videoId && params.text) {
+  if(params.context && params.auth && params.channelId && params.videoId && params.text) {
     return youtube.commentThreads.insert({
       part: 'id,snippet',
       auth: params.auth,
