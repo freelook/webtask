@@ -207,6 +207,7 @@ router
           }, console.log);
         });
       } catch(err) {
+        console.log(err);
         next(err);
       }
     }
