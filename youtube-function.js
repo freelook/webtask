@@ -43,7 +43,7 @@ const validateMiddleware = (req, res, next) => {
   }
   return next();
 };
-const refreshToken = (context, cb) => {
+const refreshToken = (context, storage, cb) => {
   as.waterfall([
     (next) => request.post({
       url: context.secrets.googleAuthUrl,
@@ -61,7 +61,8 @@ const refreshToken = (context, cb) => {
         access_token: _.get(data, 'access_token'),
         expire: Date.now() + 1000 * (_.get(data, 'expires_in', 0) - 60)
       };
-      context.storage.set(token, () => next(null, token.access_token));
+      storage.token = token;
+      context.storage.set(storage, () => next(null, token.access_token));
     }
   ], cb);
 };
@@ -69,10 +70,10 @@ const authenticate = (context, cb) => {
   as.waterfall([
     (next) => context.storage.get(next),
     (storage, next) => {
-      if (Date.now() < _.get(storage, 'expire', 0)) {
-         return next(null, _.get(storage, 'access_token'));
+      if (Date.now() < _.get(storage.token, 'expire', 0)) {
+         return next(null, _.get(storage.token, 'access_token'));
       }
-      return refreshToken(context, next);
+      return refreshToken(context, storage, next);
     }
   ], (err, access_token) => {
     if(!!err) {
@@ -196,23 +197,15 @@ router
           max: 3
         });
         let videos = _.get(videoData, 'data.items', []);
-        let store = await util.promisify((next) => req.webtaskContext.storage.get(next))();
-        let comments = await global.Promise.all(_.map(videos, async(item) => {
-          let videoId = _.get(item, 'id.videoId');
-          if(_.includes(store.id, videoId)) {
-            return null;
-          }
-          store.id.unshift(videoId);
+        let comments = await Promise.all(_.map(videos, async(item) => {
           return _.get( await util.promisify(comment)({
             auth: auth,
             context: req.webtaskContext,
             channelId: _.get(item, 'snippet.channelId'),
-            videoId: videoId,
+            videoId: _.get(item, 'id.videoId'),
             text: _.get(req, 'query.text', _.get(req, 'body.text'))
           }), 'data' );
         }));
-        store.id.length = Math.min(store.id.length, 7);
-        await util.promisify((data, next) => req.webtaskContext.storage.set(data, next))(store);
         return {data: {comments, videos}};
       } catch(err) {
         return err;
