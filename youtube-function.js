@@ -210,6 +210,7 @@ router
       }
     }
   ], (err, publishResult) => {
+    console.log(err, publishResult);
     responseHandler(null, res, _.get(publishResult, 'data', {}));
   });
 });
