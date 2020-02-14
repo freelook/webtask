@@ -108,7 +108,8 @@ const search = (params, next) => {
       auth: params.auth,
       key: params.context.secrets.api_key,
       maxResults: 3,
-      order: 'relevance'
+      order: 'relevance',
+      type: 'video'
     };
     if(params.query) {
       config.q = params.query;
