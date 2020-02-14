@@ -195,7 +195,7 @@ router
           max: 1
         });
         let videos = _.get(videoData, 'data.items', []);
-        let comments = _.map(videos, async(item) => {
+        let comments = await Promise.all(_.map(videos, async(item) => {
           return _.get( await util.promisify(comment)({
             auth: auth,
             context: req.webtaskContext,
@@ -203,7 +203,7 @@ router
             videoId: _.get(item, 'id.videoId'),
             text: _.get(req, 'query.text', _.get(req, 'body.text'))
           }), 'data' );
-        });
+        }));
         console.log(comments, videos);
         return {data: {comments, videos}};
       } catch(err) {
