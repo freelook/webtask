@@ -39,6 +39,7 @@ router
               info: {title, image, labels}
             }
           }, () => {});
+          request.get(req.webtaskContext.secrets.youtubePublish);
         }
       }
     } finally {/**/}
