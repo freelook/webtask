@@ -196,15 +196,23 @@ router
           max: 3
         });
         let videos = _.get(videoData, 'data.items', []);
-        let comments = await Promise.all(_.map(videos, async(item) => {
+        let store = await util.promisify((next) => req.webtaskContext.storage.get(next))();
+        let comments = await global.Promise.all(_.map(videos, async(item) => {
+          let videoId = _.get(item, 'id.videoId');
+          if(_.includes(store.id, videoId)) {
+            return null;
+          }
+          store.id.unshift(videoId);
           return _.get( await util.promisify(comment)({
             auth: auth,
             context: req.webtaskContext,
             channelId: _.get(item, 'snippet.channelId'),
-            videoId: _.get(item, 'id.videoId'),
+            videoId: videoId,
             text: _.get(req, 'query.text', _.get(req, 'body.text'))
           }), 'data' );
         }));
+        store.id.length = Math.min(store.id.length, 7);
+        await util.promisify((data, next) => req.webtaskContext.storage.set(data, next))(store);
         return {data: {comments, videos}};
       } catch(err) {
         return err;
