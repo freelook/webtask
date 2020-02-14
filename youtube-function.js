@@ -197,22 +197,21 @@ router
           order: 'date',
           max: 1
         });
-        console.log(videos);
-        _.map(_.get(videos, 'data.items', []), (item) => {
-          return comment({
+        let comments = await _.map(_.get(videos, 'data.items', []), async(item) => {
+          return await util.promisify(comment)({
             auth: auth,
             context: req.webtaskContext,
             channelId: _.get(item, 'snippet.channelId'),
             videoId: _.get(item, 'id.videoId'),
             text: "Sooo cute!"
-          }, console.log);
+          });
         });
+        next(null, {data: {comments, videos}});
       } catch(err) {
-        console.log(err);
         next(err);
       }
     }
-  ], (err, commentResult) => responseHandler(null, res, _.get(commentResult, 'data', {})));
+  ], (err, publishResult) => responseHandler(null, res, _.get(publishResult, 'data', {})));
 });
 
 app
