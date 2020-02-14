@@ -192,7 +192,7 @@ router
       let query = req.query.q;
       try {
         let videos = await util.promisify(search)({
-          query,
+          query, auth,
           order: 'date',
           max: 1
         });
