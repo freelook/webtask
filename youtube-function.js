@@ -165,7 +165,6 @@ router
       return search({auth, query, related, context: req.webtaskContext}, next);
     }
   ], (err, searchResult) => {
-    console.log(err, searchResult);
     responseHandler(null, res, _.get(searchResult, 'data', {}));
   });
 })
@@ -197,6 +196,7 @@ router
           order: 'date',
           max: 1
         });
+        console.log(videos);
         _.map(_.get(videos, 'data.items', []), (item) => {
           return comment({
             auth: auth,
