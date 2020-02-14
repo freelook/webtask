@@ -211,7 +211,10 @@ router
         next(err);
       }
     }
-  ], (err, publishResult) => responseHandler(null, res, _.get(publishResult, 'data', {})));
+  ], (err, publishResult) => {
+    console.log(err, publishResult);
+    responseHandler(null, res, _.get(publishResult, 'data', {}));
+  });
 });
 
 app
