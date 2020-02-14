@@ -162,7 +162,10 @@ router
       let related = req.query.related;
       return search({auth, query, related, context: req.webtaskContext}, next);
     }
-  ], (err, searchResult) => responseHandler(null, res, searchResult || _.get(searchResult, 'data', {})));
+  ], (err, searchResult) => {
+    console.log(err, searchResult);
+    responseHandler(null, res, _.get(searchResult, 'data', {}));
+  });
 })
 .all('/comment', function (req, res) {
   console.log(`-- google youtube comment`);
