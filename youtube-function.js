@@ -102,15 +102,21 @@ const list = (params, next) => {
   return next(null, "Not enough params for list");
 };
 const search = (params, next) => {
-  if(params.auth && params.query) {
-    return youtube.search.list({
+  if(params.auth && (params.query || params.related)) {
+    let config = {
       part: 'id,snippet',
       auth: params.auth,
       key: params.context.secrets.api_key,
-      q: params.query,
       maxResults: 3,
       order: 'relevance'
-    }, next);
+    };
+    if(params.query) {
+      config.q = params.query;
+    }
+    if(params.related) {
+      config.relatedToVideoId = params.related;
+    }
+    return youtube.search.list(config, next);
   }
   return next(null, "Not enough params for search");
 };
