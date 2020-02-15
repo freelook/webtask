@@ -199,25 +199,27 @@ router
         let videos = _.get(videoData, 'data.items', []);
         let store = await util.promisify((next) => req.webtaskContext.storage.get(next))();
         let comments = await global.Promise.all(_.map(videos, async(item) => {
-          let videoId = _.get(item, 'id.videoId');
-          if(_.includes(store.id, videoId)) {
+          try {
+            let videoId = _.get(item, 'id.videoId');
+            if(_.includes(store.id, videoId)) {
+              return null;
+            }
+            store.id.unshift(videoId);
+            return _.get( await util.promisify(comment)({
+              auth: auth,
+              context: req.webtaskContext,
+              channelId: _.get(item, 'snippet.channelId'),
+              videoId: videoId,
+              text: _.get(req, 'query.text', _.get(req, 'body.text'))
+            }), 'data' );
+          } finally {
             return null;
           }
-          store.id.unshift(videoId);
-          return _.get( await util.promisify(comment)({
-            auth: auth,
-            context: req.webtaskContext,
-            channelId: _.get(item, 'snippet.channelId'),
-            videoId: videoId,
-            text: _.get(req, 'query.text', _.get(req, 'body.text'))
-          }), 'data' );
         }));
         store.id.length = Math.min(store.id.length, 10);
-        console.log(store);
         await util.promisify((data, next) => req.webtaskContext.storage.set(data, next))(store);
         return {data: {comments, videos}};
       } catch(err) {
-        console.log(err);
         return err;
       }
     }
