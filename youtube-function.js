@@ -213,10 +213,11 @@ router
           }), 'data' );
         }));
         store.id.length = Math.min(store.id.length, 10);
-        console.log(store); 
+        console.log(store);
         await util.promisify((data, next) => req.webtaskContext.storage.set(data, next))(store);
         return {data: {comments, videos}};
       } catch(err) {
+        console.log(err);
         return err;
       }
     }
