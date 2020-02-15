@@ -212,7 +212,7 @@ router
               videoId: videoId,
               text: _.get(req, 'query.text', _.get(req, 'body.text'))
             }), 'data' );
-          } finally {
+          } catch(err) {
             return null;
           }
         }));
