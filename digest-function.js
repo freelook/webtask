@@ -45,7 +45,7 @@ router
       }
     } finally {/**/}
   }
-  res.status(204).send(_.get(req.query, 'hub.challenge', ''));
+  res.send(_.get(req.query, 'hub.challenge', ''));
 })
 .all('/unsubscribe', (req, res) => {
   if(req.webtaskContext.secrets.token !== req.query.token) {
