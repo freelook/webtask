@@ -14,6 +14,7 @@ const router = express.Router();
 router
 .all('/call', async (req, res) => {
   const feed = req.body;
+  console.log(feed);
   if(_.includes(feed, req.webtaskContext.secrets.topic)) {
     try {
       const id = feed.match(/<id>(.*)<\/id>/)[1].split(":")[2];
