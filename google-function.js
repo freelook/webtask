@@ -57,7 +57,7 @@ router
   as.waterfall([
     (next) => refreshToken(req.webtaskContext, next),
     (token, next) => {
-      let url = `${req.webtaskContext.secrets.googleSearchUrl}${token}&num=20&q=${query}`;
+      let url = `${req.webtaskContext.secrets.googleSearchUrl}${token}&num=20&q=${query}`; 
       if(req.query.type === 'image') {
         url += `&searchtype=image`;
       } 
