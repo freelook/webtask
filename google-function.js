@@ -50,7 +50,7 @@ const refreshToken = (context, cb) => {
 router
 .all('/web', function (req, res) {
   console.log(`-- google search`);
-  const query = req.query.q;
+  const query = _.get(req, 'query.q', _.get(req, 'body.q'));
   if(!query) {
     return responseHandler('Empty query', res);
   }
@@ -58,7 +58,8 @@ router
     (next) => refreshToken(req.webtaskContext, next),
     (token, next) => {
       let url = `${req.webtaskContext.secrets.googleSearchUrl}${token}&num=20&q=${query}`;
-      if(req.query.type === 'image') {
+      let type = _.get(req, 'query.type', _.get(req, 'body.type'));
+      if(type === 'image') {
         url += `&searchtype=image`;
       } 
       request.get({
