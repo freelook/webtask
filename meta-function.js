@@ -51,7 +51,7 @@ const metaget = function (uri, user_options, callback) {
                     }
                 });
                 
-                mata_obj['title'] = $('title').text();
+                meta_obj['title'] = $('title').text();
                 
                 callback(null, meta_obj);
             } else {
