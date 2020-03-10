@@ -63,7 +63,7 @@ router
         url += `&searchtype=image`;
       } 
       request.get({
-        url: url, encoding: null
+        url
       }, (err, httpResponse, body) => {
         try {
           var goog = (data) => next(null, data);
