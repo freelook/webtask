@@ -69,7 +69,7 @@ router
           var goog = (data) => next(null, data);
           eval(body);
         } catch(err) {
-          next(err);
+          next({error: _.toString(err)});
         }
       });
     }
