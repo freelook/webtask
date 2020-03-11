@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const util = require('util');
+const urlHelper = reqire('url');
 const cheerio = require('cheerio');
 const request = require('request');
 
@@ -52,8 +53,14 @@ const metaget = function (uri, user_options, callback) {
                 });
                 
                 meta_obj['title'] = $('title').text();
-                meta_obj['icon'] = $('link[rel*="apple-touch-icon"]').attr('href') ||
+                var icon $('link[rel*="apple-touch-icon"]').attr('href') ||
                 $('link[rel*="icon"]').attr('href') || '';
+                if(icon) {
+                  if(!(_.startsWith(icon, '//') || _.startsWith(icon, 'http'))) {
+                    icon = url.resolve(uri, icon);
+                  }
+                  meta_obj['icon'] = icon;
+                }
                 
                 callback(null, meta_obj);
             } else {
