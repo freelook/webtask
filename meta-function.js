@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const util = require('util');
-const urlHelper = reqire('url');
+const urlHelper = require('url');
 const cheerio = require('cheerio');
 const request = require('request');
 
