@@ -56,7 +56,7 @@ const metaget = function (uri, user_options, callback) {
                 var icon = $('link[rel*="apple-touch-icon"]').attr('href') || $('link[rel*="icon"]').attr('href') || '';
                 if(icon) {
                   if(!(_.startsWith(icon, '//') || _.startsWith(icon, 'http'))) {
-                    icon = url.resolve(uri, icon);
+                    icon = urlHelper.resolve(uri, icon);
                   }
                   meta_obj['icon'] = icon;
                 }
