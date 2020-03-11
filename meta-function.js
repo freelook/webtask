@@ -60,6 +60,13 @@ const metaget = function (uri, user_options, callback) {
                   }
                   meta_obj['icon'] = icon;
                 }
+                var rss = $('link[type*="rss+xml"]').attr('href') || $('link[type*="atom+xml"]').attr('href') || '';
+                if(rss) {
+                  if(!(_.startsWith(rss, '//') || _.startsWith(rss, 'http'))) {
+                    icon = urlHelper.resolve(uri, rss);
+                  }
+                  meta_obj['rss'] = rss;
+                }
                 
                 callback(null, meta_obj);
             } else {
