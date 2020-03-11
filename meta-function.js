@@ -53,13 +53,14 @@ const metaget = function (uri, user_options, callback) {
                 });
                 
                 meta_obj['title'] = $('title').text();
+                var ogUrl = _.get(meta_obj, 'og:url', _.get(meta_obj, 'url', uri));
                 var icon = $('link[rel*="apple-touch-icon"]').attr('href') || $('link[rel*="icon"]').attr('href') || '';
                 if(icon) {
-                  meta_obj['icon'] = urlHelper.resolve(uri, icon);
+                  meta_obj['icon'] = urlHelper.resolve(ogUrl, icon);
                 }
                 var rss = $('link[type*="rss+xml"]').attr('href') || $('link[type*="atom+xml"]').attr('href') || '';
                 if(rss) {
-                  meta_obj['rss'] = urlHelper.resolve(uri, rss);
+                  meta_obj['rss'] = urlHelper.resolve(ogUrl, rss);
                 }
                 
                 callback(null, meta_obj);
