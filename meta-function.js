@@ -55,17 +55,11 @@ const metaget = function (uri, user_options, callback) {
                 meta_obj['title'] = $('title').text();
                 var icon = $('link[rel*="apple-touch-icon"]').attr('href') || $('link[rel*="icon"]').attr('href') || '';
                 if(icon) {
-                  if(!(_.startsWith(icon, '//') || _.startsWith(icon, 'http'))) {
-                    icon = urlHelper.resolve(uri, icon);
-                  }
-                  meta_obj['icon'] = icon;
+                  meta_obj['icon'] = urlHelper.resolve(uri, icon);
                 }
                 var rss = $('link[type*="rss+xml"]').attr('href') || $('link[type*="atom+xml"]').attr('href') || '';
                 if(rss) {
-                  if(!(_.startsWith(rss, '//') || _.startsWith(rss, 'http'))) {
-                    rss = urlHelper.resolve(uri, rss);
-                  }
-                  meta_obj['rss'] = rss;
+                  meta_obj['rss'] = urlHelper.resolve(uri, rss);
                 }
                 
                 callback(null, meta_obj);
