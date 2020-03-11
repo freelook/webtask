@@ -54,6 +54,9 @@ const metaget = function (uri, user_options, callback) {
                 
                 meta_obj['title'] = $('title').text();
                 var ogUrl = _.get(meta_obj, 'og:url', _.get(meta_obj, 'url', uri));
+                if(meta_obj['og:image']) {
+                  meta_obj['og:image'] = urlHelper.resolve(ogUrl, meta_obj['og:image']);
+                }
                 var icon = $('link[rel*="apple-touch-icon"]').attr('href') || $('link[rel*="icon"]').attr('href') || '';
                 if(icon) {
                   meta_obj['icon'] = urlHelper.resolve(ogUrl, icon);
