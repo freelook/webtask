@@ -63,7 +63,7 @@ const metaget = function (uri, user_options, callback) {
                 var rss = $('link[type*="rss+xml"]').attr('href') || $('link[type*="atom+xml"]').attr('href') || '';
                 if(rss) {
                   if(!(_.startsWith(rss, '//') || _.startsWith(rss, 'http'))) {
-                    icon = urlHelper.resolve(uri, rss);
+                    rss = urlHelper.resolve(uri, rss);
                   }
                   meta_obj['rss'] = rss;
                 }
