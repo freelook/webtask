@@ -52,6 +52,8 @@ const metaget = function (uri, user_options, callback) {
                 });
                 
                 meta_obj['title'] = $('title').text();
+                meta_obj['icon'] = $('link[rel*="apple-touch-icon"]').attr('href') ||
+                $('link[rel*="icon"]').attr('href') || '';
                 
                 callback(null, meta_obj);
             } else {
