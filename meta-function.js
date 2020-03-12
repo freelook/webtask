@@ -3,6 +3,7 @@ const util = require('util');
 const urlHelper = require('url');
 const cheerio = require('cheerio');
 const request = require('request');
+const needle = require('needle');
 
 const metaget = function (uri, user_options, callback) {
         var options = {
@@ -35,8 +36,14 @@ const metaget = function (uri, user_options, callback) {
             options.headers = user_options.headers;
         }
 
-        request.get(options, function (error, response, body) {
+        needle.get(options.url, {
+          open_timeout: options.timeout,
+          response_timeout: options.timeout,
+          read_timeout: options.timeout,
+          headers: options.headers
+        }, function (error, response) {
             if (!error && response.statusCode === 200) {
+                var body = response.body;
                 var $ = cheerio.load(body);
                 var meta = $('meta');
                 var keys = Object.keys(meta);
