@@ -8,6 +8,7 @@ const needle = require('needle');
 const metaget = function (uri, user_options, callback) {
         var options = {
             url: uri,
+            follow: 5, 
             timeout: 5000,
             headers: {
                 'User-Agent': 'request'
@@ -40,6 +41,7 @@ const metaget = function (uri, user_options, callback) {
           open_timeout: options.timeout,
           response_timeout: options.timeout,
           read_timeout: options.timeout,
+          follow_max: options.follow,
           headers: options.headers
         }, function (error, response) {
             if (!error && response.statusCode === 200) {
