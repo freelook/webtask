@@ -2,7 +2,6 @@ const _ = require('lodash');
 const util = require('util');
 const urlHelper = require('url');
 const cheerio = require('cheerio');
-const request = require('request');
 const needle = require('needle');
 
 const metaget = function (uri, user_options, callback) {
