@@ -18,14 +18,14 @@ module.exports = function(context, cb) {
   const max = _.get(context, 'query.max', _.get(context, 'body.max', _.get(context, 'secrets.max')));
   return needle.get(rss, {follow_max: 5})
       .on('readable', function() {
-          this.pipe(new feedparser());
-      })
-      .pipe(es.writeArray(function (err, arr) {
+          this.pipe(new feedparser())
+              .pipe(es.writeArray(function (err, arr) {
           if(err) {
             return cb(err);
           }
           return cb(null, {rss: arr.slice(0, +max)});
-      }))
+      }));
+      })
       .on('error', function(err) {
           cb(err);
       });
