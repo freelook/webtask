@@ -17,10 +17,9 @@ module.exports = function(context, cb) {
   }
   const max = _.get(context, 'query.max', _.get(context, 'body.max', _.get(context, 'secrets.max')));
   return needle.get(rss, {follow_max: 5})
-      .pipe(es.through(function (data) {
-        this.emit('response', data);
+      .pipe(es.map(function (data, next) {
+        next(null, (new feedparser())(data));
       }))
-      .pipe(new feedparser())
       .pipe(es.writeArray(function (err, arr) {
           if(err) {
             return cb(err);
