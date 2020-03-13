@@ -16,11 +16,8 @@ module.exports = function(context, cb) {
       return cb('No rss param provided.');
   }
   const max = _.get(context, 'query.max', _.get(context, 'body.max', _.get(context, 'secrets.max')));
-  return needle.get(rss, {follow_max: 5})
+  return request(rss, {follow_max: 5})
       .pipe(new feedparser())
-      .pipe(es.map(function(data, call) {
-        console.log(data); call(null, data);
-      }))
       .pipe(es.writeArray(function (err, arr) {
           if(err) {
             return cb(err);
