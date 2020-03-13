@@ -19,7 +19,7 @@ module.exports = function(context, cb) {
   return needle.get(rss, {follow_max: 5})
       .pipe(new feedparser())
       .pipe(es.map(function(data, call) {
-        console.log(data); call(data);
+        console.log(data); call(null, data);
       }))
       .pipe(es.writeArray(function (err, arr) {
           if(err) {
