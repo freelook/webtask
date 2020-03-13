@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const request = require('request');
+const needle = require('needle');
 const feedparser = require('feedparser');
 const es = require('event-stream');
 
