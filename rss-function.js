@@ -16,20 +16,15 @@ module.exports = function(context, cb) {
       return cb('No rss param provided.');
   }
   const max = _.get(context, 'query.max', _.get(context, 'body.max', _.get(context, 'secrets.max')));
-  const fp =  new feedparser();
-  return needle.get(rss, {follow_max: 5})
-      .on('readable', function() {
-          this.pipe(fp);
-      })
+  return request(rss, {follow_max: 5})
+      .pipe(new feedparser())
+      .pipe(es.writeArray(function (err, arr) {
+          if(err) {
+            return cb(err);
+          }
+          return cb(null, {rss: arr.slice(0, +max)});
+      }))
       .on('error', function(err) {
           cb(err);
-      });
-      fp.on('readable', function() {
-          this.pipe(es.writeArray(function (err, arr) {
-            if(err) {
-              return cb(err);
-            }
-            return cb(null, {rss: arr.slice(0, +max)});
-          }));
       });
 };
