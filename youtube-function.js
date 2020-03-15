@@ -208,7 +208,7 @@ router
         await util.promisify((data, next) => req.webtaskContext.storage.set(data, next))(store);
         return {data: {comments, videos}};
         }
-        let channel = req.query.channel;
+        let channel = req.webtaskContext.secrets[`${req.db}-channel`];
         if(channel) {
           let promoText = _.get(req, 'body.payload.promoText') || _.get(req, 'body.payload.info.title');
           let link = _.get(req, 'body.payload.shortUrl') || _.get(req, 'body.payload.url');
