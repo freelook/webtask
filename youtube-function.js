@@ -30,7 +30,7 @@ const validateMiddleware = (req, res, next) => {
   req.db = db;
   return next();
 };
-const refreshToken = (context, storage, cb) => {
+const refreshToken = (db) => (context, storage, cb) => {
   as.waterfall([
     (next) => request.post({
       url: context.secrets.googleAuthUrl,
@@ -48,7 +48,7 @@ const refreshToken = (context, storage, cb) => {
         access_token: _.get(data, 'access_token'),
         expire: Date.now() + 1000 * (_.get(data, 'expires_in', 0) - 60)
       };
-      storage.token = token;
+      storage[db] = storage[db] || {}; storage[db].token = token;
       context.storage.set(storage, () => next(null, token.access_token));
     }
   ], cb);
@@ -57,10 +57,10 @@ const authenticate = (db) => (context, cb) => {
   as.waterfall([
     (next) => context.storage.get(next),
     (storage, next) => {
-      if (Date.now() < _.get(storage.token, 'expire', 0)) {
-         return next(null, _.get(storage.token, 'access_token'));
+      if (Date.now() < _.get(storage[db].token, 'expire', 0)) {
+         return next(null, _.get(storage[db].token, 'access_token'));
       }
-      return refreshToken(context, storage, next);
+      return refreshToken(db)(context, storage, next);
     }
   ], (err, access_token) => {
     if(!!err) {
