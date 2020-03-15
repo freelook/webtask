@@ -115,6 +115,7 @@ router
           promoDiscount: discount,
           promoListPrice: _.get(d, 'minCurrentPrice', ''),
           promoDealPrice: _.get(d, 'minDealPrice', ''),
+          promoType: _.get(d, 'type', ''),
           promoExpired: expare.unix(),
           promoDescription: promoDescription,
           asin: _.get(d, 'impressionAsin', '') || _.get(d, 'reviewAsin', ''),
