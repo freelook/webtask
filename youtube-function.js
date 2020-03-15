@@ -212,12 +212,12 @@ router
         if(channel) {
           let promoText = _.get(req, 'body.payload.promoText') || _.get(req, 'body.payload.info.title');
           let link = _.get(req, 'body.payload.shortUrl') || _.get(req, 'body.payload.url');
-          return _.get( await util.promisify(comment)({
+          return await util.promisify(comment)({
               auth: auth,
               context: req.webtaskContext,
               channelId: channel,
               text: `${promoText} ${link}`
-          }), 'data' ); 
+          }); 
         }
       } catch(err) {
         return err;
