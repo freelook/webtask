@@ -183,7 +183,6 @@ router
   ], (err, commentResult) => responseHandler(null, res, _.get(commentResult, 'data', {})));
 })
 .all('/publish', async (req, res) => {
-  let db = _.get(req, 'query.db', _.get(req, 'body.db'));
   console.log(`-- google youtube publish`);
   as.waterfall([
     (next) => authenticate(req.webtaskContext, next),
