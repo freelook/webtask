@@ -176,6 +176,7 @@ router
     async (auth) => {
       try {
         let query = req.query.q;
+        if(query) {
         let videoData = await util.promisify(search)({
           query, auth,
           order: 'date',
@@ -206,6 +207,16 @@ router
         store.id.length = Math.min(store.id.length, 10);
         await util.promisify((data, next) => req.webtaskContext.storage.set(data, next))(store);
         return {data: {comments, videos}};
+        }
+        let channel = req.query.channel;
+        if(channel) {
+          return _.get( await util.promisify(comment)({
+              auth: auth,
+              context: req.webtaskContext,
+              channelId: channel,
+              text: ''
+          }), 'data' ); 
+        }
       } catch(err) {
         return err;
       }
