@@ -38,7 +38,7 @@ const refreshToken = (db) => (context, storage, cb) => {
         grant_type: 'refresh_token',
         client_id: context.secrets.client_id,
         client_secret: context.secrets.client_secret,
-        refresh_token: context.secrets.refresh_token
+        refresh_token: context.secrets[`${db}_refresh_token`]
       }
     }, (err, httpResponse, body) => {
       next(null, JSON.parse(body));
