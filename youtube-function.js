@@ -108,7 +108,7 @@ const search = (params, next) => {
   return next(null, "Not enough params for search");
 };
 const comment = (params, next) => {
-  if(params.context && params.auth && params.channelId && params.videoId && params.text) {
+  if(params.context && params.auth && params.channelId && params.text) {
     return youtube.commentThreads.insert({
       part: 'id,snippet',
       auth: params.auth,
