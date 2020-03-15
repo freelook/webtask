@@ -41,6 +41,7 @@ const validateMiddleware = (req, res, next) => {
      responseHandler(errMsgToken, res);
      return next(errMsgToken);
   }
+  let db = _.get(req, 'query.db', _.get(req, 'body.db'));
   return next();
 };
 const refreshToken = (context, storage, cb) => {
