@@ -53,7 +53,7 @@ const refreshToken = (context, storage, cb) => {
     }
   ], cb);
 };
-const authenticate = (context, cb) => {
+const authenticate = (db) => (context, cb) => {
   as.waterfall([
     (next) => context.storage.get(next),
     (storage, next) => {
@@ -133,7 +133,7 @@ router
 .all('/list/:id', function (req, res) {
   console.log(`-- google youtube item(s) list`);
   as.waterfall([
-    (next) => authenticate(req.webtaskContext, next),
+    (next) => authenticate(req.db)(req.webtaskContext, next),
     (auth, next) => {
       let id = req.params.id;
       return list({auth, id, context: req.webtaskContext}, next);
@@ -143,7 +143,7 @@ router
 .all('/search', function (req, res) {
   console.log(`-- google youtube search`);
   as.waterfall([
-    (next) => authenticate(req.webtaskContext, next),
+    (next) => authenticate(req.db)(req.webtaskContext, next),
     (auth, next) => {
       let query = req.query.q;
       let related = req.query.related;
@@ -156,7 +156,7 @@ router
 .all('/comment', function (req, res) {
   console.log(`-- google youtube comment`);
   as.waterfall([
-    (next) => authenticate(req.webtaskContext, next),
+    (next) => authenticate(req.db)(req.webtaskContext, next),
     (auth, next) => {
       let item = req.body;
       return comment({
@@ -172,7 +172,7 @@ router
 .all('/publish', async (req, res) => {
   console.log(`-- google youtube publish`);
   as.waterfall([
-    (next) => authenticate(req.webtaskContext, next),
+    (next) => authenticate(req.db)(req.webtaskContext, next),
     async (auth) => {
       try {
         let query = req.query.q;
