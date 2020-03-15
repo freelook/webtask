@@ -15,26 +15,6 @@ const youtube = google.youtube('v3');
 const scopes = [
   'https://www.googleapis.com/auth/youtube'
 ];
-const validatePublish = (req, res, next) => {
-  var db = _.get(req, 'body.db');
-  var youtubePublisher = req.webtaskContext.secrets[`${db}-youtube`];
-  if(!youtubePublisher) {
-    const errMsgYb = 'No youtube publisher.';
-    responseHandler(errMsgYb, res);
-    return next(errMsgYb);
-  }
-  req.db = db;
-  var bUrl = _.get(req, 'body.payload.shortUrl');
-  var discount = _.get(req, 'body.payload.promoDiscount');
-  if(!bUrl || !discount) {
-     const errMsgUrl = 'No url or discount provided.';
-     responseHandler(errMsgUrl, res);
-     return next(errMsgUrl);
-  }
-  req.bUrl = bUrl;
-  req.discount = discount;
-  return next();
-};
 const validateMiddleware = (req, res, next) => {
   if(req.webtaskContext.secrets.token !== req.query.token) {
      const errMsgToken = 'No token.';
@@ -42,6 +22,12 @@ const validateMiddleware = (req, res, next) => {
      return next(errMsgToken);
   }
   let db = _.get(req, 'query.db', _.get(req, 'body.db'));
+  if(!db) {
+    const errMsgYb = 'No youtube db config.';
+    responseHandler(errMsgYb, res);
+    return next(errMsgYb);
+  }
+  req.db = db;
   return next();
 };
 const refreshToken = (context, storage, cb) => {
