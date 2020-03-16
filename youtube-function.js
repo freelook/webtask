@@ -1,4 +1,4 @@
-const fli = require('fli-webtask');
+const fli = require('fli-webtask'); 
 const wt = require('webtask-tools');
 const util = require('util');
 const bodyParser = require('body-parser');
@@ -128,8 +128,51 @@ const comment = (params, next) => {
   }
   return next(null, "Not enough params for comment");
 };
+const upload = async (params, next) => {
+  if (params.context && params.auth && params.snippet && params.fileStream) {
+    try {
+    const videoData = await youtube.videos.insert({
+      part: 'id,snippet,status',
+      auth: params.auth,
+      key: params.context.secrets.api_key,
+      requestBody: {
+        snippet: params.snippet,
+        status: {
+          privacyStatus: 'public'
+        }
+      },
+      media: {
+        body: params.fileStream,
+      }
+    });
+    return next(null, videoData);
+    } catch(e) {
+      return next(null, _.toString(e));
+    }
+  }
+  return next(null, "Not enough params for upload");
+};
 
 router
+.all('/upload', function (req, res) {
+  console.log(`-- google youtube upload`);
+  as.waterfall([
+    (next) => authenticate(req.db)(req.webtaskContext, next),
+    (auth, next) => {
+      let file = req.webtaskContext.secrets[`${req.db}-file`];
+      if(!file) {
+        return (null, 'No file for youtube db');
+      }
+      let snippet = {
+        title: 'Test title',
+        description: 'Test description',
+        tags: ['test tag']
+      };
+      let fileStream = request({url: file, encoding: null});
+      return upload({auth, context: req.webtaskContext, fileStream, snippet}, next);
+    }
+  ], (err, uploadResult) => responseHandler(null, res, _.get(uploadResult, 'data', uploadResult)));
+})
 .all('/list/:id', function (req, res) {
   console.log(`-- google youtube item(s) list`);
   as.waterfall([
