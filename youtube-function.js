@@ -1,4 +1,4 @@
-const fli = require('fli-webtask'); 
+const fli = require('fli-webtask');
 const wt = require('webtask-tools');
 const util = require('util');
 const bodyParser = require('body-parser');
