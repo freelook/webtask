@@ -1,4 +1,4 @@
-const fli = require('fli-webtask');
+const fli = require('fli-webtask'); 
 const express = require('express');
 const wt = require('webtask-tools');
 const bodyParser = require('body-parser');
@@ -27,6 +27,23 @@ const validateMiddleware = (req, res, next) => {
   return next();
 };
 router
+.all('/today', function (req, res) {
+  console.log('- get today deals');
+  var now = new Date();
+  var startOfDay = (new Date(now.getFullYear(), now.getMonth(), now.getDate())).getTime();
+  loader({
+    method: 'post',
+    url: `${req.marketDB}/find`,
+    qs: {
+      token: req.webtaskContext.secrets.token
+    },
+    json: {
+      "timestamp" : {"$gte": startOfDay}
+    }
+  }, (err, deals) => {
+    responseHandler(err, res, deals);
+  });
+})
 .all('/', function (req, res) {
   console.log('- deals');
   as.waterfall([
