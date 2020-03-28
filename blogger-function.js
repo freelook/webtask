@@ -1,4 +1,4 @@
-const fli = require('fli-webtask');
+const fli = require('fli-webtask'); 
 const wt = require('webtask-tools');
 const bodyParser = require('body-parser');
 const express = fli.npm.express;
@@ -108,7 +108,7 @@ router
         requestBody: {
           title: _.get(req, 'body.payload.promoText') || _.get(req, 'body.payload.info.title'),
           content: generateContent(_.get(req, 'body.payload')),
-          labels: _.get(req, 'body.payload.info.labels') || []
+          //labels: _.get(req, 'body.payload.info.labels') || []
         }
       }, next);
     }
