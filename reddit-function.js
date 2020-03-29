@@ -1,4 +1,4 @@
-const fli = require('fli-webtask');
+const fli = require('fli-webtask'); 
 const wt = require('webtask-tools');
 const bodyParser = require('body-parser');
 const snoowrap = require('snoowrap');
@@ -54,8 +54,12 @@ const redditMiddleware = (req, res, next) => {
 
 router
 .all('/publish', function (req, res) {
-  const url = req.rUrl;
-  const promoText = _.get(req, 'body.payload.promoText') || _.get(req, 'body.payload.info.title');
+  let url = req.rUrl;
+  let promoText = _.get(req, 'body.payload.promoText') || _.get(req, 'body.payload.info.title');
+  let promoDiscount = _.get(req, 'body.payload.promoDiscount');
+  if(promoDiscount) {
+    promoText = `[${promoDiscount}% off] ${promoText}`;
+  }
   console.log(`-- reddit published: ${promoText} ${url}`);
   as.waterfall([
    (next) => {
