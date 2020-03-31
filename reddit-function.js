@@ -36,7 +36,7 @@ const redditMiddleware = (req, res, next) => {
   var userAgent = req.webtaskContext.secrets[`${db}-userAgent`];
   var clientId = req.webtaskContext.secrets[`${db}-clientId`];
   var clientSecret = req.webtaskContext.secrets[`${db}-clientSecret`];
-  var refreshToken = index ? 
+  var refreshToken = index !== undefined ? 
     req.webtaskContext.secrets[`${db}-${index}-refreshToken`] : 
     req.webtaskContext.secrets[`${db}-refreshToken`];
   var subreddit = req.webtaskContext.secrets[`${db}-subreddit`];
