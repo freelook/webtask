@@ -1,4 +1,4 @@
-const fli = require('fli-webtask'); 
+const fli = require('fli-webtask');
 const request = fli.npm.request;
 const _ = fli.npm.lodash;
 const as = fli.npm.async;
