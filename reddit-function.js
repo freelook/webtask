@@ -36,7 +36,9 @@ const redditMiddleware = (req, res, next) => {
   var userAgent = req.webtaskContext.secrets[`${db}-userAgent`];
   var clientId = req.webtaskContext.secrets[`${db}-clientId`];
   var clientSecret = req.webtaskContext.secrets[`${db}-clientSecret`];
-  var refreshToken = req.webtaskContext.secrets[`${db}-${index}-refreshToken`];
+  var refreshToken = index ? 
+    req.webtaskContext.secrets[`${db}-${index}-refreshToken`] : 
+    req.webtaskContext.secrets[`${db}-refreshToken`];
   var subreddit = req.webtaskContext.secrets[`${db}-subreddit`];
   if(!(userAgent && clientId && clientSecret && refreshToken && subreddit)) {
      const errMsgReddit = 'No reddit publisher.';
