@@ -9,6 +9,7 @@ const publisher = (context) => (params, next) => {
     console.log(`-- published ${source._id}`);
     source.db = context.query.db;
     source.index = index;
+    source.payload.promoText = `[BEST DEAL] ${source.payload.promoText}`;
     return loader({
       method: 'post',
       url: context.secrets.redditFunction,
