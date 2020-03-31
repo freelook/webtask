@@ -40,7 +40,7 @@ module.exports = function(context, cb) {
       }
     }, next),
    (deals, next) => publisher(context)({
-     sources: deals
+     sources: (deals || []).filter(d => d && d.payload && d.payload.promoType === 'BEST_DEAL')
    }, () => next()),
   ], cb);
 };
