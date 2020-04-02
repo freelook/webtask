@@ -71,7 +71,7 @@ router
     .getSubreddit(req.subreddit)
     .submitLink({
       title: promoText,
-      url: req.webtaskContext.secrets.prefix + btoa(url).replace(/\//mig, '+')
+      url: req.webtaskContext.secrets.prefix + btoa(url).replace(/\//mig, '+') + '?r=1'
     })
     .then((data) => {
       next(null, data);
