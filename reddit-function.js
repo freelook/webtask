@@ -2,6 +2,7 @@ const fli = require('fli-webtask');
 const wt = require('webtask-tools');
 const bodyParser = require('body-parser');
 const snoowrap = require('snoowrap');
+const btoa = require('btoa');
 const express = fli.npm.express;
 const request = fli.npm.request;
 const as = fli.npm.async;
@@ -70,7 +71,7 @@ router
     .getSubreddit(req.subreddit)
     .submitLink({
       title: promoText,
-      url: url
+      url: req.webtaskContext.secrets.prefix + btoa(url).replace(/\//mig, '+')
     })
     .then((data) => {
       next(null, data);
