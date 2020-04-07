@@ -61,7 +61,7 @@ router
   let url = req.rUrl;
   let promoText = _.get(req, 'body.payload.promoText') || _.get(req, 'body.payload.info.title');
   let promoDiscount = _.get(req, 'body.payload.promoDiscount');
-  if(promoDiscount) {
+  if(!_.includes(promoDiscount, '%')) {
     promoText = `[${promoDiscount}% off] ${promoText}`;
   }
   console.log(`-- reddit published: ${promoText} ${url}`);
