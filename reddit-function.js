@@ -63,10 +63,7 @@ router
   let promoDiscount = _.get(req, 'body.payload.promoDiscount');
   let promoType = _.get(req, 'body.payload.promoType');
   if(promoDiscount && !_.includes(promoDiscount, '%')) {
-    promoText = `[${promoDiscount}% off] ${promoText}`;
-  }
-  if(promoType) {
-    promoText = `[${promoType}] ${promoText}`;
+    promoText = `[${promoType? promoType + ' ' : ''}${promoDiscount}% off] ${promoText}`;
   }
   console.log(`-- reddit published: ${promoText} ${url}`);
   as.waterfall([
