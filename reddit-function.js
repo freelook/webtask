@@ -65,7 +65,7 @@ router
   if(promoType === 'PROMOCODE') {
     promoText = `[${promoType}] ${promoText}`;
   } else if(promoDiscount) {
-    promoText = `[${promoDiscount} % off] ${promoText}`;
+    promoText = `[${promoDiscount}% off] ${promoText}`;
   }
   console.log(`-- reddit published: ${promoText} ${url}`);
   as.waterfall([
