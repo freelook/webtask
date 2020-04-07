@@ -62,8 +62,10 @@ router
   let promoText = _.get(req, 'body.payload.promoText') || _.get(req, 'body.payload.info.title');
   let promoDiscount = _.get(req, 'body.payload.promoDiscount');
   let promoType = _.get(req, 'body.payload.promoType');
-  if(promoDiscount || promoType) {
-    promoText = `[${promoType? promoType : ''}${promoType && promoDiscount ? ' ': ''}${promoDiscount ? promoDiscount + '% off' : ''}] ${promoText}`;
+  if(promoType === 'PROMOCODE') {
+    promoText = `[${promoType}] ${promoText}`;
+  } else if(promoDiscount) {
+    promoText = `[${promoDiscount} % off] ${promoText}`;
   }
   console.log(`-- reddit published: ${promoText} ${url}`);
   as.waterfall([
