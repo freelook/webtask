@@ -62,8 +62,13 @@ router
   let promoText = _.get(req, 'body.payload.promoText') || _.get(req, 'body.payload.info.title');
   let promoDiscount = _.get(req, 'body.payload.promoDiscount');
   let promoType = _.get(req, 'body.payload.promoType');
+  let promoImg = _.get(req, 'body.payload.promoImg');
+  let promoUrl = req.webtaskContext.secrets.prefix + btoa(url).replace(/\//mig, '+') + '?r=1';
   if(promoType === 'PROMOCODE') {
     promoText = `[${promoType}] ${promoText}`;
+    if(promoImg) {
+      promoUrl = promoUrl + '&img=' + btoa(promoImg).replace(/\//mig, '+');
+    }
   } else if(promoDiscount) {
     promoText = `[${promoDiscount}% off] ${promoText}`;
   }
@@ -74,7 +79,7 @@ router
     .getSubreddit(req.subreddit)
     .submitLink({
       title: promoText,
-      url: req.webtaskContext.secrets.prefix + btoa(url).replace(/\//mig, '+') + '?r=1'
+      url: promoUrl
     })
     .then((data) => {
       next(null, data);
