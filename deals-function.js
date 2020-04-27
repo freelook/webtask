@@ -41,6 +41,7 @@ router
       "timestamp" : {"$lte": tenDaysAgo}
     }
   }, (err, deals) => {
+    return responseHandler(err, res, deals);
     if(!err) {
       (deals || []).map((d) => {
         loader({
@@ -52,7 +53,7 @@ router
         }, () => {});
       });
     }
-    responseHandler(err, res, 'cleanup done');
+    // responseHandler(err, res, 'cleanup done');
   });
 })
 .all('/today', function (req, res) {
