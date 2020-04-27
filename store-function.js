@@ -1,4 +1,4 @@
-let dbConnections = {};
+let dbConnections = {}; 
 let StoreSchemas = {};
 const fli = require('fli-webtask');
 const wt = require('webtask-tools');
@@ -103,7 +103,13 @@ router
 })
 .post('/', function (req, res) {
   as.waterfall([
-    (next) => req.Store.create({payload:req.body}, next)
+    (next) => {
+      let state = _.get(req.body, 'state', 'new');
+      req.Store.create({
+        state: state,
+        payload: req.body
+      }, next);
+    }
   ],
   (err, data)=> responseHandler(err, res, data));
 })
@@ -149,6 +155,12 @@ router
     (next) => req.Store.findOneAndRemove(req.params.id, next)
   ],
   (err, data)=> responseHandler(err, res, data));
+})
+.post('/clean', function(req, res) {
+  as.waterfall([
+    (next) => req.Store.remove(req.body, next)
+  ],
+  (err, data) => responseHandler(err, res, data));
 });
 
 app
