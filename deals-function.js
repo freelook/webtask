@@ -40,20 +40,8 @@ router
     json: {
       "timestamp" : {"$lte": tenDaysAgo}
     }
-  }, (err, deals) => {
-    return responseHandler(err, res, deals);
-    if(!err) {
-      (deals || []).map((d) => {
-        loader({
-          method: 'delete',
-          url: `${req.marketDB}/${d._id}`,
-          qs: {
-            token: req.webtaskContext.secrets.token
-          }
-        }, () => {});
-      });
-    }
-    // responseHandler(err, res, 'cleanup done');
+  }, (err, result) => {
+    responseHandler(err, res, result);
   });
 })
 .all('/today', function (req, res) {
