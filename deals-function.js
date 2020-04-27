@@ -42,7 +42,7 @@ router
     }
   }, (err, deals) => {
     if(!err) {
-      (deals && []).map((d) => {
+      (deals || []).map((d) => {
         loader({
           method: 'delete',
           url: `${req.marketDB}/${d._id}`,
