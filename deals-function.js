@@ -27,6 +27,34 @@ const validateMiddleware = (req, res, next) => {
   return next();
 };
 router
+.all('/clean', function (req, res) {
+  console.log('- cleanup deals');
+  var now = new Date();
+  var tenDaysAgo = (new Date(now.getFullYear(), now.getMonth(), now.getDate() - 10)).getTime();
+  loader({
+    method: 'post',
+    url: `${req.marketDB}/find`,
+    qs: {
+      token: req.webtaskContext.secrets.token
+    },
+    json: {
+      "timestamp" : {"$lte": tenDaysAgo}
+    }
+  }, (err, deals) => {
+    if(!err) {
+      (deals && []).map((d) => {
+        loader({
+          method: 'delete',
+          url: `${req.marketDB}/${d._id}`,
+          qs: {
+            token: req.webtaskContext.secrets.token
+          }
+        }, () => {});
+      });
+    }
+    responseHandler(err, res, 'cleanup done');
+  });
+})
 .all('/today', function (req, res) {
   console.log('- get today deals');
   var now = new Date();
