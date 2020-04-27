@@ -33,7 +33,7 @@ router
   var tenDaysAgo = (new Date(now.getFullYear(), now.getMonth(), now.getDate() - 10)).getTime();
   loader({
     method: 'post',
-    url: `${req.marketDB}/find`,
+    url: `${req.marketDB}/clean`,
     qs: {
       token: req.webtaskContext.secrets.token
     },
