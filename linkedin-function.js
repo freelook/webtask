@@ -60,7 +60,7 @@ router
   const url = req.lUrl;
   const promoText = _.get(req, 'body.payload.promoText') || _.get(req, 'body.payload.info.title');
   const imgUrl = _.get(req, 'body.payload.promoImg') || _.get(req, 'body.payload.info.image');
-  const hashTags = ['#bestdeals'].concat(
+  const hashTags = [''].concat(
     _.get(req, 'body.payload.info.labels', [])
     .slice(2)
     .map(h => h.replace(/[^\w\d]/mig, ''))
