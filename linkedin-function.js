@@ -65,7 +65,7 @@ router
     .slice(2)
     .map(h => h.replace(/[^\w\d]/mig, ''))
     .filter(h => h && h.length < 33)
-    ).join(' #').trim();
+    ).concat('bestdeals').join(' #').trim();
   const body = {
       owner: 'urn:li:organization:' + req.linkedinPublisherId,
       subject: promoText,
