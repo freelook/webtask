@@ -224,6 +224,7 @@ router
           let promoText = _.get(req, 'body.payload.promoText') || _.get(req, 'body.payload.info.title');
           let link = _.get(req, 'body.payload.shortUrl') || _.get(req, 'body.payload.url');
           query = _.get(req, 'body.payload.info.title') || _.get(req, 'body.payload.promoText');
+          if(!promoText || !link) return;
           return await util.promisify(comment)({
               auth: auth,
               context: req.webtaskContext,
