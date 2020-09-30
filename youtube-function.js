@@ -98,7 +98,7 @@ const search = (params, next) => {
       key: params.context.secrets.api_key,
       maxResults: _.get(params, 'max', 3),
       order: _.get(params, 'order', 'relevance'),
-      publishedAfter: _.get(params, 'publishedAfter'),
+      // publishedAfter: _.get(params, 'publishedAfter'),
       q: _.get(params, 'query'),
       relatedToVideoId: _.get(params, 'related'),
       type: 'video'
