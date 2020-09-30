@@ -234,6 +234,7 @@ router
               text: `${promoText} ${link}`
           }); 
         }
+        console.log(channel, query);
         if(query) {
         let videoData = await util.promisify(search)({
           query, auth,
