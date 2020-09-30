@@ -259,7 +259,7 @@ router
             return null;
           }
         }));
-        store.id.length = Math.min(store.id.length, 10);
+        store.id.length = Math.min(store.id.length, 30);
         await util.promisify((data, next) => req.webtaskContext.storage.set(data, next))(store);
         return {data: {comments, videos}};
         }
