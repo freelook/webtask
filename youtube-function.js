@@ -226,13 +226,14 @@ router
           if(!query) {
             query = _.get(req, 'body.payload.info.title') || _.get(req, 'body.payload.promoText');
           }
-          if(!promoText || !link) return;
-          return await util.promisify(comment)({
-              auth: auth,
-              context: req.webtaskContext,
-              channelId: channel,
-              text: `${promoText} ${link}`
-          }); 
+          if(promoText || link) {
+            await util.promisify(comment)({
+                auth: auth,
+                context: req.webtaskContext,
+                channelId: channel,
+                text: `${promoText} ${link}`
+            });
+          }
         }
         console.log(channel, query);
         if(query) {
