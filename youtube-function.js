@@ -219,6 +219,18 @@ router
     async (auth) => {
       try {
         let query = req.query.q;
+        let channel = req.webtaskContext.secrets[`${req.db}-channel`];
+        if(channel) {
+          let promoText = _.get(req, 'body.payload.promoText') || _.get(req, 'body.payload.info.title');
+          let link = _.get(req, 'body.payload.shortUrl') || _.get(req, 'body.payload.url');
+          query = _.get(req, 'body.payload.info.title') || _.get(req, 'body.payload.promoText');
+          return await util.promisify(comment)({
+              auth: auth,
+              context: req.webtaskContext,
+              channelId: channel,
+              text: `${promoText} ${link}`
+          }); 
+        }
         if(query) {
         let videoData = await util.promisify(search)({
           query, auth,
@@ -241,7 +253,7 @@ router
               context: req.webtaskContext,
               channelId: _.get(item, 'snippet.channelId'),
               videoId: videoId,
-              text: _.get(req, 'query.text', _.get(req, 'body.text'))
+              text: _.get(req, 'query.text', _.get(req, 'body.text')) || req.webtaskContext.secrets[`${req.db}-text`]
             }), 'data' );
           } catch(err) {
             return null;
@@ -250,17 +262,6 @@ router
         store.id.length = Math.min(store.id.length, 10);
         await util.promisify((data, next) => req.webtaskContext.storage.set(data, next))(store);
         return {data: {comments, videos}};
-        }
-        let channel = req.webtaskContext.secrets[`${req.db}-channel`];
-        if(channel) {
-          let promoText = _.get(req, 'body.payload.promoText') || _.get(req, 'body.payload.info.title');
-          let link = _.get(req, 'body.payload.shortUrl') || _.get(req, 'body.payload.url');
-          return await util.promisify(comment)({
-              auth: auth,
-              context: req.webtaskContext,
-              channelId: channel,
-              text: `${promoText} ${link}`
-          }); 
         }
       } catch(err) {
         return err;
