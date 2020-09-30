@@ -234,7 +234,7 @@ router
         if(query) {
         let videoData = await util.promisify(search)({
           query, auth,
-          order: 'date',
+          // order: 'date',
           context: req.webtaskContext,
           // publishedAfter: (d => new Date(d.setDate(d.getDate() - 1)))(new Date()).toISOString(),
           max: 3
