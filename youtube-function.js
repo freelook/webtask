@@ -240,7 +240,7 @@ router
           query, auth,
           order: 'date',
           context: req.webtaskContext,
-          // publishedAfter: (d => new Date(d.setDate(d.getDate() - 1)))(new Date()).toISOString(),
+          publishedAfter: (d => new Date(d.setDate(d.getDate() - 60)))(new Date()).toISOString(),
           max: 3
         });
         let videos = _.get(videoData, 'data.items', []);
