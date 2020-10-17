@@ -52,7 +52,7 @@ router
   as.waterfall([
    (next) => fli.npm.request({
       url: req.marketUrl,
-      followAllRedirects: true,
+      followRedirect: true,
       gzip: true,
       headers: {
         'Accept-Charset': 'utf-8',
