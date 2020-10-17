@@ -61,7 +61,7 @@ router
       encoding: 'utf8'
     },
     (err, response, body) => {
-      next(body, body);
+      next(err, body);
     }),
     (html, next) => {
       var marketplaceId, deals; 
