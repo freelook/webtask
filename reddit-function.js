@@ -66,11 +66,11 @@ router
   let promoUrl = req.webtaskContext.secrets.prefix + btoa(url).replace(/\//mig, '+') + '?r=1';
   if(promoType === 'PROMOCODE') {
     promoText = `[${promoType}] ${promoText}`;
-    if(promoImg) {
-      promoUrl = promoUrl + '&img=' + btoa(promoImg).replace(/\//mig, '+');
-    }
   } else if(promoDiscount) {
     promoText = `[${promoDiscount}% off] ${promoText}`;
+  }
+  if(promoImg) {
+    promoUrl = promoUrl + '&img=' + btoa(promoImg).replace(/\//mig, '+');
   }
   console.log(`-- reddit published: ${promoText} ${url}`);
   as.waterfall([
