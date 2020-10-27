@@ -69,9 +69,6 @@ router
   } else if(promoDiscount) {
     promoText = `[${promoDiscount}% off] ${promoText}`;
   }
-  if(promoImg) {
-    promoUrl = promoUrl + '&img=' + btoa(promoImg).replace(/\//mig, '+');
-  }
   console.log(`-- reddit published: ${promoText} ${url}`);
   as.waterfall([
    (next) => {
