@@ -66,7 +66,7 @@ router
   let promoUrl = req.webtaskContext.secrets.prefix + btoa(url).replace(/\//mig, '+') + '?r=1';
   if(promoType === 'PROMOCODE') {
     promoText = `[${promoType}] ${promoText}`;
-  } else if(promoDiscount) {
+  } else if(promoDiscount && promoText.indexOf("%") !== -1) {
     promoText = `[${promoDiscount}% off] ${promoText}`;
   }
   if(promoImg) {	
