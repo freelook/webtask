@@ -242,7 +242,6 @@ router
       }, next);
     }
   ], (err, subscribeResult) => {
-    console.log(err);
     responseHandler(err, res, _.get(subscribeResult, 'data', {}));
   });
 })
