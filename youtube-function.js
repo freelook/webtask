@@ -243,7 +243,7 @@ router
     }
   ], (err, subscribeResult) => {
     console.log(err);
-    responseHandler(err, res, _.get(subscribeResult, 'data', {})));
+    responseHandler(err, res, _.get(subscribeResult, 'data', {}));
   };
 })
 .all('/publish', async (req, res) => {
