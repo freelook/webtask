@@ -152,6 +152,23 @@ const upload = async (params, next) => {
   }
   return next(null, "Not enough params for upload");
 };
+const subscribe = (params, next) => {
+  if(params.context && params.auth && params.channelId) {
+    return youtube.subscriptions.insert({
+      part: 'id,snippet',
+      auth: params.auth,
+      key: params.context.secrets.api_key,
+      requestBody: {
+        snippet: {
+          resourceId: { 
+            channelId: params.channelId
+          }
+        }
+      }
+    }, next);
+  }
+  return next(null, "Not enough params for comment");
+};
 
 router
 .all('/upload', function (req, res) {
