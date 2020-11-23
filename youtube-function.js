@@ -57,7 +57,7 @@ const authenticate = (db) => (context, cb) => {
   as.waterfall([
     (next) => context.storage.get(next),
     (storage, next) => {
-      if (Date.now() < _.get(storage[db].token, 'expire', 0)) {
+      if (Date.now() < _.get((storage[db] || {}).token, 'expire', 0)) {
          return next(null, _.get(storage[db].token, 'access_token'));
       }
       return refreshToken(db)(context, storage, next);
