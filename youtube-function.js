@@ -241,7 +241,7 @@ router
         channelId: _.get(item, 'channelId')
       }, next);
     }
-  ], (err, subscribeResult) => responseHandler(null, res, _.get(subscribeResult, 'data', {})));
+  ], (err, subscribeResult) => responseHandler(null, res, _.get(subscribeResult, 'data', subscribeResult)));
 })
 .all('/publish', async (req, res) => {
   console.log(`-- google youtube publish`);
