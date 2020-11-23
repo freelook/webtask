@@ -229,6 +229,20 @@ router
     }
   ], (err, commentResult) => responseHandler(null, res, _.get(commentResult, 'data', {})));
 })
+.all('/subscribe', function (req, res) {
+  console.log(`-- google youtube subscribe`);
+  as.waterfall([
+    (next) => authenticate(req.db)(req.webtaskContext, next),
+    (auth, next) => {
+      let item = req.body;
+      return subscribe({
+        auth: auth,
+        context: req.webtaskContext,
+        channelId: _.get(item, 'channelId')
+      }, next);
+    }
+  ], (err, subscribeResult) => responseHandler(null, res, _.get(subscribeResult, 'data', {})));
+})
 .all('/publish', async (req, res) => {
   console.log(`-- google youtube publish`);
   as.waterfall([
