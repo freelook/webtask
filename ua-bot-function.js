@@ -16,7 +16,6 @@ router
   const feed = req.body;
   console.log(feed, req.query);
   if(_.includes(feed, req.webtaskContext.secrets.topic)) {
-    // do action
     const entry = feed.match(/<entry>(.*)<\/entry>/)[1] || '';
     const id = entry.match(/<id>(.*)<\/id>/)[1].split(":")[2];
     const published = entry.match(/<published>(.*)<\/published>/)[1];
@@ -25,7 +24,7 @@ router
       const yesterday = new Date(Date.now() - 86400000);
       const publishedTime = (new Date(published)).getTime();
       if(publishedTime > yesterday) {
-        
+        // do action
       }
     }
   }
