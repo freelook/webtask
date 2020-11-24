@@ -17,6 +17,17 @@ router
   console.log(feed, req.query);
   if(_.includes(feed, req.webtaskContext.secrets.topic)) {
     // do action
+    const entry = feed.match(/<entry>(.*)<\/entry>/)[1] || '';
+    const id = entry.match(/<id>(.*)<\/id>/)[1].split(":")[2];
+    const published = entry.match(/<published>(.*)<\/published>/)[1];
+    const title = entry.match(/<title>(.*)<\/title>/)[1];
+    if(id && title && published) {
+      const yesterday = new Date(Date.now() - 86400000);
+      const publishedTime = (new Date(published)).getTime();
+      if(publishedTime > yesterday) {
+        
+      }
+    }
   }
   res.send(_.get(req.query, 'hub.challenge', ''));
 })
