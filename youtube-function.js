@@ -160,7 +160,8 @@ const subscribe = (params, next) => {
       key: params.context.secrets.api_key,
       requestBody: {
         snippet: {
-          resourceId: { 
+          resourceId: {
+            kind: "youtube#channel",
             channelId: params.channelId
           }
         }
