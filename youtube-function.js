@@ -235,11 +235,10 @@ router
   as.waterfall([
     (next) => authenticate(req.db)(req.webtaskContext, next),
     (auth, next) => {
-      let item = req.body;
       return subscribe({
         auth: auth,
         context: req.webtaskContext,
-        channelId: _.get(item, 'channelId')
+        channelId: _.get(req, 'query.channelId', _.get(req, 'body.channelId'))
       }, next);
     }
   ], (err, subscribeResult) => {
