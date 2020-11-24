@@ -168,7 +168,7 @@ const subscribe = (params, next) => {
       }
     }, next);
   }
-  return next(null, "Not enough params for comment");
+  return next(null, "Not enough params for subscribe");
 };
 
 router
