@@ -31,6 +31,15 @@ router
         if(!_.includes(store.id, channelId)) {
           store.id.unshift(channelId);
           // do action
+          
+          loader({
+            method: 'post',
+            url: `${req.webtaskContext.secrets.telegramFunction}/publish`,
+            json: {
+              
+            }
+          });
+          
           store.id.length = Math.min(store.id.length, 100);
           await util.promisify((data, next) => req.webtaskContext.storage.set(data, next))(store);
         }
@@ -48,7 +57,7 @@ router
   as.waterfall([
     (next) => loader({
       method: 'get',
-      url: req.webtaskContext.secrets.manifest + page + '.txt'
+      url: `${req.webtaskContext.secrets.manifest}/${page}.txt`
     }, next),
     (result, next) => {
       result.data.map(id => {
