@@ -16,12 +16,12 @@ router
   const feed = req.body;
   console.log(feed, req.query);
   if(_.includes(feed, req.webtaskContext.secrets.topic)) {
-    const entry = feed.match(/<entry>(.*)<\/entry>/mi)[1] || '';
-    const videoId = entry.match(/<yt:videoId>(.*)<\/yt:videoId>/mi)[1];
-    const channelId = entry.match(/<yt:channelId>(.*)<\/yt:channelId>/mi)[1];
-    const published = entry.match(/<published>(.*)<\/published>/mi)[1];
-    const title = entry.match(/<title>(.*)<\/title>/mi)[1];
-    const channelName = entry.match(/<name>(.*)<\/name>/)[1];
+    const entry = (feed.match(/<entry>(.*)<\/entry>/mi) || [])[1] || '';
+    const videoId = (entry.match(/<yt:videoId>(.*)<\/yt:videoId>/mi) || [])[1];
+    const channelId = (entry.match(/<yt:channelId>(.*)<\/yt:channelId>/mi) || [])[1];
+    const published = (entry.match(/<published>(.*)<\/published>/mi) || [])[1];
+    const title = (entry.match(/<title>(.*)<\/title>/mi) || [])[1];
+    const channelName = (entry.match(/<name>(.*)<\/name>/) || [])[1];
     if(videoId && channelId && published && title && channelName) {
       const yesterday = new Date(Date.now() - 86400000);
       const publishedTime = (new Date(published)).getTime();
