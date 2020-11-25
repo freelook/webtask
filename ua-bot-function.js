@@ -46,8 +46,7 @@ router
                 as: 'link',
                 shortUrl: `https://youtu.be/${videoId}`,
                 info: {
-                  title: title,
-                  labels: [channelName]
+                  title: title
                 }
               }
             }
