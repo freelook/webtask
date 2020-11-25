@@ -41,7 +41,7 @@ router
   as.waterfall([
     (next) => loader({
       method: 'get',
-      url: req.webtaskContext.secrets.url + page + '.txt'
+      url: req.webtaskContext.secrets.manifest + page + '.txt'
     }, next),
     (result, next) => {
       result.data.map(id => {
