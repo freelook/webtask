@@ -35,8 +35,20 @@ router
           loader({
             method: 'post',
             url: `${req.webtaskContext.secrets.telegramFunction}/publish`,
+            qs: {
+              token: req.webtaskContext.secrets.token
+            },
             json: {
-              
+              _id: "ua-youtube",
+              db: "ua-youtube",
+              payload: {
+                as: 'link',
+                shortUrl: `https://youtu.be/${videoId}`,
+                info: {
+                  title: title,
+                  labels: [channelName]
+                }
+              }
             }
           });
           
