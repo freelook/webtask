@@ -12,7 +12,7 @@ const app = express();
 const router = express.Router();
 
 router
-.all('/call', (req, res) => {
+.all('/call', async (req, res) => {
   const feed = req.body;
   console.log(feed, req.query);
   if(_.includes(feed, req.webtaskContext.secrets.topic)) {
@@ -26,7 +26,14 @@ router
       const yesterday = new Date(Date.now() - 86400000);
       const publishedTime = (new Date(published)).getTime();
       if(publishedTime > yesterday) {
-        // do action
+        let store = await util.promisify((next) => req.webtaskContext.storage.get(next))();
+        store.id = store.id || [];
+        if(!_.includes(store.id, channelId)) {
+          store.id.unshift(channelId);
+          // do action
+          store.id.length = Math.min(store.id.length, 100);
+          await util.promisify((data, next) => req.webtaskContext.storage.set(data, next))(store);
+        }
       }
     }
   }
