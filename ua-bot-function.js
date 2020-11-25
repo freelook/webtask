@@ -17,10 +17,12 @@ router
   console.log(feed, req.query);
   if(_.includes(feed, req.webtaskContext.secrets.topic)) {
     const entry = feed.match(/<entry>(.*)<\/entry>/)[1] || '';
-    const id = entry.match(/<id>(.*)<\/id>/)[1].split(":")[2];
+    const videoId = entry.match(/<yt:videoId>(.*)<\/yt:videoId>/)[1];
+    const channelId = entry.match(/<yt:channelId>(.*)<\/yt:channelId>/)[1];
     const published = entry.match(/<published>(.*)<\/published>/)[1];
     const title = entry.match(/<title>(.*)<\/title>/)[1];
-    if(id && title && published) {
+    const channelName = entry.match(/<name>(.*)<\/name>/)[1];
+    if(videoId && channelId && published && title && channelName) {
       const yesterday = new Date(Date.now() - 86400000);
       const publishedTime = (new Date(published)).getTime();
       if(publishedTime > yesterday) {
