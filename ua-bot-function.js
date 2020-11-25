@@ -16,7 +16,7 @@ router
   const feed = req.body;
   console.log(feed, req.query);
   if(_.includes(feed, req.webtaskContext.secrets.topic)) {
-    const entry = ((/<entry>(.*)<\/entry>/mi).exec(feed) || [])[0] || '';
+    const entry = feed.split('<entry>')[1] || '';
     const videoId = (entry.match(/<yt:videoId>(.*)<\/yt:videoId>/) || [])[1];
     const channelId = (entry.match(/<yt:channelId>(.*)<\/yt:channelId>/) || [])[1];
     const published = (entry.match(/<published>(.*)<\/published>/) || [])[1];
