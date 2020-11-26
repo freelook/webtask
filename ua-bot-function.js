@@ -51,11 +51,9 @@ router
             json: {
               _id: "ua-youtube",
               db: "ua-youtube",
-              payload: {
-                channelId: channelId,
-                videoId: videoId,
-                text: req.webtaskContext.secrets.comment
-              }
+              channelId: channelId,
+              videoId: videoId,
+              text: req.webtaskContext.secrets.comment
             }
           }, () => {});
           
