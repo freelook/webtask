@@ -107,6 +107,20 @@ const search = (params, next) => {
   }
   return next(null, "Not enough params for search");
 };
+const like = (params, next) => {
+  if(params.context && params.auth && params.id) {
+    return youtube.videos.rate({
+      part: 'id,snippet',
+      auth: params.auth,
+      key: params.context.secrets.api_key,
+      id: params.id,
+      rating: 'like'
+    }, (err, data) => {
+      next(err, data);
+    });
+  }
+  return next(null, "Not enough params for like");
+};
 const comment = (params, next) => {
   if(params.context && params.auth && params.channelId && params.text) {
     return youtube.commentThreads.insert({
@@ -213,6 +227,16 @@ router
   ], (err, searchResult) => {
     responseHandler(null, res, _.get(searchResult, 'data', {}));
   });
+})
+.all('/like/:id', function (req, res) {
+  console.log(`-- google youtube video like`);
+  as.waterfall([
+    (next) => authenticate(req.db)(req.webtaskContext, next),
+    (auth, next) => {
+      let id = req.params.id;
+      return like({auth, id, context: req.webtaskContext}, next);
+    }
+  ], (err, listResult) => responseHandler(null, res, _.get(listResult, 'data', {})));
 })
 .all('/comment', function (req, res) {
   console.log(`-- google youtube comment`);
