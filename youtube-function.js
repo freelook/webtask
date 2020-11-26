@@ -236,7 +236,7 @@ router
       let id = req.params.id;
       return like({auth, id, context: req.webtaskContext}, next);
     }
-  ], (err, likeResult) => responseHandler(err, res, _.get(likeResult, 'data', likeResult)));
+  ], (err, likeResult) => responseHandler(err, res, _.get(likeResult, 'data', {})));
 })
 .all('/comment', function (req, res) {
   console.log(`-- google youtube comment`);
