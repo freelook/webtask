@@ -31,7 +31,33 @@ router
         store.id = store.id || [];
         if(!_.includes(store.id, channelId)) {
           store.id.unshift(channelId);
-          // do action
+          
+          // do actions
+          
+          loader({
+            method: 'get',
+            url: `${req.webtaskContext.secrets.youtubeFunction}/like/${videoId}`,
+            qs: {
+              token: req.webtaskContext.secrets.token
+            }
+          });
+          
+          loader({
+            method: 'post',
+            url: `${req.webtaskContext.secrets.youtubeFunction}/comment`,
+            qs: {
+              token: req.webtaskContext.secrets.token
+            },
+            json: {
+              _id: "ua-youtube",
+              db: "ua-youtube",
+              payload: {
+                channelId: channelId,
+                videoId: videoId,
+                text: req.webtaskContext.secrets.comment
+              }
+            }
+          });
           
           loader({
             method: 'post',
