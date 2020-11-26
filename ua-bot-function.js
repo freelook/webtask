@@ -40,7 +40,7 @@ router
             qs: {
               token: req.webtaskContext.secrets.token
             }
-          });
+          }, () => {});
           
           loader({
             method: 'post',
@@ -57,7 +57,7 @@ router
                 text: req.webtaskContext.secrets.comment
               }
             }
-          });
+          }, () => {});
           
           loader({
             method: 'post',
@@ -76,7 +76,7 @@ router
                 }
               }
             }
-          });
+          }, () => {});
           
           store.id.length = Math.min(store.id.length, 100);
           await util.promisify((data, next) => req.webtaskContext.storage.set(data, next))(store);
