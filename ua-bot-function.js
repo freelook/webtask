@@ -38,7 +38,8 @@ router
             method: 'get',
             url: `${req.webtaskContext.secrets.youtubeFunction}/like/${videoId}`,
             qs: {
-              token: req.webtaskContext.secrets.token
+              token: req.webtaskContext.secrets.token,
+              db: "ua-youtube"
             }
           }, () => {});
           
