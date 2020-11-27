@@ -47,7 +47,8 @@ router
             method: 'post',
             url: `${req.webtaskContext.secrets.youtubeFunction}/comment`,
             qs: {
-              token: req.webtaskContext.secrets.token
+              token: req.webtaskContext.secrets.token,
+              db: "ua-youtube"
             },
             json: {
               _id: "ua-youtube",
