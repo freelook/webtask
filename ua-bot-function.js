@@ -55,7 +55,7 @@ router
               db: "ua-youtube",
               channelId: channelId,
               videoId: videoId,
-              text: req.webtaskContext.secrets.comment
+              text: req.webtaskContext.secrets.comment.replace("${channelName}", channelName)
             }
           }, () => {});
           
