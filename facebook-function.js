@@ -90,9 +90,6 @@ router
 .all('/publish', function (req, res) {
   const url = req.fUrl;
   const promoType = _.get(req, 'body.payload.promoType');
-  if(promoType !== 'PROMOCODE') {
-    return responseHandler('Skip deal', res);
-  }
   const promoText = _.get(req, 'body.payload.promoText') || _.get(req, 'body.payload.info.title');
   const imgUrl = _.get(req, 'body.payload.promoImg') || _.get(req, 'body.payload.info.image');
   const hashTags = [''].concat(
