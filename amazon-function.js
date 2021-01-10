@@ -138,7 +138,7 @@ router
     const keywords = _.get(result, '[0].keywords', '');
     const info = _.get(result, '[1]', {});
     info.labels = _.concat(
-      _.get(info, 'labels', ['Amazon', 'Deal']),
+      _.get(info, 'labels', ['BestDeal', 'AmazingDeal']),
       _.chain(keywords).split(',').compact().map(_.trim).value()
     );
     responseHandler(null, res, info);
