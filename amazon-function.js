@@ -140,8 +140,9 @@ router
   (err, result) => {
     const keywords = _.get(result, '[0].keywords', '');
     const info = _.get(result, '[1]', {});
+    const labels = _.get(req.webtaskContext.secrets, `${req.market}-labels`, `BestDeal,AmazingDeal`).split(',');
     info.labels = _.concat(
-      _.get(info, 'labels', ['BestDeal', 'AmazingDeal']),
+      _.get(info, 'labels', labels),
       _.chain(keywords).split(',').compact().map(_.trim).value()
     );
     responseHandler(null, res, info);
