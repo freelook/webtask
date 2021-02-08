@@ -55,7 +55,8 @@ router
             }
           }, () => {});
           
-          store.id.length = Math.min(store.id.length, 200);
+          store.id.length = Math.min(store.id.length, 100);
+          store.next.length = Math.min(store.id.length, 100);
           await util.promisify((data, next) => req.webtaskContext.storage.set(data, next))(store);
         }
       }
