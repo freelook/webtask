@@ -86,6 +86,13 @@ router
   }
   res.send(_.get(req.query, 'hub.challenge', ''));
 })
+.all('/next', async (req, res) => {
+    let store = await util.promisify((next) => req.webtaskContext.storage.get(next))();
+    store.next = store.next || [];
+    let next = store.next.shift();
+    await util.promisify((data, next) => req.webtaskContext.storage.set(data, next))(store);
+    res.send(next);
+})
 .all('/subscribe', (req, res) => {
   if(req.webtaskContext.secrets.token !== req.query.token) {
     return res.status(400).send('No token');
