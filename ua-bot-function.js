@@ -91,7 +91,7 @@ router
     store.next = store.next || [];
     let next = store.next.shift();
     await util.promisify((data, next) => req.webtaskContext.storage.set(data, next))(store);
-    res.send(next);
+    res.json({next});
 })
 .all('/subscribe', (req, res) => {
   if(req.webtaskContext.secrets.token !== req.query.token) {
