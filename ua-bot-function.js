@@ -67,7 +67,7 @@ router
 })
 .all('/next', async (req, res) => {
     let store = await util.promisify((next) => req.webtaskContext.storage.get(next))();
-    store.next = store.next || [];
+    store.next = _.compact(store.next || []);
     let nextID = store.next.shift();
     await util.promisify((data, next) => req.webtaskContext.storage.set(data, next))(store);
     res.json({next: nextID});
