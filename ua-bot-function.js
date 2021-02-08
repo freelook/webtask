@@ -22,8 +22,9 @@ router
     const published = (entry.match(/<published>(.*)<\/published>/) || [])[1];
     const title = (entry.match(/<title>(.*)<\/title>/) || [])[1];
     const channelName = (entry.match(/<name>(.*)<\/name>/) || [])[1];
-    console.log({videoId, channelId, published, title, channelName});
-    if(videoId && channelId && published && title && channelName) {
+    const ignore = req.webtaskContext.secrets.ignore.split(',');
+    console.log({videoId, channelId, published, title, channelName}); 
+    if(!_.includes(ignore, channelId) && videoId && channelId && published && title && channelName) {
       const yesterday = new Date(Date.now() - 86400000);
       const publishedTime = (new Date(published)).getTime();
       if(publishedTime > yesterday) {
