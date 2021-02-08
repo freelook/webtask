@@ -89,9 +89,9 @@ router
 .all('/next', async (req, res) => {
     let store = await util.promisify((next) => req.webtaskContext.storage.get(next))();
     store.next = store.next || [];
-    let next = store.next.shift();
+    let nextID = store.next.shift();
     await util.promisify((data, next) => req.webtaskContext.storage.set(data, next))(store);
-    res.json({next});
+    res.json({next: nextID});
 })
 .all('/subscribe', (req, res) => {
   if(req.webtaskContext.secrets.token !== req.query.token) {
