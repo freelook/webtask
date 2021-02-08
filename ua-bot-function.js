@@ -29,35 +29,12 @@ router
       if(publishedTime > yesterday) {
         let store = await util.promisify((next) => req.webtaskContext.storage.get(next))();
         store.id = store.id || [];
+        store.next = store.next || [];
         if(!_.includes(store.id, channelId)) {
           store.id.unshift(channelId);
+          store.next.unshift(videoId);
           
           // do actions
-          
-          loader({
-            method: 'get',
-            url: `${req.webtaskContext.secrets.youtubeFunction}/like/${videoId}`,
-            qs: {
-              token: req.webtaskContext.secrets.token,
-              db: "ua-youtube"
-            }
-          }, () => {});
-          
-          loader({
-            method: 'post',
-            url: `${req.webtaskContext.secrets.youtubeFunction}/comment`,
-            qs: {
-              token: req.webtaskContext.secrets.token,
-              db: "ua-youtube"
-            },
-            json: {
-              _id: "ua-youtube",
-              db: "ua-youtube",
-              channelId: channelId,
-              videoId: videoId,
-              text: req.webtaskContext.secrets.comment.replace("${channelName}", channelName)
-            }
-          }, () => {});
           
           loader({
             method: 'post',
