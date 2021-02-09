@@ -77,6 +77,7 @@ router
     return res.status(400).send('No token');
   }
   const page = req.query.page || 1;
+  const ignore = req.webtaskContext.secrets.ignore.split(',');
   console.log("Subscribe page ", page);
   as.waterfall([
     (next) => loader({
@@ -85,28 +86,30 @@ router
     }, next),
     (result, next) => {
       result.data.map(id => {
-        console.log("Unsubscribe id ", id);
-        request.post({
-          url: req.webtaskContext.secrets.pubsubhubbub,
-          formData: {
-            'hub.callback': req.webtaskContext.secrets.callback,
-            'hub.topic': req.webtaskContext.secrets.topic + id,
-            'hub.verify': 'async',
-            'hub.mode': 'unsubscribe'
-          }
-        }, () => {
+        if(!_.includes(ignore, id)) {
+          console.log("Unsubscribe id ", id);
           request.post({
             url: req.webtaskContext.secrets.pubsubhubbub,
             formData: {
               'hub.callback': req.webtaskContext.secrets.callback,
               'hub.topic': req.webtaskContext.secrets.topic + id,
               'hub.verify': 'async',
-              'hub.mode': 'subscribe'
+              'hub.mode': 'unsubscribe'
             }
           }, () => {
-            console.log("Subscribe id ", id);
+            request.post({
+              url: req.webtaskContext.secrets.pubsubhubbub,
+              formData: {
+                'hub.callback': req.webtaskContext.secrets.callback,
+                'hub.topic': req.webtaskContext.secrets.topic + id,
+                'hub.verify': 'async',
+                'hub.mode': 'subscribe'
+              }
+            }, () => {
+              console.log("Subscribe id ", id);
+            });
           });
-        });
+        }
       });
       if(result.next) {
         loader({
