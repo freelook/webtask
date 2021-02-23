@@ -79,7 +79,7 @@ ${hashTags}`
       parse_mode: 'Markdown',
       text: `[ ](${imgUrl}) ${promoText}
 
-${url}
+${url.replace(/_/mig, '\\_')}
 
 ${hashTags}`
     }
