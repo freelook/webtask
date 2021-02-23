@@ -22,7 +22,7 @@ module.exports = async function(context, cb) {
           promoExpired: offer.period_end,
           promoDescription: offer.description,
           slug: offer.slug,
-          url: `${context.secrets.link}${encodeURIComponent(offer.slug)}`,
+          url: `${context.secrets.link}${offer.slug}`,
           notification: 'minified',
           info: {
             labels: ['Знижка', 'Акція']
