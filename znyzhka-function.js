@@ -13,7 +13,7 @@ module.exports = async function(context, cb) {
     }
     const page = context.query.page || 1;
     const response = await axios.get(`${context.secrets.catalog}${page}`);
-    const deals = _.get(response, 'data.data.data', []).map((offer) => {
+    let deals = _.get(response, 'data.data.data', []).map((offer) => {
       return {
           promoText: offer.title,
           promoImg: offer.image,
@@ -29,6 +29,9 @@ module.exports = async function(context, cb) {
           }
         };
     });
+    if(context.query.max) {
+      deals = deals.slice(0, context.query.max);
+    }
     if(context.query.publish) {
       deals.map((deal) => {
         if(deal && deal.url && deal.promoText) {
