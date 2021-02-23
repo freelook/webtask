@@ -34,9 +34,9 @@ module.exports = async function(context, cb) {
         if(deal && deal.url && deal.promoText) {
           loader({
             method: 'post',
-            url: req.marketDB,
+            url: context.secrets.storeFunction,
             qs: {
-              token: req.webtaskContext.secrets.token
+              token: context.secrets.token
             },
             json: deal
           }, () => {});
