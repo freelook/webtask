@@ -23,15 +23,15 @@ module.exports = function(context, cb) {
       qs: {token: context.secrets.token}
     }, (err, msg) => next(null, {storage:storage, msg:msg})),
     (params, next) => {
-      var last = _.get(params.storage, 'last');
       var current = _.get(params.msg, 'payload');
       if(!current) {
         return next('No item payload provided.', params);
       }
-      if(last && current && _.isEqual(last, current)) {
+      var last = _.get(params.storage, current.db);
+      if(last && current.id && _.isEqual(last, current.id)) {
         return next('Item still in progress.', params);
       }
-      params.storage.last = current;
+      params.storage[current.db] = current.id;
       return next(null, params);
     },
     (params, next) => context.storage.set(params.storage, () => next(null, params)),
@@ -40,7 +40,7 @@ module.exports = function(context, cb) {
         url: `${context.secrets.storeFunction}/${params.msg.payload.db}/${params.msg.payload.id}`,
         qs: {token: context.secrets.token},
         json: {
-          state: 'scheduled'
+          state: params.msg.payload.notification || 'scheduled'
         }
     }, () => next(null, params))
   ], (err, params) => {
