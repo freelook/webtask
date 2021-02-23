@@ -23,7 +23,10 @@ module.exports = async function(context, cb) {
           promoDescription: offer.description,
           slug: offer.slug,
           url: `${context.secrets.link}${encodeURIComponent(offer.slug)}`,
-          notification: 'minified'
+          notification: 'minified',
+          info: {
+            labels: ['Знижка', 'Акція']
+          }
         };
     });
     if(context.query.publish) {
