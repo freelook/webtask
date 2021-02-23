@@ -60,7 +60,7 @@ router
   const imgUrl = _.get(req, 'body.payload.promoImg') || _.get(req, 'body.payload.info.image');
   const hashTags = [''].concat(
     _.get(req, 'body.payload.info.labels', [])
-    .map(h => h.replace(/[^\w\d]/mig, ''))
+    .map(h => h.replace(/[^\w\dА-ЯҐЄІЇ]/mig, ''))
     .filter(h => h && h.length < 33)
     ).join(' #').trim();
   console.log(`-- telegram published: ${promoText} ${url}`);
