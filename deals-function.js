@@ -54,7 +54,9 @@ router
     qs: {
       token: req.webtaskContext.secrets.token
     },
-    json: {
+    json: req.query.active ? {
+      "payload.promoExpired": {"$gte": `${new Date(startOfDay).toISOString().split('T')[0]} 00:00:00`}
+    } : {
       "timestamp" : {"$gte": startOfDay}
     }
   }, (err, deals) => {
