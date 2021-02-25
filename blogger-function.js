@@ -120,7 +120,7 @@ router
     }
   ],
   (err, response) => {
-    responseHandler(null, res, err ? JSON.stringify(err, Object.getOwnPropertyNames(err)) : _.get(response, 'data', {}));
+    responseHandler(null, res, !!err ? JSON.stringify(err, Object.getOwnPropertyNames(err)) : _.get(response, 'data', {}));
   });
 });
 
