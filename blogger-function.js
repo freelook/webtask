@@ -72,7 +72,7 @@ const auth = (context, cb) => {
     if(!!err) {
       return cb(err);
     }
-    var authObj = new google.auth.OAuth2(context.secrets.client_id, context.secrets.client_secret);
+    var authObj = new google.auth.OAuth2();
     authObj.setCredentials({
       access_token: access_token,
       refresh_token: context.secrets.refresh_token,
