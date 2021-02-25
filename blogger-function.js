@@ -63,7 +63,7 @@ const auth = (context, cb) => {
   as.waterfall([
     (next) => context.storage.get(next),
     (storage, next) => {
-      return next(null, _.get(storage, 'access_token'));
+      return next(null, _.get(storage, 'access_token')); // todo: fix me
       if (Date.now() < _.get(storage, 'expire', 0)) {
          return next(null, _.get(storage, 'access_token'));
       }
