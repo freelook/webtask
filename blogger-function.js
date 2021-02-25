@@ -114,7 +114,7 @@ router
     }
   ],
   (err, response) => {
-    console.log(error, response);
+    console.log(err, response);
     responseHandler(null, res, _.get(response, 'data', {}));
   });
 });
