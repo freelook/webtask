@@ -63,6 +63,7 @@ const auth = (context, cb) => {
   as.waterfall([
     (next) => context.storage.get(next),
     (storage, next) => {
+      return next(null, _.get(storage, 'access_token'));
       if (Date.now() < _.get(storage, 'expire', 0)) {
          return next(null, _.get(storage, 'access_token'));
       }
@@ -72,9 +73,9 @@ const auth = (context, cb) => {
     if(!!err) {
       return cb(err);
     }
-    var authObj = new google.auth.OAuth2();
+    var authObj = new google.auth.OAuth2(context.secrets.client_id, context.secrets.client_secret);
     authObj.setCredentials({
-      access_token: access_token,
+      //access_token: access_token,
       refresh_token: context.secrets.refresh_token,
       //client_id: context.secrets.client_id,
       //client_secret: context.secrets.client_secret
