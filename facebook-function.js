@@ -102,7 +102,7 @@ router
    (next) => getToken(req, next),
    (access_token, next) => loader({
     method: 'post',
-    url: req.facebookPublisherUrl,
+    url: `${req.facebookPublisherUrl}/${_.get(req, 'body.payload.as') === 'link' ? 'feed' : 'photos'}`,
     qs: _.get(req, 'body.payload.as') === 'link' ? {
       message: `${promoText} 
  
@@ -112,12 +112,12 @@ router
       link: url,
       access_token: access_token
     } : {
-      message: `${url} 
+      caption: `${url} 
 
       ${promoText} 
 
       ${hashTags}`,
-      link: imgUrl,
+      url: imgUrl,
       access_token: access_token
     },
    }, next)
