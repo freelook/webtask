@@ -119,7 +119,6 @@ router
     }
   ],
   (err, response) => {
-    console.log(err);
     responseHandler(null, res, err ? JSON.stringify(err, Object.getOwnPropertyNames(err)) : _.get(response, 'data', {}));
   });
 });
