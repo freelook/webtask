@@ -73,7 +73,7 @@ const auth = (context, cb) => {
       return cb(err);
     }
     var authObj = new google.auth.OAuth2();
-    authObj.setCredentials({access_token: access_token, refresh_token: context.secrets.refresh_token});
+    authObj.setCredentials({access_token: access_token, refresh_token: context.secrets.refresh_token, client_id: context.secrets.client_id});
     return cb(null, authObj); 
   });
 };
