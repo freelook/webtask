@@ -114,8 +114,8 @@ router
     }
   ],
   (err, response) => {
-    console.log('========', response, err);
-    responseHandler(null, res, response || err);
+    console.log('------------->', err, response);
+    responseHandler(null, res, _.get(response, 'data', {}));
   });
 });
 
