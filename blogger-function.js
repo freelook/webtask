@@ -76,8 +76,8 @@ const auth = (context, cb) => {
     authObj.setCredentials({
       access_token: access_token,
       refresh_token: context.secrets.refresh_token,
-      client_id: context.secrets.client_id,
-      client_secret: context.secrets.client_secret
+      //client_id: context.secrets.client_id,
+      //client_secret: context.secrets.client_secret
     });
     return cb(null, authObj); 
   });
