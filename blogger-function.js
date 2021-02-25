@@ -114,7 +114,7 @@ router
     }
   ],
   (err, response) => {
-    responseHandler(null, res, JSON.stringify(err, Object.getOwnPropertyNames(err)) || _.get(response, 'data', {}));
+    responseHandler(null, res, _.get(response, 'data', {}));
   });
 });
 
