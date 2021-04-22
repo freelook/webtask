@@ -2,7 +2,6 @@ const fli = require('fli-webtask');
 const wt = require('webtask-tools');
 const util = require('util');
 const bodyParser = require('body-parser');
-const safeEval = require('safe-eval');
 const express = fli.npm.express;
 const request = fli.npm.request;
 const as = fli.npm.async;
@@ -68,7 +67,7 @@ router
       }, (err, httpResponse, body) => {
         try {
           var goog = (data) => next(null, data);
-          safeEval(body);
+          eval(body);
         } catch(err) {
           next({error: _.toString(err)});
         }
