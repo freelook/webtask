@@ -67,8 +67,12 @@ router
         url
       }, (err, httpResponse, body) => {
         try {
-          var goog = (data) => next(null, data);
-          safeEval(decodeURIComponent(body).replace(/<b>|<\/b>|\n/gi, ""));
+          const data = JSON.parse(decodeURIComponent(body)
+            .replace(`/*O_o*/`, '')
+            .replace(`goog(`, '')
+            .replace(`);`, '')
+            .replace(/<b>|<\/b>|\n/gi, "").trim());
+          next(null, data);
         } catch(err) {
           next({error: _.toString(err)});
         }
