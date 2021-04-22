@@ -68,7 +68,7 @@ router
       }, (err, httpResponse, body) => {
         try {
           var goog = (data) => next(null, data);
-          safeEval(decodeURIComponent(body || "").replace(/(<([^>]+)>)/gi, ""));
+          safeEval(body);
         } catch(err) {
           next({error: _.toString(err)});
         }
