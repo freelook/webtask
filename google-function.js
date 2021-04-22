@@ -67,11 +67,13 @@ router
         url
       }, (err, httpResponse, body) => {
         try {
-          const data = JSON.parse(decodeURIComponent(body)
+          const data = JSON.parse(
+            body
             .replace(`/*O_o*/`, '')
             .replace(`goog(`, '')
             .replace(`);`, '')
-            .replace(/<b>|<\/b>|\n/gi, "").trim());
+            .replace(/<b>|<\/b>|\n/gi, "").trim()
+          );
           next(null, data);
         } catch(err) {
           next({error: _.toString(err)});
