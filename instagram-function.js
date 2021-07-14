@@ -46,6 +46,7 @@ router
 .all('/publish', function (req, res) {
   const url = req.fUrl;
   const promoType = _.get(req, 'body.payload.promoType');
+  const asin = _.get(req, 'body.payload.asin');
   const promoText = _.get(req, 'body.payload.promoText') || _.get(req, 'body.payload.info.title');
   const imgUrl = _.get(req, 'body.payload.promoImg') || _.get(req, 'body.payload.info.image');
   const hashTags = [''].concat(
@@ -61,6 +62,8 @@ router
     url: `${req.fbInstaPublisherUrl}/media`,
     qs: {
       caption: `${promoText} 
+
+      Dealcode: ${asin} on deals.freelook.info
 
       ${hashTags}`,
       image_url: imgUrl,
