@@ -123,6 +123,7 @@ router
    }, next)
   ],
   (err, info) => {
+    console.log(err);
     if(!!err) {
       recordAlarm(req)('facebook_publish_error');
     }
